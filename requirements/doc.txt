@@ -1,4 +1,0 @@
--r base.txt
-sphinx~=7.2
-sphinx_rtd_theme~=1.2
-autodoc_pydantic~=2.0

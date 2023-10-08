@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crawlinsta.collecting &mdash; Instagram Crawler 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/autodoc_pydantic.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Instagram Crawler
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../01_about.html">Crawlinsta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../02_installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../03_usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../04_source.html">Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../05_authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../06_contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Instagram Crawler</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">crawlinsta.collecting</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for crawlinsta.collecting</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Json</span>
+<span class="kn">from</span> <span class="nn">.schemas</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">UserInfo</span><span class="p">,</span> <span class="n">Users</span><span class="p">,</span> <span class="n">Likers</span><span class="p">,</span> <span class="n">Comments</span><span class="p">,</span> <span class="n">Medias</span><span class="p">,</span> <span class="n">Hashtag</span><span class="p">,</span> <span class="n">SearchingResult</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="collect_user_info">
+<a class="viewcode-back" href="../../04_source.html#crawlinsta.collecting.collect_user_info">[docs]</a>
+<span class="k">def</span> <span class="nf">collect_user_info</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect user information through username, including user_id, username,</span>
+<span class="sd">    profile_pic_url, biography, media_count, follower_count, following_count,</span>
+<span class="sd">    medias.</span>
+
+<span class="sd">    Strategy: click the username, get to the main page of the user, the user</span>
+<span class="sd">    information is returned in the response body.</span>
+
+<span class="sd">    Alternatively, put the mouse over the user&#39;s name in home page, the user</span>
+<span class="sd">    information will show in a popup. A request triggered by the mouseover was</span>
+<span class="sd">    sent to the path `/api/v1/users/&lt;user_id&gt;/info/` or</span>
+<span class="sd">    `/api/v1/users/web_profile_info/?username=&lt;user_name&gt;`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        username (str): name of the user.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Json: user information in json format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">UserInfo</span><span class="p">()</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="collect_medias_of_user">
+<a class="viewcode-back" href="../../04_source.html#crawlinsta.collecting.collect_medias_of_user">[docs]</a>
+<span class="k">def</span> <span class="nf">collect_medias_of_user</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect medias of the given user.</span>
+
+<span class="sd">    Strategy: click the username, get to the main page of the user, a few medias</span>
+<span class="sd">    are displayed in the user&#39;s main page. The request was sent to the path</span>
+<span class="sd">    `/api/v1/feed/user/&lt;user_name&gt;/username/?count=6` to get the medias and a</span>
+<span class="sd">    next_max_id for loading other medias. To load the other medias, move the mouse</span>
+<span class="sd">    to the bottom of the page, it will trigger another request sent to</span>
+<span class="sd">    `/api/v1/feed/user/&lt;user_id&gt;/?count=12&amp;max_id=&lt;next_max_id&gt;`</span>
+<span class="sd">    to have more medias.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        username (str): name of the user.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Json: all visible followers&#39; user information of the given user in json format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Medias</span><span class="p">()</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="collect_followers_of_user">
+<a class="viewcode-back" href="../../04_source.html#crawlinsta.collecting.collect_followers_of_user">[docs]</a>
+<span class="k">def</span> <span class="nf">collect_followers_of_user</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect followers of the given user.</span>
+
+<span class="sd">    Strategy: click the username, get to the main page of the user, then click followers, a list of</span>
+<span class="sd">    followers of the user shows in a popup. A request triggered by the clicking was sent to the path</span>
+<span class="sd">    `/api/v1/friendships/&lt;user_id&gt;/followers/?count=12&amp;search_surface=follow_list_page`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        username (str): name of the user.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Json: all visible followers&#39; user information of the given user in json format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Users</span><span class="p">()</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="collect_following_of_user">
+<a class="viewcode-back" href="../../04_source.html#crawlinsta.collecting.collect_following_of_user">[docs]</a>
+<span class="k">def</span> <span class="nf">collect_following_of_user</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect following of the given user.</span>
+
+<span class="sd">    Strategy: click the username, get to the main page of the user, then click following, a list of</span>
+<span class="sd">    following of the user shows in a popup. A request triggered by the clicking was sent to the path</span>
+<span class="sd">    `/api/v1/friendships/373735170/following/?count=12`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        username (str): name of the user.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Json: all visible followings&#39; user information of the given user in json format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Users</span><span class="p">()</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="collect_likers_of_media">
+<a class="viewcode-back" href="../../04_source.html#crawlinsta.collecting.collect_likers_of_media">[docs]</a>
+<span class="k">def</span> <span class="nf">collect_likers_of_media</span><span class="p">(</span><span class="n">media_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect the users, who likes a given media.</span>
+
+<span class="sd">    Strategy: click the likes (a button with link `/p/&lt;media_code&gt;/liked_by/`), a list of likers shows in a popup.</span>
+<span class="sd">    A request triggered by the clicking was sent to the path `/api/v1/media/&lt;media_id&gt;/likers/`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        media_code (str): media short code for generating access url.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Json: all likers&#39; user information of the given media in json format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Likers</span><span class="p">()</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="collect_comments_of_media">
+<a class="viewcode-back" href="../../04_source.html#crawlinsta.collecting.collect_comments_of_media">[docs]</a>
+<span class="k">def</span> <span class="nf">collect_comments_of_media</span><span class="p">(</span><span class="n">media_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect comments of a given media.</span>
+
+<span class="sd">    Strategy: click the media (a button with link `/p/&lt;media_code&gt;/`), a list of</span>
+<span class="sd">    comments shows in a popup. A request triggered by the clicking was sent to the path</span>
+<span class="sd">    `/api/v1/media/&lt;media_id&gt;/comments/?can_support_threading=true&amp;permalink_enabled=false`</span>
+<span class="sd">    The comments are paginated, to load more comments, have to use the mouse to click</span>
+<span class="sd">    a button to load more comments.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        media_code (str): media short code for generating access url.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Json: all comments of the given media in json format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Comments</span><span class="p">()</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="search_with_keyword">
+<a class="viewcode-back" href="../../04_source.html#crawlinsta.collecting.search_with_keyword">[docs]</a>
+<span class="k">def</span> <span class="nf">search_with_keyword</span><span class="p">(</span><span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Search hashtags or users with given keyword.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        keyword (str): keyword for searching.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Json: found users/hashtags.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">SearchingResult</span><span class="p">()</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="collect_hashtag_top_medias">
+<a class="viewcode-back" href="../../04_source.html#crawlinsta.collecting.collect_hashtag_top_medias">[docs]</a>
+<span class="k">def</span> <span class="nf">collect_hashtag_top_medias</span><span class="p">(</span><span class="n">hashtag</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect top medias of a given hashtag.</span>
+
+<span class="sd">    Strategy: click the search button from the left navigation bar, and input the hashtag in</span>
+<span class="sd">    the searchbar, and select the desired hashtag from searching results. This action will</span>
+<span class="sd">    trigger a request sent to the path `/api/v1/tags/web_info/?tag_name=&lt;tag name&gt;`, as result</span>
+<span class="sd">    the top medias are showed.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        hashtag (str): hashtag.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Json: Hashtag information in a json format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Hashtag</span><span class="p">()</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Zhiwei Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

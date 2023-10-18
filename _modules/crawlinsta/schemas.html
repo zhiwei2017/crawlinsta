@@ -13,9 +13,9 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=01f34227"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=2389946f"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -45,11 +45,9 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../01_about.html">Crawlinsta</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../02_installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../03_usage.html">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../04_source.html">Source</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../05_authors.html">Authors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../06_contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../02_source.html">Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../03_authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../04_contributing.html">Contributing</a></li>
 </ul>
 
         </div>
@@ -128,19 +126,14 @@
                                 <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">])</span>
 
 
-<div class="viewcode-block" id="UserInfo">
-<a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.UserInfo">[docs]</a>
-<span class="k">class</span> <span class="nc">UserInfo</span><span class="p">(</span><span class="n">UserBasicInfo</span><span class="p">,</span> <span class="n">UserEngagementInfo</span><span class="p">):</span>
+<div class="viewcode-block" id="UserInfo"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.UserInfo">[docs]</a><span class="k">class</span> <span class="nc">UserInfo</span><span class="p">(</span><span class="n">UserBasicInfo</span><span class="p">,</span> <span class="n">UserEngagementInfo</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;User information contains `id`, `username`, `full name`, `biography` and son on .&quot;&quot;&quot;</span>
     <span class="n">biography</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A shot description of the user account.&quot;</span><span class="p">,</span>
                            <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Hello, welcome to my instagram.&quot;</span><span class="p">])</span></div>
 
 
-
-<div class="viewcode-block" id="Users">
-<a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.Users">[docs]</a>
-<span class="k">class</span> <span class="nc">Users</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="Users"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Users">[docs]</a><span class="k">class</span> <span class="nc">Users</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An aggregation class to have the field `users` for storing a list of</span>
 <span class="sd">    instances of `UserInfo`.&quot;&quot;&quot;</span>
     <span class="n">users</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">UserInfo</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
@@ -158,10 +151,7 @@
                                                       <span class="n">biography</span><span class="o">=</span><span class="s2">&quot;Hello, welcome to my instagram.&quot;</span><span class="p">)]])</span></div>
 
 
-
-<div class="viewcode-block" id="FriendshipStatus">
-<a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.FriendshipStatus">[docs]</a>
-<span class="k">class</span> <span class="nc">FriendshipStatus</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="FriendshipStatus"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.FriendshipStatus">[docs]</a><span class="k">class</span> <span class="nc">FriendshipStatus</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Describe the relationship between the liker and the post owner. &quot;&quot;&quot;</span>
     <span class="n">following</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the liker follow the post owner?&quot;</span><span class="p">,</span>
@@ -207,32 +197,23 @@
                                            <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span></div>
 
 
-
-<div class="viewcode-block" id="Liker">
-<a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.Liker">[docs]</a>
-<span class="k">class</span> <span class="nc">Liker</span><span class="p">(</span><span class="n">UserBasicInfo</span><span class="p">):</span>
+<div class="viewcode-block" id="Liker"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Liker">[docs]</a><span class="k">class</span> <span class="nc">Liker</span><span class="p">(</span><span class="n">UserBasicInfo</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Liker, who likes a post. It contains the basic user information of `id`,</span>
 <span class="sd">    `username`, `full name` etc, and additionally a `friendship_status` field to</span>
 <span class="sd">    describe the relationship between the liker and the post owner.&quot;&quot;&quot;</span>
     <span class="n">friendship_status</span><span class="p">:</span> <span class="n">FriendshipStatus</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[])</span></div>
 
 
-
-<div class="viewcode-block" id="Likers">
-<a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.Likers">[docs]</a>
-<span class="k">class</span> <span class="nc">Likers</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="Likers"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Likers">[docs]</a><span class="k">class</span> <span class="nc">Likers</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An aggregation class to have the field `likers` for storing a list of</span>
 <span class="sd">    instances of `Liker`.&quot;&quot;&quot;</span>
     <span class="n">likers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Liker</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[[]])</span></div>
 
 
-
 <span class="n">Comment</span> <span class="o">=</span> <span class="n">ForwardRef</span><span class="p">(</span><span class="s1">&#39;Comment&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="Comment">
-<a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.Comment">[docs]</a>
-<span class="k">class</span> <span class="nc">Comment</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="Comment"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Comment">[docs]</a><span class="k">class</span> <span class="nc">Comment</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Relevant information about a comment, including `id`, `user_id`, `post_id`</span>
 <span class="sd">    `type` etc.&quot;&quot;&quot;</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
@@ -272,10 +253,7 @@
                                           <span class="n">examples</span><span class="o">=</span><span class="p">[[]])</span></div>
 
 
-
-<div class="viewcode-block" id="Comments">
-<a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.Comments">[docs]</a>
-<span class="k">class</span> <span class="nc">Comments</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="Comments"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Comments">[docs]</a><span class="k">class</span> <span class="nc">Comments</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An aggregation of comments.&quot;&quot;&quot;</span>
     <span class="n">comments</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Comment</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A list of comments.&quot;</span><span class="p">,</span>
@@ -296,10 +274,7 @@
                                                        <span class="n">child_comments</span><span class="o">=</span><span class="p">[])]])</span></div>
 
 
-
-<div class="viewcode-block" id="Usertag">
-<a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.Usertag">[docs]</a>
-<span class="k">class</span> <span class="nc">Usertag</span><span class="p">(</span><span class="n">UserBasicInfo</span><span class="p">):</span>
+<div class="viewcode-block" id="Usertag"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Usertag">[docs]</a><span class="k">class</span> <span class="nc">Usertag</span><span class="p">(</span><span class="n">UserBasicInfo</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Usertag information, mainly about who is tagged at which position at what time</span>
 <span class="sd">    in video and how long the tagged user appears.&quot;&quot;&quot;</span>
     <span class="n">user</span><span class="p">:</span> <span class="n">UserBasicInfo</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
@@ -320,10 +295,7 @@
                                                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">])</span></div>
 
 
-
-<div class="viewcode-block" id="Location">
-<a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.Location">[docs]</a>
-<span class="k">class</span> <span class="nc">Location</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="Location"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Location">[docs]</a><span class="k">class</span> <span class="nc">Location</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Location information, contains location name, city, longitude, latitude and</span>
 <span class="sd">     address etc.&quot;&quot;&quot;</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
@@ -349,10 +321,7 @@
                          <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">])</span></div>
 
 
-
-<div class="viewcode-block" id="Caption">
-<a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.Caption">[docs]</a>
-<span class="k">class</span> <span class="nc">Caption</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="Caption"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Caption">[docs]</a><span class="k">class</span> <span class="nc">Caption</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Caption of the post.&quot;&quot;&quot;</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unique identifier of the caption.&quot;</span><span class="p">,</span>
@@ -366,7 +335,6 @@
     <span class="n">content_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Content type of the Caption.&quot;</span><span class="p">,</span>
                               <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;comment&quot;</span><span class="p">])</span></div>
-
 
 
 <span class="k">class</span> <span class="nc">PostEngagementInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -440,9 +408,7 @@
                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">405268</span><span class="p">])</span>
 
 
-<div class="viewcode-block" id="Hashtag">
-<a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.Hashtag">[docs]</a>
-<span class="k">class</span> <span class="nc">Hashtag</span><span class="p">(</span><span class="n">HashtagBasicInfo</span><span class="p">,</span> <span class="n">Posts</span><span class="p">):</span>
+<div class="viewcode-block" id="Hashtag"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Hashtag">[docs]</a><span class="k">class</span> <span class="nc">Hashtag</span><span class="p">(</span><span class="n">HashtagBasicInfo</span><span class="p">,</span> <span class="n">Posts</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Hashtag information&quot;&quot;&quot;</span>
     <span class="n">profile_pic_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                                  <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Profile picture url.&quot;</span><span class="p">,</span>
@@ -462,7 +428,6 @@
     <span class="n">social_context_profile_links</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">([],</span>
                                                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Social context profile links.&quot;</span><span class="p">,</span>
                                                     <span class="n">examples</span><span class="o">=</span><span class="p">[[]])</span></div>
-
 
 
 <span class="k">class</span> <span class="nc">SearchingResultHashtag</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -492,9 +457,7 @@
                                                         <span class="n">is_private</span><span class="o">=</span><span class="kc">None</span><span class="p">)])</span>
 
 
-<div class="viewcode-block" id="SearchingResult">
-<a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.SearchingResult">[docs]</a>
-<span class="k">class</span> <span class="nc">SearchingResult</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="SearchingResult"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.SearchingResult">[docs]</a><span class="k">class</span> <span class="nc">SearchingResult</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Searching result contains found hashtags and/or users.&quot;&quot;&quot;</span>
     <span class="n">hashtags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SearchingResultHashtag</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">([],</span>
                                                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Found hashtags matched to the keywords.&quot;</span><span class="p">,</span>
@@ -511,7 +474,6 @@
                                                                                                <span class="n">profile_pic_url</span><span class="o">=</span><span class="s2">&quot;https://dummy-pic.com&quot;</span><span class="p">,</span>
                                                                                                <span class="n">is_verified</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                                                                                <span class="n">is_private</span><span class="o">=</span><span class="kc">None</span><span class="p">))]])</span></div>
-
 </pre></div>
 
            </div>

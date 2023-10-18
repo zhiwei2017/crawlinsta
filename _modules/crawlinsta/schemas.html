@@ -109,8 +109,8 @@
 
 <span class="k">class</span> <span class="nc">UserEngagementInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;User engagement information, contains mainly about the interactions between the given user with</span>
-<span class="sd">    other users or medias. It contains fields like `follower_count`, `following_count`, `following_tag_count`,</span>
-<span class="sd">    `media_count`, `usertags_count`.&quot;&quot;&quot;</span>
+<span class="sd">    other users or posts. It contains fields like `follower_count`, `following_count`, `following_tag_count`,</span>
+<span class="sd">    `post_count`, `usertags_count`.&quot;&quot;&quot;</span>
     <span class="n">follower_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                                 <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of the followers.&quot;</span><span class="p">,</span>
                                 <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">])</span>
@@ -120,11 +120,11 @@
     <span class="n">following_tag_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                                      <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of the tags, which followed by the user.&quot;</span><span class="p">,</span>
                                      <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">media_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of the medias of the user.&quot;</span><span class="p">,</span>
+    <span class="n">post_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of the posts of the user.&quot;</span><span class="p">,</span>
                              <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">])</span>
     <span class="n">usertags_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of the times, that the user was tagged in medias.&quot;</span><span class="p">,</span>
+                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of the times, that the user was tagged in posts.&quot;</span><span class="p">,</span>
                                 <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">])</span>
 
 
@@ -153,7 +153,7 @@
                                                       <span class="n">follower_count</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
                                                       <span class="n">following_count</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
                                                       <span class="n">following_tag_count</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                                                      <span class="n">media_count</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                                      <span class="n">post_count</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                                                       <span class="n">usertags_count</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                                                       <span class="n">biography</span><span class="o">=</span><span class="s2">&quot;Hello, welcome to my instagram.&quot;</span><span class="p">)]])</span></div>
 
@@ -162,29 +162,29 @@
 <div class="viewcode-block" id="FriendshipStatus">
 <a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.FriendshipStatus">[docs]</a>
 <span class="k">class</span> <span class="nc">FriendshipStatus</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Describe the relationship between the liker and the media owner. &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Describe the relationship between the liker and the post owner. &quot;&quot;&quot;</span>
     <span class="n">following</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the liker follow the media owner?&quot;</span><span class="p">,</span>
+                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the liker follow the post owner?&quot;</span><span class="p">,</span>
                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">followed_by</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the media owner follow the liker?&quot;</span><span class="p">,</span>
+                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the post owner follow the liker?&quot;</span><span class="p">,</span>
                               <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                           <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker blocked by the media owner? &quot;</span>
+                           <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker blocked by the post owner? &quot;</span>
                                        <span class="s2">&quot;Blocked users&#39; likes are not showed.&quot;</span><span class="p">,</span>
                            <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">muting</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the media owner muted by the liker?&quot;</span><span class="p">,</span>
+                         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the post owner muted by the liker?&quot;</span><span class="p">,</span>
                          <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;is a private friend. For a private friend, &quot;</span>
                                          <span class="s2">&quot;the liker are not displayed in likes&quot;</span><span class="p">,</span>
                              <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">incoming_request</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the media owner send a follower request to the liker?&quot;</span><span class="p">,</span>
+                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the post owner send a follower request to the liker?&quot;</span><span class="p">,</span>
                                    <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">outgoing_request</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the liker send a follower request to the media owner?&quot;</span><span class="p">,</span>
+                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the liker send a follower request to the post owner?&quot;</span><span class="p">,</span>
                                    <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_blocking_reel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker blocking reel?&quot;</span><span class="p">,</span>
@@ -193,17 +193,17 @@
                                  <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker muting reel?&quot;</span><span class="p">,</span>
                                  <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_bestie</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker bestie of the media owner?&quot;</span><span class="p">,</span>
+                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker bestie of the post owner?&quot;</span><span class="p">,</span>
                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_restricted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_feed_favorite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the feed of the media owner favorite of the liker?&quot;</span><span class="p">,</span>
+                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the feed of the post owner favorite of the liker?&quot;</span><span class="p">,</span>
                                    <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">subscribed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the liker subscribe the media owner?&quot;</span><span class="p">,</span>
+                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the liker subscribe the post owner?&quot;</span><span class="p">,</span>
                              <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_eligible_to_subscribe</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                           <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker eligible to subscribe the media owner?&quot;</span><span class="p">,</span>
+                                           <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker eligible to subscribe the post owner?&quot;</span><span class="p">,</span>
                                            <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span></div>
 
 
@@ -211,9 +211,9 @@
 <div class="viewcode-block" id="Liker">
 <a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.Liker">[docs]</a>
 <span class="k">class</span> <span class="nc">Liker</span><span class="p">(</span><span class="n">UserBasicInfo</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Liker, who likes a media. It contains the basic user information of `id`,</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Liker, who likes a post. It contains the basic user information of `id`,</span>
 <span class="sd">    `username`, `full name` etc, and additionally a `friendship_status` field to</span>
-<span class="sd">    describe the relationship between the liker and the media owner.&quot;&quot;&quot;</span>
+<span class="sd">    describe the relationship between the liker and the post owner.&quot;&quot;&quot;</span>
     <span class="n">friendship_status</span><span class="p">:</span> <span class="n">FriendshipStatus</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[])</span></div>
 
 
@@ -233,7 +233,7 @@
 <div class="viewcode-block" id="Comment">
 <a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.Comment">[docs]</a>
 <span class="k">class</span> <span class="nc">Comment</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Relevant information about a comment, including `id`, `user_id`, `media_id`</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Relevant information about a comment, including `id`, `user_id`, `post_id`</span>
 <span class="sd">    `type` etc.&quot;&quot;&quot;</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unique identifier of the comment. It consists of 17 digits.&quot;</span><span class="p">,</span>
@@ -241,7 +241,7 @@
     <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                          <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Id reference to the user, who made the comment.&quot;</span><span class="p">,</span>
                          <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;8659188880&quot;</span><span class="p">])</span>
-    <span class="n">media_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+    <span class="n">post_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                          <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Id reference to the user, who made the comment.&quot;</span><span class="p">,</span>
                          <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;3194677555662724330&quot;</span><span class="p">])</span>
     <span class="n">created_at_utc</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
@@ -262,8 +262,8 @@
     <span class="n">has_translation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the comment have a translation&quot;</span><span class="p">,</span>
                                   <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">])</span>
-    <span class="n">is_liked_by_media_owner</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                          <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the comment liked by the media owner.&quot;</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">])</span>
+    <span class="n">is_liked_by_post_owner</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                                          <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the comment liked by the post owner.&quot;</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">])</span>
     <span class="n">comment_like_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of people liked the comment.&quot;</span><span class="p">,</span>
                                     <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -281,7 +281,7 @@
                                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A list of comments.&quot;</span><span class="p">,</span>
                                     <span class="n">examples</span><span class="o">=</span><span class="p">[[</span><span class="n">Comment</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;18016617763686865&quot;</span><span class="p">,</span>
                                                        <span class="n">user_id</span><span class="o">=</span><span class="s2">&quot;8659188880&quot;</span><span class="p">,</span>
-                                                       <span class="n">media_id</span><span class="o">=</span><span class="s2">&quot;3194677555662724330&quot;</span><span class="p">,</span>
+                                                       <span class="n">post_id</span><span class="o">=</span><span class="s2">&quot;3194677555662724330&quot;</span><span class="p">,</span>
                                                        <span class="nb">type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                                                        <span class="n">created_at_utc</span><span class="o">=</span><span class="mi">1695060863</span><span class="p">,</span>
                                                        <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;comment&quot;</span><span class="p">,</span>
@@ -290,7 +290,7 @@
                                                        <span class="n">is_ranked_comment</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                                        <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Cool Stuff!&quot;</span><span class="p">,</span>
                                                        <span class="n">has_translation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                                                       <span class="n">is_liked_by_media_owner</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                       <span class="n">is_liked_by_post_owner</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                                        <span class="n">has_liked_comment</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                                        <span class="n">comment_like_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                                                        <span class="n">child_comments</span><span class="o">=</span><span class="p">[])]])</span></div>
@@ -303,12 +303,12 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Usertag information, mainly about who is tagged at which position at what time</span>
 <span class="sd">    in video and how long the tagged user appears.&quot;&quot;&quot;</span>
     <span class="n">user</span><span class="p">:</span> <span class="n">UserBasicInfo</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;User who is tagged in the media.&quot;</span><span class="p">,</span>
+                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;User who is tagged in the post.&quot;</span><span class="p">,</span>
                                 <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="n">UserBasicInfo</span><span class="p">])</span>
     <span class="n">position</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A list of two floats, which is &quot;</span>
                                               <span class="s2">&quot;used to identify the position of &quot;</span>
-                                              <span class="s2">&quot;the tagged user in the media.&quot;</span><span class="p">,</span>
+                                              <span class="s2">&quot;the tagged user in the post.&quot;</span><span class="p">,</span>
                                   <span class="n">examples</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.6794871795</span><span class="p">,</span> <span class="mf">0.7564102564</span><span class="p">]])</span>
     <span class="n">start_time_in_video_in_sec</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
                                                         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Start time in video in seconds &quot;</span>
@@ -353,7 +353,7 @@
 <div class="viewcode-block" id="Caption">
 <a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.Caption">[docs]</a>
 <span class="k">class</span> <span class="nc">Caption</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Caption of the media.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Caption of the post.&quot;&quot;&quot;</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unique identifier of the caption.&quot;</span><span class="p">,</span>
                     <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;1107837019238536&quot;</span><span class="p">])</span>
@@ -369,8 +369,8 @@
 
 
 
-<span class="k">class</span> <span class="nc">MediaEngagementInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Media engagement information about count of likes and count of comments.&quot;&quot;&quot;</span>
+<span class="k">class</span> <span class="nc">PostEngagementInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Post engagement information about count of likes and count of comments.&quot;&quot;&quot;</span>
     <span class="n">like_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Count of likes.&quot;</span><span class="p">,</span>
                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">])</span>
@@ -379,29 +379,27 @@
                                <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">])</span>
 
 
-<div class="viewcode-block" id="Media">
-<a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.Media">[docs]</a>
-<span class="k">class</span> <span class="nc">Media</span><span class="p">(</span><span class="n">MediaEngagementInfo</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Media information about when it was created, who is tagged in it, its</span>
+<span class="k">class</span> <span class="nc">Post</span><span class="p">(</span><span class="n">PostEngagementInfo</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Post information about when it was created, who is tagged in it, its</span>
 <span class="sd">    caption, location width, height etc. &quot;&quot;&quot;</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unique identifier of the media.&quot;</span><span class="p">,</span>
+                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unique identifier of the post.&quot;</span><span class="p">,</span>
                     <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;3179223655971394742&quot;</span><span class="p">])</span>
     <span class="n">code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                      <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Short code of the media url. Can be used in &quot;</span>
-                                  <span class="s2">&quot;form of www.instagram.com/&lt;code&gt; to access the media.&quot;</span><span class="p">,</span>
+                      <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Short code of the post url. Can be used in &quot;</span>
+                                  <span class="s2">&quot;form of www.instagram.com/&lt;code&gt; to access the post.&quot;</span><span class="p">,</span>
                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Cx4I1irBSnk&quot;</span><span class="p">])</span>
     <span class="n">taken_at</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                          <span class="n">description</span><span class="o">=</span><span class="s2">&quot;When the media was created, in unix epoch time.&quot;</span><span class="p">,</span>
+                          <span class="n">description</span><span class="o">=</span><span class="s2">&quot;When the post was created, in unix epoch time.&quot;</span><span class="p">,</span>
                           <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">1695060863</span><span class="p">])</span>
     <span class="n">has_shared_to_fb</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the media shared to facebook?&quot;</span><span class="p">,</span>
+                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the post shared to facebook?&quot;</span><span class="p">,</span>
                                    <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">usertags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Usertag</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Usertags appear in the media.&quot;</span><span class="p">,</span>
+                                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Usertags appear in the post.&quot;</span><span class="p">,</span>
                                     <span class="n">examples</span><span class="o">=</span><span class="p">[])</span>
-    <span class="n">media_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;media type: Photo, Video, IGTV, Reel, Album.&quot;</span><span class="p">,</span>
+    <span class="n">post_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;post type: Photo, Video, IGTV, Reel, Album.&quot;</span><span class="p">,</span>
                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Photo&quot;</span><span class="p">])</span>
     <span class="n">caption</span><span class="p">:</span> <span class="n">Caption</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Caption of the port.&quot;</span><span class="p">,</span>
@@ -410,27 +408,23 @@
                                        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Accessibility caption in text format.&quot;</span><span class="p">,</span>
                                        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Photo is taken by John.&quot;</span><span class="p">])</span>
     <span class="n">location</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Location</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Location of the media, most of the time it&#39;s not given.&quot;</span><span class="p">,</span>
+                                         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Location of the post, most of the time it&#39;s not given.&quot;</span><span class="p">,</span>
                                          <span class="n">examples</span><span class="o">=</span><span class="p">[])</span>
-    <span class="n">original_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Original width of the media, can be used to &quot;</span>
-                                                 <span class="s2">&quot;get the downloading url of the media.&quot;</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">1440</span><span class="p">])</span>
-    <span class="n">original_height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Original height of the media, can be used to &quot;</span>
-                                                  <span class="s2">&quot;get the downloading url of the media.&quot;</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">1440</span><span class="p">])</span>
+    <span class="n">original_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Original width of the post, can be used to &quot;</span>
+                                                 <span class="s2">&quot;get the downloading url of the post.&quot;</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">1440</span><span class="p">])</span>
+    <span class="n">original_height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Original height of the post, can be used to &quot;</span>
+                                                  <span class="s2">&quot;get the downloading url of the post.&quot;</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">1440</span><span class="p">])</span>
     <span class="c1"># the url signature has a time limitation.</span>
     <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Download URL of the media, which is only accessible in fea hours.&quot;</span><span class="p">,</span>
-                     <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;https://scontent-muc2-1.cdninstagram.com/v/t39.30808-6/369866539_18384091342039171_8947783907607888457_n.jpg?stp=dst-jpg_e15&amp;_nc_ht=scontent-muc2-1.cdninstagram.com&amp;_nc_cat=107&amp;_nc_ohc=MK-DDNIWpOsAX9XOSOU&amp;edm=ABmJApAAAAAA&amp;ccb=7-5&amp;ig_cache_key=MzE3NzEzMTk0MjI3MjUxNjgwOQ%3D%3D.2-ccb7-5&amp;oh=00_AfASOeklyljD2tiuunU9AfSJplcSGFnMoJIzujuYa1DC9g&amp;oe=650EF52B&amp;_nc_sid=b41fef&quot;</span><span class="p">])</span></div>
+                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Download URL of the post, which is only accessible in fea hours.&quot;</span><span class="p">,</span>
+                     <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;https://scontent-muc2-1.cdninstagram.com/v/t39.30808-6/369866539_18384091342039171_8947783907607888457_n.jpg?stp=dst-jpg_e15&amp;_nc_ht=scontent-muc2-1.cdninstagram.com&amp;_nc_cat=107&amp;_nc_ohc=MK-DDNIWpOsAX9XOSOU&amp;edm=ABmJApAAAAAA&amp;ccb=7-5&amp;ig_cache_key=MzE3NzEzMTk0MjI3MjUxNjgwOQ%3D%3D.2-ccb7-5&amp;oh=00_AfASOeklyljD2tiuunU9AfSJplcSGFnMoJIzujuYa1DC9g&amp;oe=650EF52B&amp;_nc_sid=b41fef&quot;</span><span class="p">])</span>
 
 
-
-<div class="viewcode-block" id="Medias">
-<a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.Medias">[docs]</a>
-<span class="k">class</span> <span class="nc">Medias</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregate a list of medias into a field to easily render as a JSON response. &quot;&quot;&quot;</span>
-    <span class="n">medias</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Media</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A list of medias.&quot;</span><span class="p">,</span>
-                              <span class="n">examples</span><span class="o">=</span><span class="p">[])</span></div>
-
+<span class="k">class</span> <span class="nc">Posts</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregate a list of posts into a field to easily render as a JSON response. &quot;&quot;&quot;</span>
+    <span class="n">posts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Post</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A list of posts.&quot;</span><span class="p">,</span>
+                              <span class="n">examples</span><span class="o">=</span><span class="p">[])</span>
 
 
 <span class="k">class</span> <span class="nc">HashtagBasicInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -441,14 +435,14 @@
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;name of the hashtag.&quot;</span><span class="p">,</span>
                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;asiangames&quot;</span><span class="p">])</span>
-    <span class="n">media_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Count of the medias with the hashtag.&quot;</span><span class="p">,</span>
+    <span class="n">post_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Count of the posts with the hashtag.&quot;</span><span class="p">,</span>
                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">405268</span><span class="p">])</span>
 
 
 <div class="viewcode-block" id="Hashtag">
 <a class="viewcode-back" href="../../04_source.html#crawlinsta.schemas.Hashtag">[docs]</a>
-<span class="k">class</span> <span class="nc">Hashtag</span><span class="p">(</span><span class="n">HashtagBasicInfo</span><span class="p">,</span> <span class="n">Medias</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Hashtag</span><span class="p">(</span><span class="n">HashtagBasicInfo</span><span class="p">,</span> <span class="n">Posts</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Hashtag information&quot;&quot;&quot;</span>
     <span class="n">profile_pic_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                                  <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Profile picture url.&quot;</span><span class="p">,</span>
@@ -461,7 +455,7 @@
                                               <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;asiangames2023&quot;</span><span class="p">])</span>
     <span class="n">subtitle</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
                           <span class="n">description</span><span class="o">=</span><span class="s2">&quot;subtitle of the hastag.&quot;</span><span class="p">,</span>
-                          <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;See a few top medias each week&quot;</span><span class="p">])</span>
+                          <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;See a few top posts each week&quot;</span><span class="p">])</span>
     <span class="n">social_context</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
                                 <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Social context of the hashtag.&quot;</span><span class="p">,</span>
                                 <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
@@ -480,7 +474,7 @@
                                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Hashtag shows in the search result at the associated position.&quot;</span><span class="p">,</span>
                                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="n">HashtagBasicInfo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;17843654935044234&quot;</span><span class="p">,</span>
                                                                  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;primeleague&quot;</span><span class="p">,</span>
-                                                                 <span class="n">media_count</span><span class="o">=</span><span class="mi">16</span><span class="p">)])</span>
+                                                                 <span class="n">post_count</span><span class="o">=</span><span class="mi">16</span><span class="p">)])</span>
 
 
 <span class="k">class</span> <span class="nc">SearchingResultUser</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -507,7 +501,7 @@
                                                    <span class="n">examples</span><span class="o">=</span><span class="p">[[</span><span class="n">SearchingResultHashtag</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                                                                                      <span class="n">hashtag</span><span class="o">=</span><span class="n">HashtagBasicInfo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;17843654935044234&quot;</span><span class="p">,</span>
                                                                                                               <span class="n">name</span><span class="o">=</span><span class="s2">&quot;primeleague&quot;</span><span class="p">,</span>
-                                                                                                              <span class="n">media_count</span><span class="o">=</span><span class="mi">16</span><span class="p">))]])</span>
+                                                                                                              <span class="n">post_count</span><span class="o">=</span><span class="mi">16</span><span class="p">))]])</span>
     <span class="n">users</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SearchingResultUser</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">([],</span>
                                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Found users matched to the keywords.&quot;</span><span class="p">,</span>
                                              <span class="n">examples</span><span class="o">=</span><span class="p">[[</span><span class="n">SearchingResultUser</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>

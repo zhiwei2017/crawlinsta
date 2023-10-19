@@ -103,7 +103,7 @@
 
 
 <div class="viewcode-block" id="collect_posts_of_user"><a class="viewcode-back" href="../../02_source.html#crawlinsta.collecting.collect_posts_of_user">[docs]</a><span class="k">def</span> <span class="nf">collect_posts_of_user</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect posts of the given user.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect n posts of the given user.</span>
 
 <span class="sd">    Strategy: click the username, get to the main page of the user, a few posts</span>
 <span class="sd">    are displayed in the user&#39;s main page. The request was sent to the path</span>
@@ -119,9 +119,61 @@
 <span class="sd">         it&#39;s 100. If it&#39;s set to 0, collect all posts.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Json: all visible followers&#39; user information of the given user in json format.</span>
+<span class="sd">        Json: all visible post of the given user in json format.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">Posts</span><span class="p">()</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="collect_reels_of_user"><a class="viewcode-back" href="../../02_source.html#crawlinsta.collecting.collect_reels_of_user">[docs]</a><span class="k">def</span> <span class="nf">collect_reels_of_user</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect n reels of the given user.</span>
+
+<span class="sd">    Strategy: click the username, get to the main page of the user, a few posts</span>
+<span class="sd">    are displayed in the user&#39;s main page. The request was sent to the path</span>
+<span class="sd">    `/api/v1/feed/user/&lt;user_name&gt;/username/?count=6` to get the posts and a</span>
+<span class="sd">    next_max_id for loading other posts. To load the other posts, move the mouse</span>
+<span class="sd">    to the bottom of the page, it will trigger another request sent to</span>
+<span class="sd">    `/api/v1/feed/user/&lt;user_id&gt;/?count=12&amp;max_id=&lt;next_max_id&gt;`</span>
+<span class="sd">    to have more posts.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        username (str): name of the user.</span>
+<span class="sd">        n (int): maximum number of posts, which should be collected. By default,</span>
+<span class="sd">         it&#39;s 100. If it&#39;s set to 0, collect all posts.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Json: all visible reels user information of the given user in json format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO: complete documentation</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="collect_user_tagged_posts"><a class="viewcode-back" href="../../02_source.html#crawlinsta.collecting.collect_user_tagged_posts">[docs]</a><span class="k">def</span> <span class="nf">collect_user_tagged_posts</span> <span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect n posts in which user was tagged.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        username (str): name of the user.</span>
+<span class="sd">        n (int): maximum number of posts, which should be collected. By default,</span>
+<span class="sd">         it&#39;s 100. If it&#39;s set to 0, collect all posts.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Json: all visible reels user information of the given user in json format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO: complete documentation</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="get_friendship_status"><a class="viewcode-back" href="../../02_source.html#crawlinsta.collecting.get_friendship_status">[docs]</a><span class="k">def</span> <span class="nf">get_friendship_status</span> <span class="p">(</span><span class="n">username1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">username2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the relationship between any two users</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        username1 (str): </span>
+<span class="sd">        username2 (str): </span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO: complete documentation</span>
+    <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="collect_followers"><a class="viewcode-back" href="../../02_source.html#crawlinsta.collecting.collect_followers">[docs]</a><span class="k">def</span> <span class="nf">collect_followers</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
@@ -226,6 +278,32 @@
 <span class="sd">        Json: Hashtag information in a json format.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">Hashtag</span><span class="p">()</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="collect_posts_by_music_id"><a class="viewcode-back" href="../../02_source.html#crawlinsta.collecting.collect_posts_by_music_id">[docs]</a><span class="k">def</span> <span class="nf">collect_posts_by_music_id</span><span class="p">(</span><span class="n">music_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Search for all posts containing a music_id</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        music_id (str):</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO: complete documentation</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="download_media"><a class="viewcode-back" href="../../02_source.html#crawlinsta.collecting.download_media">[docs]</a><span class="k">def</span> <span class="nf">download_media</span><span class="p">(</span><span class="n">media_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Download the image/video based on a media_url or a profile_picture_url.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        media_url: </span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO: complete documentation</span>
+    <span class="k">pass</span></div>
 </pre></div>
 
            </div>

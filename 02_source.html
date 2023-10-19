@@ -350,8 +350,20 @@ it’s 100. If it’s set to 0, collect all likers.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">collect_posts_by_music_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">music_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_posts_by_music_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Search for all posts containing a music_id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>music_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">collect_posts_of_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_posts_of_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Collect posts of the given user.</p>
+<dd><p>Collect n posts of the given user.</p>
 <p>Strategy: click the username, get to the main page of the user, a few posts
 are displayed in the user’s main page. The request was sent to the path
 <cite>/api/v1/feed/user/&lt;user_name&gt;/username/?count=6</cite> to get the posts and a
@@ -368,7 +380,35 @@ it’s 100. If it’s set to 0, collect all posts.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>all visible followers’ user information of the given user in json format.</p>
+<dd class="field-even"><p>all visible post of the given user in json format.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Json</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">collect_reels_of_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_reels_of_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Collect n reels of the given user.</p>
+<p>Strategy: click the username, get to the main page of the user, a few posts
+are displayed in the user’s main page. The request was sent to the path
+<cite>/api/v1/feed/user/&lt;user_name&gt;/username/?count=6</cite> to get the posts and a
+next_max_id for loading other posts. To load the other posts, move the mouse
+to the bottom of the page, it will trigger another request sent to
+<cite>/api/v1/feed/user/&lt;user_id&gt;/?count=12&amp;max_id=&lt;next_max_id&gt;</cite>
+to have more posts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – name of the user.</p></li>
+<li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – maximum number of posts, which should be collected. By default,
+it’s 100. If it’s set to 0, collect all posts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>all visible reels user information of the given user in json format.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Json</p>
@@ -398,6 +438,54 @@ sent to the path <cite>/api/v1/users/&lt;user_id&gt;/info/</cite> or
 <dd class="field-odd"><p>Json</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">collect_user_tagged_posts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_user_tagged_posts"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Collect n posts in which user was tagged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – name of the user.</p></li>
+<li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – maximum number of posts, which should be collected. By default,
+it’s 100. If it’s set to 0, collect all posts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>all visible reels user information of the given user in json format.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Json</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">download_media</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">media_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#download_media"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Download the image/video based on a media_url or a profile_picture_url.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>media_url</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_friendship_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">username2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#get_friendship_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get the relationship between any two users</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username1</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – </p></li>
+<li><p><strong>username2</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
 </dd></dl>
 
 <dl class="py function">
@@ -450,7 +538,7 @@ sent to the path <cite>/api/v1/users/&lt;user_id&gt;/info/</cite> or
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;following_tag_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Number of the tags, which followed by the user.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Number of the tags, which are followed by the user.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="mi">0</span>
 <span class="w">         </span><span class="p">],</span>
@@ -490,7 +578,7 @@ sent to the path <cite>/api/v1/users/&lt;user_id&gt;/info/</cite> or
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Id&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.It&#39;s the unique identifier for the user besides the user id,which is generated by instagram automatically.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="s2">&quot;dummy_user&quot;</span>
 <span class="w">         </span><span class="p">],</span>
@@ -539,7 +627,7 @@ sent to the path <cite>/api/v1/users/&lt;user_id&gt;/info/</cite> or
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;biography&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;A shot description of the user account.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;A short description of the user account.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="s2">&quot;Hello, welcome to my instagram.&quot;</span>
 <span class="w">         </span><span class="p">],</span>
@@ -582,7 +670,7 @@ sent to the path <cite>/api/v1/users/&lt;user_id&gt;/info/</cite> or
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.UserInfo.biography">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">biography</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.UserInfo.biography" title="Permalink to this definition"></a></dt>
-<dd><p>A shot description of the user account.</p>
+<dd><p>A short description of the user account.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -600,7 +688,7 @@ sent to the path <cite>/api/v1/users/&lt;user_id&gt;/info/</cite> or
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.UserInfo.following_tag_count">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">following_tag_count</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.UserInfo.following_tag_count" title="Permalink to this definition"></a></dt>
-<dd><p>Number of the tags, which followed by the user.</p>
+<dd><p>Number of the tags, which are followed by the user.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -642,7 +730,7 @@ sent to the path <cite>/api/v1/users/&lt;user_id&gt;/info/</cite> or
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.UserInfo.username">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">username</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.UserInfo.username" title="Permalink to this definition"></a></dt>
-<dd><p>It’s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.</p>
+<dd><p>It’s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.It’s the unique identifier for the user besides the user id,which is generated by instagram automatically.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -699,7 +787,7 @@ instances of <cite>UserInfo</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;following_tag_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Number of the tags, which followed by the user.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Number of the tags, which are followed by the user.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="mi">0</span>
 <span class="w">               </span><span class="p">],</span>
@@ -739,7 +827,7 @@ instances of <cite>UserInfo</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Id&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.It&#39;s the unique identifier for the user besides the user id,which is generated by instagram automatically.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="s2">&quot;dummy_user&quot;</span>
 <span class="w">               </span><span class="p">],</span>
@@ -788,7 +876,7 @@ instances of <cite>UserInfo</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;biography&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;A shot description of the user account.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;A short description of the user account.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="s2">&quot;Hello, welcome to my instagram.&quot;</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1107,7 +1195,7 @@ describe the relationship between the liker and the post owner.</p>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Id&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.It&#39;s the unique identifier for the user besides the user id,which is generated by instagram automatically.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="s2">&quot;dummy_user&quot;</span>
 <span class="w">         </span><span class="p">],</span>
@@ -1360,7 +1448,7 @@ describe the relationship between the liker and the post owner.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Liker.username">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">username</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Liker.username" title="Permalink to this definition"></a></dt>
-<dd><p>It’s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.</p>
+<dd><p>It’s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.It’s the unique identifier for the user besides the user id,which is generated by instagram automatically.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1542,7 +1630,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Id&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.It&#39;s the unique identifier for the user besides the user id,which is generated by instagram automatically.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="s2">&quot;dummy_user&quot;</span>
 <span class="w">               </span><span class="p">],</span>
@@ -2053,7 +2141,7 @@ in video and how long the tagged user appears.</p>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Id&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.It&#39;s the unique identifier for the user besides the user id,which is generated by instagram automatically.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="s2">&quot;dummy_user&quot;</span>
 <span class="w">         </span><span class="p">],</span>
@@ -2180,7 +2268,7 @@ in video and how long the tagged user appears.</p>
 <span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Id&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.It&#39;s the unique identifier for the user besides the user id,which is generated by instagram automatically.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="s2">&quot;dummy_user&quot;</span>
 <span class="w">               </span><span class="p">],</span>
@@ -2321,7 +2409,7 @@ in video and how long the tagged user appears.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Usertag.username">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">username</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Usertag.username" title="Permalink to this definition"></a></dt>
-<dd><p>It’s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.</p>
+<dd><p>It’s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.It’s the unique identifier for the user besides the user id,which is generated by instagram automatically.</p>
 </dd></dl>
 
 </dd></dl>
@@ -2939,7 +3027,7 @@ address etc.</p>
 <span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Id&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.It&#39;s the unique identifier for the user besides the user id,which is generated by instagram automatically.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="s2">&quot;dummy_user&quot;</span>
 <span class="w">               </span><span class="p">],</span>
@@ -3016,7 +3104,7 @@ address etc.</p>
 <span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Id&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.It&#39;s the unique identifier for the user besides the user id,which is generated by instagram automatically.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="s2">&quot;dummy_user&quot;</span>
 <span class="w">               </span><span class="p">],</span>

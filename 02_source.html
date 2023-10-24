@@ -145,7 +145,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#crawlinsta.schemas.Caption"><code class="docutils literal notranslate"><span class="pre">Caption</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Caption.content_type"><code class="docutils literal notranslate"><span class="pre">Caption.content_type</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Caption.created_at_utc"><code class="docutils literal notranslate"><span class="pre">Caption.created_at_utc</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Caption.id"><code class="docutils literal notranslate"><span class="pre">Caption.id</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Caption.text"><code class="docutils literal notranslate"><span class="pre">Caption.text</span></code></a></li>
@@ -159,8 +158,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Hashtag.posts"><code class="docutils literal notranslate"><span class="pre">Hashtag.posts</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Hashtag.profile_pic_url"><code class="docutils literal notranslate"><span class="pre">Hashtag.profile_pic_url</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Hashtag.related_tags"><code class="docutils literal notranslate"><span class="pre">Hashtag.related_tags</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Hashtag.social_context"><code class="docutils literal notranslate"><span class="pre">Hashtag.social_context</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Hashtag.social_context_profile_links"><code class="docutils literal notranslate"><span class="pre">Hashtag.social_context_profile_links</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Hashtag.subtitle"><code class="docutils literal notranslate"><span class="pre">Hashtag.subtitle</span></code></a></li>
 </ul>
 </li>
@@ -351,13 +348,22 @@ it’s 100. If it’s set to 0, collect all likers.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">collect_posts_by_music_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">music_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_posts_by_music_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Search for all posts containing a music_id</p>
+<dd><p>Search for all posts containing the given music_id.</p>
+<p>Strategy: the only way to collect the posts using the same music, is to first find
+a post with this music, then click the link “original audio” to get all the posts
+using this music.</p>
+<p>The request was sent to the path /reels/audio/&lt;music_id&gt;/.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>music_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – </p>
+<dd class="field-odd"><p><strong>music_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – id of the music.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a list of posts containing the music.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Json</p>
 </dd>
 </dl>
-<p>Returns:</p>
 </dd></dl>
 
 <dl class="py function">
@@ -393,17 +399,18 @@ it’s 100. If it’s set to 0, collect all posts.</p></li>
 <span class="sig-name descname"><span class="pre">collect_reels_of_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_reels_of_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Collect n reels of the given user.</p>
 <p>Strategy: click the username, get to the main page of the user, a few posts
-are displayed in the user’s main page. The request was sent to the path
-<cite>/api/v1/feed/user/&lt;user_name&gt;/username/?count=6</cite> to get the posts and a
-next_max_id for loading other posts. To load the other posts, move the mouse
-to the bottom of the page, it will trigger another request sent to
+are displayed in the user’s main page. Click the button reels to see all the
+reels from the user.The request was sent to the path
+<cite>/api/v1/feed/user/&lt;user_name&gt;/username/?count=6</cite> to get the posts/reels and a
+next_max_id for loading other posts/reels. To load the other posts/reels,
+move the mouse to the bottom of the page, it will trigger another request sent to
 <cite>/api/v1/feed/user/&lt;user_id&gt;/?count=12&amp;max_id=&lt;next_max_id&gt;</cite>
-to have more posts.</p>
+to have more posts/reels.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – name of the user.</p></li>
-<li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – maximum number of posts, which should be collected. By default,
+<li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – maximum number of reels, which should be collected. By default,
 it’s 100. If it’s set to 0, collect all posts.</p></li>
 </ul>
 </dd>
@@ -444,16 +451,23 @@ sent to the path <cite>/api/v1/users/&lt;user_id&gt;/info/</cite> or
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">collect_user_tagged_posts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_user_tagged_posts"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Collect n posts in which user was tagged.</p>
+<p>Strategy: click the username, get to the main page of the user, a few posts
+are displayed in the user’s main page. Click the button tagged to see all the
+posts in which the user was tagged.The request was sent to the path
+<cite>/&lt;user_name&gt;/tagged/</cite> to get the tagged posts/reels and a next_max_id for
+loading other posts/reels. To load the other posts/reels, move the mouse to
+the bottom of the page, it will trigger another request sent to the path
+/graphql/query/?doc_id=&lt;tagged_user_id&gt;&amp;variables=&lt;next_max_id&gt;</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – name of the user.</p></li>
-<li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – maximum number of posts, which should be collected. By default,
-it’s 100. If it’s set to 0, collect all posts.</p></li>
+<li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – maximum number of tagged posts, which should be collected. By
+default, it’s 100. If it’s set to 0, collect all posts.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>all visible reels user information of the given user in json format.</p>
+<dd class="field-even"><p>all visible tagged posts in json format.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Json</p>
@@ -476,12 +490,14 @@ it’s 100. If it’s set to 0, collect all posts.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">get_friendship_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">username2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#get_friendship_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Get the relationship between any two users</p>
+<dd><p>Get the relationship between any two users.</p>
+<p>Strategy: the only way to do it is to check if user_A is contained in
+user_B’s followings or followers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>username1</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – </p></li>
-<li><p><strong>username2</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – </p></li>
+<li><p><strong>username1</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – username of the person A.</p></li>
+<li><p><strong>username2</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – username of the person B.</p></li>
 </ul>
 </dd>
 </dl>
@@ -963,7 +979,7 @@ instances of <cite>UserInfo</cite>.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;is_private&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;is a private friend. For a private friend, the liker are not displayed in likes&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker&#39;s account private? For a private account, it&#39;s not displayed in likes.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="kc">false</span>
 <span class="w">         </span><span class="p">],</span>
@@ -971,7 +987,7 @@ instances of <cite>UserInfo</cite>.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;incoming_request&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Does the post owner send a follower request to the liker?&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Has the post owner sent a follower request to the liker?&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="kc">false</span>
 <span class="w">         </span><span class="p">],</span>
@@ -979,7 +995,7 @@ instances of <cite>UserInfo</cite>.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;outgoing_request&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Does the liker send a follower request to the post owner?&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Has the liker sent a follower request to the post owner?&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="kc">false</span>
 <span class="w">         </span><span class="p">],</span>
@@ -987,7 +1003,7 @@ instances of <cite>UserInfo</cite>.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;is_blocking_reel&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker blocking reel?&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker blocking reel to show in his personal feed??&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="kc">false</span>
 <span class="w">         </span><span class="p">],</span>
@@ -995,7 +1011,7 @@ instances of <cite>UserInfo</cite>.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;is_muting_reel&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker muting reel?&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker muting reel in his personal feed?&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="kc">false</span>
 <span class="w">         </span><span class="p">],</span>
@@ -1003,7 +1019,7 @@ instances of <cite>UserInfo</cite>.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;is_bestie&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker bestie of the post owner?&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker bestie of the post owner? Only the uer can see his/her besties list.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="kc">false</span>
 <span class="w">         </span><span class="p">],</span>
@@ -1011,6 +1027,7 @@ instances of <cite>UserInfo</cite>.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;is_restricted&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker&#39;s account restricted?&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="kc">false</span>
 <span class="w">         </span><span class="p">],</span>
@@ -1026,7 +1043,7 @@ instances of <cite>UserInfo</cite>.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;subscribed&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Does the liker subscribe the post owner?&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Has the liker subscribed the post owner?&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="kc">false</span>
 <span class="w">         </span><span class="p">],</span>
@@ -1102,19 +1119,19 @@ instances of <cite>UserInfo</cite>.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.FriendshipStatus.incoming_request">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">incoming_request</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.FriendshipStatus.incoming_request" title="Permalink to this definition"></a></dt>
-<dd><p>Does the post owner send a follower request to the liker?</p>
+<dd><p>Has the post owner sent a follower request to the liker?</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.FriendshipStatus.is_bestie">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_bestie</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.FriendshipStatus.is_bestie" title="Permalink to this definition"></a></dt>
-<dd><p>Is the liker bestie of the post owner?</p>
+<dd><p>Is the liker bestie of the post owner? Only the uer can see his/her besties list.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.FriendshipStatus.is_blocking_reel">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_blocking_reel</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.FriendshipStatus.is_blocking_reel" title="Permalink to this definition"></a></dt>
-<dd><p>Is the liker blocking reel?</p>
+<dd><p>Is the liker blocking reel to show in his personal feed??</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -1132,19 +1149,20 @@ instances of <cite>UserInfo</cite>.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.FriendshipStatus.is_muting_reel">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_muting_reel</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.FriendshipStatus.is_muting_reel" title="Permalink to this definition"></a></dt>
-<dd><p>Is the liker muting reel?</p>
+<dd><p>Is the liker muting reel in his personal feed?</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.FriendshipStatus.is_private">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_private</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.FriendshipStatus.is_private" title="Permalink to this definition"></a></dt>
-<dd><p>is a private friend. For a private friend, the liker are not displayed in likes</p>
+<dd><p>Is the liker’s account private? For a private account, it’s not displayed in likes.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.FriendshipStatus.is_restricted">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_restricted</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.FriendshipStatus.is_restricted" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Is the liker’s account restricted?</p>
+</dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.FriendshipStatus.muting">
@@ -1155,13 +1173,13 @@ instances of <cite>UserInfo</cite>.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.FriendshipStatus.outgoing_request">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">outgoing_request</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.FriendshipStatus.outgoing_request" title="Permalink to this definition"></a></dt>
-<dd><p>Does the liker send a follower request to the post owner?</p>
+<dd><p>Has the liker sent a follower request to the post owner?</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.FriendshipStatus.subscribed">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">subscribed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.FriendshipStatus.subscribed" title="Permalink to this definition"></a></dt>
-<dd><p>Does the liker subscribe the post owner?</p>
+<dd><p>Has the liker subscribed the post owner?</p>
 </dd></dl>
 
 </dd></dl>
@@ -1249,6 +1267,7 @@ describe the relationship between the liker and the post owner.</p>
 <span class="w">               </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/FriendshipStatus&quot;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates the friendship between the liker and post owner.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">   </span><span class="p">},</span>
@@ -1289,7 +1308,7 @@ describe the relationship between the liker and the post owner.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;is_private&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;is a private friend. For a private friend, the liker are not displayed in likes&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker&#39;s account private? For a private account, it&#39;s not displayed in likes.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1297,7 +1316,7 @@ describe the relationship between the liker and the post owner.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;incoming_request&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Does the post owner send a follower request to the liker?&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Has the post owner sent a follower request to the liker?&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1305,7 +1324,7 @@ describe the relationship between the liker and the post owner.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;outgoing_request&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Does the liker send a follower request to the post owner?&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Has the liker sent a follower request to the post owner?&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1313,7 +1332,7 @@ describe the relationship between the liker and the post owner.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;is_blocking_reel&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker blocking reel?&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker blocking reel to show in his personal feed??&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1321,7 +1340,7 @@ describe the relationship between the liker and the post owner.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;is_muting_reel&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker muting reel?&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker muting reel in his personal feed?&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1329,7 +1348,7 @@ describe the relationship between the liker and the post owner.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;is_bestie&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker bestie of the post owner?&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker bestie of the post owner? Only the uer can see his/her besties list.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1337,6 +1356,7 @@ describe the relationship between the liker and the post owner.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;is_restricted&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker&#39;s account restricted?&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1352,7 +1372,7 @@ describe the relationship between the liker and the post owner.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;subscribed&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Does the liker subscribe the post owner?&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Has the liker subscribed the post owner?&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1413,7 +1433,8 @@ describe the relationship between the liker and the post owner.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Liker.friendship_status">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">friendship_status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#crawlinsta.schemas.FriendshipStatus" title="crawlinsta.schemas.FriendshipStatus"><span class="pre">FriendshipStatus</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Liker.friendship_status" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Indicates the friendship between the liker and post owner.</p>
+</dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Liker.fullname">
@@ -1465,6 +1486,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;likers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;A list of likers.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="p">[]</span>
 <span class="w">         </span><span class="p">],</span>
@@ -1512,7 +1534,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;is_private&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;is a private friend. For a private friend, the liker are not displayed in likes&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker&#39;s account private? For a private account, it&#39;s not displayed in likes.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1520,7 +1542,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;incoming_request&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Does the post owner send a follower request to the liker?&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Has the post owner sent a follower request to the liker?&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1528,7 +1550,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;outgoing_request&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Does the liker send a follower request to the post owner?&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Has the liker sent a follower request to the post owner?&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1536,7 +1558,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;is_blocking_reel&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker blocking reel?&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker blocking reel to show in his personal feed??&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1544,7 +1566,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;is_muting_reel&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker muting reel?&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker muting reel in his personal feed?&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1552,7 +1574,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;is_bestie&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker bestie of the post owner?&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker bestie of the post owner? Only the uer can see his/her besties list.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1560,6 +1582,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;is_restricted&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker&#39;s account restricted?&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1575,7 +1598,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;subscribed&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Does the liker subscribe the post owner?&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Has the liker subscribed the post owner?&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1684,6 +1707,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">                     </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/FriendshipStatus&quot;</span>
 <span class="w">                  </span><span class="p">}</span>
 <span class="w">               </span><span class="p">],</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates the friendship between the liker and post owner.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">},</span>
@@ -1713,7 +1737,8 @@ instances of <cite>Liker</cite>.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Likers.likers">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">likers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#crawlinsta.schemas.Liker" title="crawlinsta.schemas.Liker"><span class="pre">Liker</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Likers.likers" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>A list of likers.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1761,7 +1786,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Status of the comment, Active or Inactive.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Status of the comment, Active or Inactive. The inactive comments refers to the comments which are hidden by the post owner with certainconditions, such as filtered with certain words, default spam filter, ormanually controlled by the post owner.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="s2">&quot;Active&quot;</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1769,7 +1794,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;share_enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the comment enabled for sharing.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the comment enabled for sharing? Generally all the visible commendsare legit for sharing, only the hidden commends are not enabled for sharing. This is a duplicated feature of status.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">true</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1777,7 +1802,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;is_ranked_comment&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the comment a ranked one?&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the comment a ranked one? The Instagram comments feature is set up in such a way that it shows first the comments of people you follow. Or, sometimes, a comment by a verified account or a comment that is most liked shows up first.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">true</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1785,7 +1810,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Comment content in free text format.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Comment content in free text format. The Instagram comment character limit is also 2200 characters, just like the caption. Instagram comments can only contain up to 30 hashtags.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="s2">&quot;Cool stuff!&quot;</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1793,7 +1818,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;has_translation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Does the comment have a translation&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Does the comment have a translation? Captions and comments on posts in feed, as well as the bio that you include on your profile, are translated automatically based on the language they&#39;re written in and the language settings of the person viewing it. If your language is available as a translation, you can tap See translation below the text to see it.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">true</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1801,7 +1826,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;is_liked_by_post_owner&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the comment liked by the post owner.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the comment liked by the post owner?&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">true</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1893,7 +1918,7 @@ instances of <cite>Liker</cite>.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Comment.has_translation">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_translation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Comment.has_translation" title="Permalink to this definition"></a></dt>
-<dd><p>Does the comment have a translation</p>
+<dd><p>Does the comment have a translation? Captions and comments on posts in feed, as well as the bio that you include on your profile, are translated automatically based on the language they’re written in and the language settings of the person viewing it. If your language is available as a translation, you can tap See translation below the text to see it.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -1905,13 +1930,13 @@ instances of <cite>Liker</cite>.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Comment.is_liked_by_post_owner">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_liked_by_post_owner</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Comment.is_liked_by_post_owner" title="Permalink to this definition"></a></dt>
-<dd><p>Is the comment liked by the post owner.</p>
+<dd><p>Is the comment liked by the post owner?</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Comment.is_ranked_comment">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_ranked_comment</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Comment.is_ranked_comment" title="Permalink to this definition"></a></dt>
-<dd><p>Is the comment a ranked one?</p>
+<dd><p>Is the comment a ranked one? The Instagram comments feature is set up in such a way that it shows first the comments of people you follow. Or, sometimes, a comment by a verified account or a comment that is most liked shows up first.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -1923,19 +1948,19 @@ instances of <cite>Liker</cite>.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Comment.share_enabled">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">share_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Comment.share_enabled" title="Permalink to this definition"></a></dt>
-<dd><p>Is the comment enabled for sharing.</p>
+<dd><p>Is the comment enabled for sharing? Generally all the visible commendsare legit for sharing, only the hidden commends are not enabled for sharing. This is a duplicated feature of status.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Comment.status">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Comment.status" title="Permalink to this definition"></a></dt>
-<dd><p>Status of the comment, Active or Inactive.</p>
+<dd><p>Status of the comment, Active or Inactive. The inactive comments refers to the comments which are hidden by the post owner with certainconditions, such as filtered with certain words, default spam filter, ormanually controlled by the post owner.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Comment.text">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">text</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Comment.text" title="Permalink to this definition"></a></dt>
-<dd><p>Comment content in free text format.</p>
+<dd><p>Comment content in free text format. The Instagram comment character limit is also 2200 characters, just like the caption. Instagram comments can only contain up to 30 hashtags.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -2007,7 +2032,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Status of the comment, Active or Inactive.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Status of the comment, Active or Inactive. The inactive comments refers to the comments which are hidden by the post owner with certainconditions, such as filtered with certain words, default spam filter, ormanually controlled by the post owner.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="s2">&quot;Active&quot;</span>
 <span class="w">               </span><span class="p">],</span>
@@ -2015,7 +2040,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;share_enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the comment enabled for sharing.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the comment enabled for sharing? Generally all the visible commendsare legit for sharing, only the hidden commends are not enabled for sharing. This is a duplicated feature of status.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">true</span>
 <span class="w">               </span><span class="p">],</span>
@@ -2023,7 +2048,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;is_ranked_comment&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the comment a ranked one?&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the comment a ranked one? The Instagram comments feature is set up in such a way that it shows first the comments of people you follow. Or, sometimes, a comment by a verified account or a comment that is most liked shows up first.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">true</span>
 <span class="w">               </span><span class="p">],</span>
@@ -2031,7 +2056,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Comment content in free text format.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Comment content in free text format. The Instagram comment character limit is also 2200 characters, just like the caption. Instagram comments can only contain up to 30 hashtags.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="s2">&quot;Cool stuff!&quot;</span>
 <span class="w">               </span><span class="p">],</span>
@@ -2039,7 +2064,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;has_translation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Does the comment have a translation&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Does the comment have a translation? Captions and comments on posts in feed, as well as the bio that you include on your profile, are translated automatically based on the language they&#39;re written in and the language settings of the person viewing it. If your language is available as a translation, you can tap See translation below the text to see it.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">true</span>
 <span class="w">               </span><span class="p">],</span>
@@ -2047,7 +2072,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;is_liked_by_post_owner&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the comment liked by the post owner.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the comment liked by the post owner?&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">true</span>
 <span class="w">               </span><span class="p">],</span>
@@ -2418,11 +2443,12 @@ in video and how long the tagged user appears.</p>
 <dt class="sig sig-object py" id="crawlinsta.schemas.Location">
 <em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Location</span></span><a class="reference internal" href="_modules/crawlinsta/schemas.html#Location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crawlinsta.schemas.Location" title="Permalink to this definition"></a></dt>
 <dd><p>Location information, contains location name, city, longitude, latitude and
-address etc.</p>
+address etc. The location information is provided by the post owner, while
+creating/editing the post.</p>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Location&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Location information, contains location name, city, longitude, latitude and\naddress etc.&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Location information, contains location name, city, longitude, latitude and\naddress etc. The location information is provided by the post owner, while\ncreating/editing the post.&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -2436,7 +2462,7 @@ address etc.</p>
 <span class="w">      </span><span class="nt">&quot;short_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Short name of the location&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="s2">&quot;Kedrodasos Beach&quot;</span>
+<span class="w">            </span><span class="s2">&quot;Kedro-beach&quot;</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Short Name&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
@@ -2570,7 +2596,7 @@ address etc.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Text content of the caption.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Text content of the caption. The Instagram caption character limit is also 2200 characters, just like the comment. Instagram caption can only contain up to 30 hashtags.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="s2">&quot;Life&#39;s a beach, and I&#39;m just playing in the sand.&quot;</span>
 <span class="w">         </span><span class="p">],</span>
@@ -2584,21 +2610,12 @@ address etc.</p>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Created At Utc&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="nt">&quot;content_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Content type of the Caption.&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="s2">&quot;comment&quot;</span>
-<span class="w">         </span><span class="p">],</span>
-<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Content Type&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">   </span><span class="p">},</span>
 <span class="w">   </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;created_at_utc&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;content_type&quot;</span>
+<span class="w">      </span><span class="s2">&quot;created_at_utc&quot;</span>
 <span class="w">   </span><span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
@@ -2606,19 +2623,12 @@ address etc.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Fields<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#crawlinsta.schemas.Caption.content_type" title="crawlinsta.schemas.Caption.content_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">content_type</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Caption.created_at_utc" title="crawlinsta.schemas.Caption.created_at_utc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">created_at_utc</span> <span class="pre">(int)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Caption.id" title="crawlinsta.schemas.Caption.id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">id</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Caption.text" title="crawlinsta.schemas.Caption.text"><code class="xref py py-obj docutils literal notranslate"><span class="pre">text</span> <span class="pre">(str)</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="crawlinsta.schemas.Caption.content_type">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">content_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Caption.content_type" title="Permalink to this definition"></a></dt>
-<dd><p>Content type of the Caption.</p>
-</dd></dl>
-
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Caption.created_at_utc">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">created_at_utc</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Caption.created_at_utc" title="Permalink to this definition"></a></dt>
@@ -2634,7 +2644,7 @@ address etc.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Caption.text">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">text</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Caption.text" title="Permalink to this definition"></a></dt>
-<dd><p>Text content of the caption.</p>
+<dd><p>Text content of the caption. The Instagram caption character limit is also 2200 characters, just like the comment. Instagram caption can only contain up to 30 hashtags.</p>
 </dd></dl>
 
 </dd></dl>
@@ -2649,15 +2659,6 @@ address etc.</p>
 <span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hashtag information&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;posts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;A list of posts.&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">         </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/Post&quot;</span>
-<span class="w">         </span><span class="p">},</span>
-<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Posts&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span>
-<span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Unique identifier of the hashtag.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -2683,7 +2684,7 @@ address etc.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;profile_pic_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Profile picture url.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hashtag profile picture url. It&#39;s created by instagram using one of the popular pictures from posts with the hashtag.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="s2">&quot;https://scontent-muc2-1.cdninstagram.com/v/t51.2885-15/384945060_3382351958743676_8236780213784037973_n.heic?stp=dst-jpg_e35&amp;_nc_ht=scontent-muc2-1.cdninstagram.com&amp;_nc_cat=108&amp;_nc_ohc=z0_PSswODrcAX-UzX_h&amp;edm=AGyKU4gBAAAA&amp;ccb=7-5&amp;ig_cache_key=MzIwNDA1MjAyOTI2NTQ2Nzc0OA%3D%3D.2-ccb7-5&amp;oh=00_AfDfikF5zUMBZVxEx7KCDJDMEa7xnrtU3FQAKRMl8DgUVw&amp;oe=651FC6D7&amp;_nc_sid=2011ad&quot;</span>
 <span class="w">         </span><span class="p">],</span>
@@ -2711,7 +2712,7 @@ address etc.</p>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;related tags in a list.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Related tags in a list. This is calculated by instagram based on co-occurrence of posts.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="s2">&quot;asiangames2023&quot;</span>
 <span class="w">         </span><span class="p">],</span>
@@ -2726,25 +2727,13 @@ address etc.</p>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Subtitle&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="nt">&quot;social_context&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Social context of the hashtag.&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="s2">&quot;&quot;</span>
-<span class="w">         </span><span class="p">],</span>
-<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Social Context&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="nt">&quot;social_context_profile_links&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Social context profile links.&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="p">[]</span>
-<span class="w">         </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;posts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;A list of top posts. Instagram only shows top posts (up to 30) from the hashtag.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
 <span class="w">         </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
+<span class="w">            </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/Post&quot;</span>
 <span class="w">         </span><span class="p">},</span>
-<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Social Context Profile Links&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Posts&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">   </span><span class="p">},</span>
@@ -2761,7 +2750,7 @@ address etc.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Text content of the caption.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Text content of the caption. The Instagram caption character limit is also 2200 characters, just like the comment. Instagram caption can only contain up to 30 hashtags.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="s2">&quot;Life&#39;s a beach, and I&#39;m just playing in the sand.&quot;</span>
 <span class="w">               </span><span class="p">],</span>
@@ -2775,27 +2764,18 @@ address etc.</p>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Created At Utc&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;content_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Content type of the Caption.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="s2">&quot;comment&quot;</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Content Type&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">},</span>
 <span class="w">         </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;created_at_utc&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;content_type&quot;</span>
+<span class="w">            </span><span class="s2">&quot;created_at_utc&quot;</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Caption&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;Location&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Location information, contains location name, city, longitude, latitude and\naddress etc.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Location information, contains location name, city, longitude, latitude and\naddress etc. The location information is provided by the post owner, while\ncreating/editing the post.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Unique identifier of the location.&quot;</span><span class="p">,</span>
@@ -2808,7 +2788,7 @@ address etc.</p>
 <span class="w">            </span><span class="nt">&quot;short_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Short name of the location&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="s2">&quot;Kedrodasos Beach&quot;</span>
+<span class="w">                  </span><span class="s2">&quot;Kedro-beach&quot;</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Short Name&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
@@ -2926,12 +2906,12 @@ address etc.</p>
 <span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usertags&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span>
 <span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;post_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;post type: Photo, Video, IGTV, Reel, Album.&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;media_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Media type: Photo, Video, IGTV, Reel, Album.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="s2">&quot;Photo&quot;</span>
 <span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Post Type&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Media Type&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;caption&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -2940,11 +2920,10 @@ address etc.</p>
 <span class="w">                     </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/Caption&quot;</span>
 <span class="w">                  </span><span class="p">}</span>
 <span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Caption of the port.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;accessibility_caption&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Accessibility caption in text format.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Accessibility caption in text format. Alt text describes your photos for people with visual impairments. Alt text will be automatically created for your photos or you can choose to write your own.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="s2">&quot;Photo is taken by John.&quot;</span>
 <span class="w">               </span><span class="p">],</span>
@@ -2964,7 +2943,7 @@ address etc.</p>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;original_width&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Original width of the post, can be used to get the downloading url of the post.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Original width of the media, can be used to get the downloading url of the media.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="mi">1440</span>
 <span class="w">               </span><span class="p">],</span>
@@ -2972,7 +2951,7 @@ address etc.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;original_height&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Original height of the post, can be used to get the downloading url of the post.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Original height of the media, can be used to get the downloading url of the media.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="mi">1440</span>
 <span class="w">               </span><span class="p">],</span>
@@ -2980,7 +2959,7 @@ address etc.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Download URL of the post, which is only accessible in fea hours.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Download URL of the media, which is only accessible in a few hours.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="s2">&quot;https://scontent-muc2-1.cdninstagram.com/v/t39.30808-6/369866539_18384091342039171_8947783907607888457_n.jpg?stp=dst-jpg_e15&amp;_nc_ht=scontent-muc2-1.cdninstagram.com&amp;_nc_cat=107&amp;_nc_ohc=MK-DDNIWpOsAX9XOSOU&amp;edm=ABmJApAAAAAA&amp;ccb=7-5&amp;ig_cache_key=MzE3NzEzMTk0MjI3MjUxNjgwOQ%3D%3D.2-ccb7-5&amp;oh=00_AfASOeklyljD2tiuunU9AfSJplcSGFnMoJIzujuYa1DC9g&amp;oe=650EF52B&amp;_nc_sid=b41fef&quot;</span>
 <span class="w">               </span><span class="p">],</span>
@@ -2996,7 +2975,7 @@ address etc.</p>
 <span class="w">            </span><span class="s2">&quot;taken_at&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;has_shared_to_fb&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;usertags&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;post_type&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;media_type&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;caption&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;accessibility_caption&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;location&quot;</span><span class="p">,</span>
@@ -3222,12 +3201,12 @@ address etc.</p>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">   </span><span class="p">},</span>
 <span class="w">   </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="s2">&quot;posts&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;name&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;post_count&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;profile_pic_url&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;is_trending&quot;</span>
+<span class="w">      </span><span class="s2">&quot;is_trending&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;posts&quot;</span>
 <span class="w">   </span><span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
@@ -3242,8 +3221,6 @@ address etc.</p>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Hashtag.posts" title="crawlinsta.schemas.Hashtag.posts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">posts</span> <span class="pre">(List[crawlinsta.schemas.Post])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Hashtag.profile_pic_url" title="crawlinsta.schemas.Hashtag.profile_pic_url"><code class="xref py py-obj docutils literal notranslate"><span class="pre">profile_pic_url</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Hashtag.related_tags" title="crawlinsta.schemas.Hashtag.related_tags"><code class="xref py py-obj docutils literal notranslate"><span class="pre">related_tags</span> <span class="pre">(List[str]</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
-<li><p><a class="reference internal" href="#crawlinsta.schemas.Hashtag.social_context" title="crawlinsta.schemas.Hashtag.social_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">social_context</span> <span class="pre">(str)</span></code></a></p></li>
-<li><p><a class="reference internal" href="#crawlinsta.schemas.Hashtag.social_context_profile_links" title="crawlinsta.schemas.Hashtag.social_context_profile_links"><code class="xref py py-obj docutils literal notranslate"><span class="pre">social_context_profile_links</span> <span class="pre">(List[str])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Hashtag.subtitle" title="crawlinsta.schemas.Hashtag.subtitle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subtitle</span> <span class="pre">(str)</span></code></a></p></li>
 </ul>
 </dd>
@@ -3274,32 +3251,20 @@ address etc.</p>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Hashtag.posts">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">posts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Post</span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Hashtag.posts" title="Permalink to this definition"></a></dt>
-<dd><p>A list of posts.</p>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">posts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Post</span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Hashtag.posts" title="Permalink to this definition"></a></dt>
+<dd><p>A list of top posts. Instagram only shows top posts (up to 30) from the hashtag.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Hashtag.profile_pic_url">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">profile_pic_url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Hashtag.profile_pic_url" title="Permalink to this definition"></a></dt>
-<dd><p>Profile picture url.</p>
+<dd><p>Hashtag profile picture url. It’s created by instagram using one of the popular pictures from posts with the hashtag.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Hashtag.related_tags">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">related_tags</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#crawlinsta.schemas.Hashtag.related_tags" title="Permalink to this definition"></a></dt>
-<dd><p>related tags in a list.</p>
-</dd></dl>
-
-<dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="crawlinsta.schemas.Hashtag.social_context">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">social_context</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#crawlinsta.schemas.Hashtag.social_context" title="Permalink to this definition"></a></dt>
-<dd><p>Social context of the hashtag.</p>
-</dd></dl>
-
-<dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="crawlinsta.schemas.Hashtag.social_context_profile_links">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">social_context_profile_links</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#crawlinsta.schemas.Hashtag.social_context_profile_links" title="Permalink to this definition"></a></dt>
-<dd><p>Social context profile links.</p>
+<dd><p>Related tags in a list. This is calculated by instagram based on co-occurrence of posts.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">

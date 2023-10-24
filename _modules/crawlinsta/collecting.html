@@ -128,16 +128,17 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect n reels of the given user.</span>
 
 <span class="sd">    Strategy: click the username, get to the main page of the user, a few posts</span>
-<span class="sd">    are displayed in the user&#39;s main page. The request was sent to the path</span>
-<span class="sd">    `/api/v1/feed/user/&lt;user_name&gt;/username/?count=6` to get the posts and a</span>
-<span class="sd">    next_max_id for loading other posts. To load the other posts, move the mouse</span>
-<span class="sd">    to the bottom of the page, it will trigger another request sent to</span>
+<span class="sd">    are displayed in the user&#39;s main page. Click the button reels to see all the</span>
+<span class="sd">    reels from the user.The request was sent to the path</span>
+<span class="sd">    `/api/v1/feed/user/&lt;user_name&gt;/username/?count=6` to get the posts/reels and a</span>
+<span class="sd">    next_max_id for loading other posts/reels. To load the other posts/reels,</span>
+<span class="sd">    move the mouse to the bottom of the page, it will trigger another request sent to</span>
 <span class="sd">    `/api/v1/feed/user/&lt;user_id&gt;/?count=12&amp;max_id=&lt;next_max_id&gt;`</span>
-<span class="sd">    to have more posts.</span>
+<span class="sd">    to have more posts/reels.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        username (str): name of the user.</span>
-<span class="sd">        n (int): maximum number of posts, which should be collected. By default,</span>
+<span class="sd">        n (int): maximum number of reels, which should be collected. By default,</span>
 <span class="sd">         it&#39;s 100. If it&#39;s set to 0, collect all posts.</span>
 
 <span class="sd">    Returns:</span>
@@ -147,27 +148,38 @@
     <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="collect_user_tagged_posts"><a class="viewcode-back" href="../../02_source.html#crawlinsta.collecting.collect_user_tagged_posts">[docs]</a><span class="k">def</span> <span class="nf">collect_user_tagged_posts</span> <span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<div class="viewcode-block" id="collect_user_tagged_posts"><a class="viewcode-back" href="../../02_source.html#crawlinsta.collecting.collect_user_tagged_posts">[docs]</a><span class="k">def</span> <span class="nf">collect_user_tagged_posts</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect n posts in which user was tagged.</span>
+
+<span class="sd">    Strategy: click the username, get to the main page of the user, a few posts</span>
+<span class="sd">    are displayed in the user&#39;s main page. Click the button tagged to see all the</span>
+<span class="sd">    posts in which the user was tagged.The request was sent to the path</span>
+<span class="sd">    `/&lt;user_name&gt;/tagged/` to get the tagged posts/reels and a next_max_id for</span>
+<span class="sd">    loading other posts/reels. To load the other posts/reels, move the mouse to</span>
+<span class="sd">    the bottom of the page, it will trigger another request sent to the path</span>
+<span class="sd">    /graphql/query/?doc_id=&lt;tagged_user_id&gt;&amp;variables=&lt;next_max_id&gt;</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        username (str): name of the user.</span>
-<span class="sd">        n (int): maximum number of posts, which should be collected. By default,</span>
-<span class="sd">         it&#39;s 100. If it&#39;s set to 0, collect all posts.</span>
+<span class="sd">        n (int): maximum number of tagged posts, which should be collected. By</span>
+<span class="sd">         default, it&#39;s 100. If it&#39;s set to 0, collect all posts.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Json: all visible reels user information of the given user in json format.</span>
+<span class="sd">        Json: all visible tagged posts in json format.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># TODO: complete documentation</span>
     <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="get_friendship_status"><a class="viewcode-back" href="../../02_source.html#crawlinsta.collecting.get_friendship_status">[docs]</a><span class="k">def</span> <span class="nf">get_friendship_status</span> <span class="p">(</span><span class="n">username1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">username2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the relationship between any two users</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the relationship between any two users.</span>
+
+<span class="sd">    Strategy: the only way to do it is to check if user_A is contained in</span>
+<span class="sd">    user_B&#39;s followings or followers.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        username1 (str): </span>
-<span class="sd">        username2 (str): </span>
+<span class="sd">        username1 (str): username of the person A.</span>
+<span class="sd">        username2 (str): username of the person B.</span>
 
 <span class="sd">    Returns:</span>
 
@@ -281,13 +293,19 @@
 
 
 <div class="viewcode-block" id="collect_posts_by_music_id"><a class="viewcode-back" href="../../02_source.html#crawlinsta.collecting.collect_posts_by_music_id">[docs]</a><span class="k">def</span> <span class="nf">collect_posts_by_music_id</span><span class="p">(</span><span class="n">music_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Search for all posts containing a music_id</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Search for all posts containing the given music_id.</span>
+
+<span class="sd">    Strategy: the only way to collect the posts using the same music, is to first find</span>
+<span class="sd">    a post with this music, then click the link &quot;original audio&quot; to get all the posts</span>
+<span class="sd">    using this music.</span>
+
+<span class="sd">    The request was sent to the path /reels/audio/&lt;music_id&gt;/.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        music_id (str):</span>
+<span class="sd">        music_id (str): id of the music.</span>
 
 <span class="sd">    Returns:</span>
-
+<span class="sd">        Json: a list of posts containing the music.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># TODO: complete documentation</span>
     <span class="k">pass</span></div>

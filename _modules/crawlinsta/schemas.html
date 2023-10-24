@@ -169,30 +169,33 @@
                          <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the post owner muted by the liker?&quot;</span><span class="p">,</span>
                          <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;is a private friend. For a private friend, &quot;</span>
-                                         <span class="s2">&quot;the liker are not displayed in likes&quot;</span><span class="p">,</span>
+                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker&#39;s account private? For a private account, &quot;</span>
+                                         <span class="s2">&quot;it&#39;s not displayed in likes.&quot;</span><span class="p">,</span>
                              <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">incoming_request</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the post owner send a follower request to the liker?&quot;</span><span class="p">,</span>
+                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Has the post owner sent a follower request to the liker?&quot;</span><span class="p">,</span>
                                    <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">outgoing_request</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the liker send a follower request to the post owner?&quot;</span><span class="p">,</span>
+                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Has the liker sent a follower request to the post owner?&quot;</span><span class="p">,</span>
                                    <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_blocking_reel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker blocking reel?&quot;</span><span class="p">,</span>
+                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker blocking reel to show in his personal feed??&quot;</span><span class="p">,</span>
                                    <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_muting_reel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                 <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker muting reel?&quot;</span><span class="p">,</span>
+                                 <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker muting reel in his personal feed?&quot;</span><span class="p">,</span>
                                  <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_bestie</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker bestie of the post owner?&quot;</span><span class="p">,</span>
+                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker bestie of the post owner? Only the uer can &quot;</span>
+                                        <span class="s2">&quot;see his/her besties list.&quot;</span><span class="p">,</span>
                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">is_restricted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
+    <span class="n">is_restricted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker&#39;s account restricted?&quot;</span><span class="p">,</span>
+                                <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_feed_favorite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the feed of the post owner favorite of the liker?&quot;</span><span class="p">,</span>
                                    <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">subscribed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the liker subscribe the post owner?&quot;</span><span class="p">,</span>
+                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Has the liker subscribed the post owner?&quot;</span><span class="p">,</span>
                              <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_eligible_to_subscribe</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker eligible to subscribe the post owner?&quot;</span><span class="p">,</span>
@@ -203,13 +206,18 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Liker, who likes a post. It contains the basic user information of `id`,</span>
 <span class="sd">    `username`, `full name` etc, and additionally a `friendship_status` field to</span>
 <span class="sd">    describe the relationship between the liker and the post owner.&quot;&quot;&quot;</span>
-    <span class="n">friendship_status</span><span class="p">:</span> <span class="n">FriendshipStatus</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[])</span></div>
+    <span class="n">friendship_status</span><span class="p">:</span> <span class="n">FriendshipStatus</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Indicates the friendship between the &quot;</span>
+                                                            <span class="s2">&quot;liker and post owner.&quot;</span><span class="p">,</span>
+                                                <span class="n">examples</span><span class="o">=</span><span class="p">[])</span></div>
 
 
 <div class="viewcode-block" id="Likers"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Likers">[docs]</a><span class="k">class</span> <span class="nc">Likers</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An aggregation class to have the field `likers` for storing a list of</span>
 <span class="sd">    instances of `Liker`.&quot;&quot;&quot;</span>
-    <span class="n">likers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Liker</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[[]])</span></div>
+    <span class="n">likers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Liker</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A list of likers.&quot;</span><span class="p">,</span>
+                                <span class="n">examples</span><span class="o">=</span><span class="p">[[]])</span></div>
 
 
 <span class="n">Comment</span> <span class="o">=</span> <span class="n">ForwardRef</span><span class="p">(</span><span class="s1">&#39;Comment&#39;</span><span class="p">)</span>
@@ -231,22 +239,40 @@
                                 <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Timestamp of when the comment was made.&quot;</span><span class="p">,</span>
                                 <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">1695060863</span><span class="p">])</span>
     <span class="n">status</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Status of the comment, Active or Inactive.&quot;</span><span class="p">,</span>
+                        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Status of the comment, Active or Inactive. The inactive comments &quot;</span>
+                                    <span class="s2">&quot;refers to the comments which are hidden by the post owner with certain&quot;</span>
+                                    <span class="s2">&quot;conditions, such as filtered with certain words, default spam filter, or&quot;</span>
+                                    <span class="s2">&quot;manually controlled by the post owner.&quot;</span><span class="p">,</span>
                         <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Active&quot;</span><span class="p">])</span>
     <span class="n">share_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the comment enabled for sharing.&quot;</span><span class="p">,</span>
+                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the comment enabled for sharing? Generally all the visible commends&quot;</span>
+                                            <span class="s2">&quot;are legit for sharing, only the hidden commends are not enabled for &quot;</span>
+                                            <span class="s2">&quot;sharing. This is a duplicated feature of status.&quot;</span><span class="p">,</span>
                                 <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">])</span>
     <span class="n">is_ranked_comment</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the comment a ranked one?&quot;</span><span class="p">,</span>
+                                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the comment a ranked one? The Instagram comments feature &quot;</span>
+                                                <span class="s2">&quot;is set up in such a way that it shows first the comments of &quot;</span>
+                                                <span class="s2">&quot;people you follow. Or, sometimes, a comment by a verified &quot;</span>
+                                                <span class="s2">&quot;account or a comment that is most liked shows up first.&quot;</span><span class="p">,</span>
                                     <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">])</span>
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                      <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Comment content in free text format.&quot;</span><span class="p">,</span>
+                      <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Comment content in free text format. The Instagram comment character &quot;</span>
+                                  <span class="s2">&quot;limit is also 2200 characters, just like the caption. Instagram comments&quot;</span>
+                                  <span class="s2">&quot; can only contain up to 30 hashtags.&quot;</span><span class="p">,</span>
                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Cool stuff!&quot;</span><span class="p">])</span>
     <span class="n">has_translation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                  <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the comment have a translation&quot;</span><span class="p">,</span>
+                                  <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the comment have a translation? &quot;</span>
+                                              <span class="s2">&quot;Captions and comments on posts in feed, &quot;</span>
+                                              <span class="s2">&quot;as well as the bio that you include on your profile, &quot;</span>
+                                              <span class="s2">&quot;are translated automatically based on the language &quot;</span>
+                                              <span class="s2">&quot;they&#39;re written in and the language settings of the &quot;</span>
+                                              <span class="s2">&quot;person viewing it. If your language is available as a &quot;</span>
+                                              <span class="s2">&quot;translation, you can tap See translation below the text &quot;</span>
+                                              <span class="s2">&quot;to see it.&quot;</span><span class="p">,</span>
                                   <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">])</span>
     <span class="n">is_liked_by_post_owner</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                          <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the comment liked by the post owner.&quot;</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">])</span>
+                                         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the comment liked by the post owner?&quot;</span><span class="p">,</span>
+                                         <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">])</span>
     <span class="n">comment_like_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of people liked the comment.&quot;</span><span class="p">,</span>
                                     <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -299,13 +325,14 @@
 
 <div class="viewcode-block" id="Location"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Location">[docs]</a><span class="k">class</span> <span class="nc">Location</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Location information, contains location name, city, longitude, latitude and</span>
-<span class="sd">     address etc.&quot;&quot;&quot;</span>
+<span class="sd">     address etc. The location information is provided by the post owner, while</span>
+<span class="sd">     creating/editing the post.&quot;&quot;&quot;</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unique identifier of the location.&quot;</span><span class="p">,</span>
                     <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;1107837019238536&quot;</span><span class="p">])</span>
     <span class="n">short_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Short name of the location&quot;</span><span class="p">,</span>
-                            <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kedrodasos Beach&quot;</span><span class="p">])</span>
+                            <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kedro-beach&quot;</span><span class="p">])</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Full name of the location.&quot;</span><span class="p">,</span>
                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kedrodasos Beach&quot;</span><span class="p">])</span>
@@ -329,14 +356,13 @@
                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unique identifier of the caption.&quot;</span><span class="p">,</span>
                     <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;1107837019238536&quot;</span><span class="p">])</span>
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                      <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Text content of the caption.&quot;</span><span class="p">,</span>
+                      <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Text content of the caption. The Instagram caption character &quot;</span>
+                                  <span class="s2">&quot;limit is also 2200 characters, just like the comment. &quot;</span>
+                                  <span class="s2">&quot;Instagram caption can only contain up to 30 hashtags.&quot;</span><span class="p">,</span>
                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Life&#39;s a beach, and I&#39;m just playing in the sand.&quot;</span><span class="p">])</span>
     <span class="n">created_at_utc</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                                 <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Timestamp when the caption was created. In unix epoch time.&quot;</span><span class="p">,</span>
-                                <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">1693213015</span><span class="p">])</span>
-    <span class="n">content_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Content type of the Caption.&quot;</span><span class="p">,</span>
-                              <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;comment&quot;</span><span class="p">])</span></div>
+                                <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">1693213015</span><span class="p">])</span></div>
 
 
 <span class="k">class</span> <span class="nc">PostEngagementInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -368,25 +394,32 @@
     <span class="n">usertags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Usertag</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Usertags appear in the post.&quot;</span><span class="p">,</span>
                                     <span class="n">examples</span><span class="o">=</span><span class="p">[])</span>
-    <span class="n">post_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;post type: Photo, Video, IGTV, Reel, Album.&quot;</span><span class="p">,</span>
+    <span class="n">media_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Media type: Photo, Video, IGTV, Reel, Album.&quot;</span><span class="p">,</span>
                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Photo&quot;</span><span class="p">])</span>
     <span class="n">caption</span><span class="p">:</span> <span class="n">Caption</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Caption of the port.&quot;</span><span class="p">,</span>
+                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Caption of the post.&quot;</span><span class="p">,</span>
                              <span class="n">examples</span><span class="o">=</span><span class="p">[])</span>
     <span class="n">accessibility_caption</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Accessibility caption in text format.&quot;</span><span class="p">,</span>
+                                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Accessibility caption in text format. Alt text describes &quot;</span>
+                                                   <span class="s2">&quot;your photos for people with visual impairments. Alt text &quot;</span>
+                                                   <span class="s2">&quot;will be automatically created for your photos or you can &quot;</span>
+                                                   <span class="s2">&quot;choose to write your own.&quot;</span><span class="p">,</span>
                                        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Photo is taken by John.&quot;</span><span class="p">])</span>
     <span class="n">location</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Location</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                                          <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Location of the post, most of the time it&#39;s not given.&quot;</span><span class="p">,</span>
                                          <span class="n">examples</span><span class="o">=</span><span class="p">[])</span>
-    <span class="n">original_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Original width of the post, can be used to &quot;</span>
-                                                 <span class="s2">&quot;get the downloading url of the post.&quot;</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">1440</span><span class="p">])</span>
-    <span class="n">original_height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Original height of the post, can be used to &quot;</span>
-                                                  <span class="s2">&quot;get the downloading url of the post.&quot;</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">1440</span><span class="p">])</span>
+    <span class="n">original_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Original width of the media, can be used to &quot;</span>
+                                            <span class="s2">&quot;get the downloading url of the media.&quot;</span><span class="p">,</span>
+                                <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">1440</span><span class="p">])</span>
+    <span class="n">original_height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                                 <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Original height of the media, can be used to &quot;</span>
+                                             <span class="s2">&quot;get the downloading url of the media.&quot;</span><span class="p">,</span>
+                                 <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">1440</span><span class="p">])</span>
     <span class="c1"># the url signature has a time limitation.</span>
     <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Download URL of the post, which is only accessible in fea hours.&quot;</span><span class="p">,</span>
+                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Download URL of the media, which is only accessible in a few hours.&quot;</span><span class="p">,</span>
                      <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;https://scontent-muc2-1.cdninstagram.com/v/t39.30808-6/369866539_18384091342039171_8947783907607888457_n.jpg?stp=dst-jpg_e15&amp;_nc_ht=scontent-muc2-1.cdninstagram.com&amp;_nc_cat=107&amp;_nc_ohc=MK-DDNIWpOsAX9XOSOU&amp;edm=ABmJApAAAAAA&amp;ccb=7-5&amp;ig_cache_key=MzE3NzEzMTk0MjI3MjUxNjgwOQ%3D%3D.2-ccb7-5&amp;oh=00_AfASOeklyljD2tiuunU9AfSJplcSGFnMoJIzujuYa1DC9g&amp;oe=650EF52B&amp;_nc_sid=b41fef&quot;</span><span class="p">])</span>
 
 
@@ -410,26 +443,26 @@
                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">405268</span><span class="p">])</span>
 
 
-<div class="viewcode-block" id="Hashtag"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Hashtag">[docs]</a><span class="k">class</span> <span class="nc">Hashtag</span><span class="p">(</span><span class="n">HashtagBasicInfo</span><span class="p">,</span> <span class="n">Posts</span><span class="p">):</span>
+<div class="viewcode-block" id="Hashtag"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Hashtag">[docs]</a><span class="k">class</span> <span class="nc">Hashtag</span><span class="p">(</span><span class="n">HashtagBasicInfo</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Hashtag information&quot;&quot;&quot;</span>
     <span class="n">profile_pic_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                 <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Profile picture url.&quot;</span><span class="p">,</span>
+                                 <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Hashtag profile picture url. It&#39;s created by instagram using one of the &quot;</span>
+                                             <span class="s2">&quot;popular pictures from posts with the hashtag.&quot;</span><span class="p">,</span>
                                  <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;https://scontent-muc2-1.cdninstagram.com/v/t51.2885-15/384945060_3382351958743676_8236780213784037973_n.heic?stp=dst-jpg_e35&amp;_nc_ht=scontent-muc2-1.cdninstagram.com&amp;_nc_cat=108&amp;_nc_ohc=z0_PSswODrcAX-UzX_h&amp;edm=AGyKU4gBAAAA&amp;ccb=7-5&amp;ig_cache_key=MzIwNDA1MjAyOTI2NTQ2Nzc0OA%3D%3D.2-ccb7-5&amp;oh=00_AfDfikF5zUMBZVxEx7KCDJDMEa7xnrtU3FQAKRMl8DgUVw&amp;oe=651FC6D7&amp;_nc_sid=2011ad&quot;</span><span class="p">])</span>
     <span class="n">is_trending</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is it a trending hashtag?&quot;</span><span class="p">,</span>
                               <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">related_tags</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
-                                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;related tags in a list.&quot;</span><span class="p">,</span>
+                                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Related tags in a list. This is calculated by instagram &quot;</span>
+                                                          <span class="s2">&quot;based on co-occurrence of posts.&quot;</span><span class="p">,</span>
                                               <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;asiangames2023&quot;</span><span class="p">])</span>
     <span class="n">subtitle</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
                           <span class="n">description</span><span class="o">=</span><span class="s2">&quot;subtitle of the hastag.&quot;</span><span class="p">,</span>
                           <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;See a few top posts each week&quot;</span><span class="p">])</span>
-    <span class="n">social_context</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Social context of the hashtag.&quot;</span><span class="p">,</span>
-                                <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
-    <span class="n">social_context_profile_links</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">([],</span>
-                                                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Social context profile links.&quot;</span><span class="p">,</span>
-                                                    <span class="n">examples</span><span class="o">=</span><span class="p">[[]])</span></div>
+    <span class="n">posts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Post</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A list of top posts. Instagram only shows top posts (up to 30) from &quot;</span>
+                                          <span class="s2">&quot;the hashtag.&quot;</span><span class="p">,</span>
+                              <span class="n">examples</span><span class="o">=</span><span class="p">[])</span></div>
 
 
 <span class="k">class</span> <span class="nc">SearchingResultHashtag</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>

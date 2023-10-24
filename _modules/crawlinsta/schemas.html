@@ -161,45 +161,45 @@
     <span class="n">followed_by</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the post owner follow the liker?&quot;</span><span class="p">,</span>
                               <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                           <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker blocked by the post owner? &quot;</span>
-                                       <span class="s2">&quot;Blocked users&#39; likes are not showed.&quot;</span><span class="p">,</span>
-                           <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">muting</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the post owner muted by the liker?&quot;</span><span class="p">,</span>
-                         <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
+    <span class="n">blocking</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
+                                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker blocked by the post owner? &quot;</span>
+                                                 <span class="s2">&quot;Blocked users&#39; likes are not showed.&quot;</span><span class="p">,</span>
+                                     <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
+    <span class="n">muting</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
+                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the post owner muted by the liker?&quot;</span><span class="p">,</span>
+                                   <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker&#39;s account private? For a private account, &quot;</span>
                                          <span class="s2">&quot;it&#39;s not displayed in likes.&quot;</span><span class="p">,</span>
                              <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">incoming_request</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Has the post owner sent a follower request to the liker?&quot;</span><span class="p">,</span>
-                                   <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">outgoing_request</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Has the liker sent a follower request to the post owner?&quot;</span><span class="p">,</span>
-                                   <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">is_blocking_reel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker blocking reel to show in his personal feed??&quot;</span><span class="p">,</span>
-                                   <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">is_muting_reel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                 <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker muting reel in his personal feed?&quot;</span><span class="p">,</span>
-                                 <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">is_bestie</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker bestie of the post owner? Only the uer can &quot;</span>
-                                        <span class="s2">&quot;see his/her besties list.&quot;</span><span class="p">,</span>
-                            <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">is_restricted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker&#39;s account restricted?&quot;</span><span class="p">,</span>
-                                <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">is_feed_favorite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the feed of the post owner favorite of the liker?&quot;</span><span class="p">,</span>
-                                   <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">subscribed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Has the liker subscribed the post owner?&quot;</span><span class="p">,</span>
-                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">is_eligible_to_subscribe</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                           <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker eligible to subscribe the post owner?&quot;</span><span class="p">,</span>
-                                           <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span></div>
+    <span class="n">incoming_request</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
+                                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Has the post owner sent a follower request to the liker?&quot;</span><span class="p">,</span>
+                                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
+    <span class="n">outgoing_request</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
+                                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Has the liker sent a follower request to the post owner?&quot;</span><span class="p">,</span>
+                                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
+    <span class="n">is_blocking_reel</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
+                                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker blocking reel to show in his personal feed??&quot;</span><span class="p">,</span>
+                                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
+    <span class="n">is_muting_reel</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
+                                           <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker muting reel in his personal feed?&quot;</span><span class="p">,</span>
+                                           <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
+    <span class="n">is_bestie</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
+                                      <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker bestie of the post owner? Only the uer can &quot;</span>
+                                                  <span class="s2">&quot;see his/her besties list.&quot;</span><span class="p">,</span>
+                                      <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
+    <span class="n">is_restricted</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
+                                          <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker&#39;s account restricted?&quot;</span><span class="p">,</span>
+                                          <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
+    <span class="n">is_feed_favorite</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
+                                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the feed of the post owner favorite of the liker?&quot;</span><span class="p">,</span>
+                                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
+    <span class="n">subscribed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
+                                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Has the liker subscribed the post owner?&quot;</span><span class="p">,</span>
+                                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
+    <span class="n">is_eligible_to_subscribe</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
+                                                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker eligible to subscribe the post owner?&quot;</span><span class="p">,</span>
+                                                     <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="Liker"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Liker">[docs]</a><span class="k">class</span> <span class="nc">Liker</span><span class="p">(</span><span class="n">UserBasicInfo</span><span class="p">):</span>

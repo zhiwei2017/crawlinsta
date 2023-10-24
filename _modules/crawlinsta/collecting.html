@@ -77,7 +77,8 @@
   <h1>Source code for crawlinsta.collecting</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Json</span>
 <span class="kn">from</span> <span class="nn">.schemas</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">UserInfo</span><span class="p">,</span> <span class="n">Users</span><span class="p">,</span> <span class="n">Likers</span><span class="p">,</span> <span class="n">Comments</span><span class="p">,</span> <span class="n">Posts</span><span class="p">,</span> <span class="n">Hashtag</span><span class="p">,</span> <span class="n">SearchingResult</span>
+    <span class="n">UserInfo</span><span class="p">,</span> <span class="n">Users</span><span class="p">,</span> <span class="n">Likers</span><span class="p">,</span> <span class="n">Comments</span><span class="p">,</span> <span class="n">Posts</span><span class="p">,</span> <span class="n">Hashtag</span><span class="p">,</span> <span class="n">SearchingResult</span><span class="p">,</span>
+    <span class="n">FriendshipStatus</span>
 <span class="p">)</span>
 
 
@@ -144,8 +145,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Json: all visible reels user information of the given user in json format.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># TODO: complete documentation</span>
-    <span class="k">pass</span></div>
+    <span class="k">return</span> <span class="n">Posts</span><span class="p">()</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="collect_user_tagged_posts"><a class="viewcode-back" href="../../02_source.html#crawlinsta.collecting.collect_user_tagged_posts">[docs]</a><span class="k">def</span> <span class="nf">collect_user_tagged_posts</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
@@ -167,11 +167,10 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Json: all visible tagged posts in json format.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># TODO: complete documentation</span>
-    <span class="k">pass</span></div>
+    <span class="k">return</span> <span class="n">Posts</span><span class="p">()</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_friendship_status"><a class="viewcode-back" href="../../02_source.html#crawlinsta.collecting.get_friendship_status">[docs]</a><span class="k">def</span> <span class="nf">get_friendship_status</span> <span class="p">(</span><span class="n">username1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">username2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<div class="viewcode-block" id="get_friendship_status"><a class="viewcode-back" href="../../02_source.html#crawlinsta.collecting.get_friendship_status">[docs]</a><span class="k">def</span> <span class="nf">get_friendship_status</span><span class="p">(</span><span class="n">username1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">username2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the relationship between any two users.</span>
 
 <span class="sd">    Strategy: the only way to do it is to check if user_A is contained in</span>
@@ -182,10 +181,10 @@
 <span class="sd">        username2 (str): username of the person B.</span>
 
 <span class="sd">    Returns:</span>
-
+<span class="sd">        Json: indicates whether person A is in person B&#39;s followings list or</span>
+<span class="sd">        followers list.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># TODO: complete documentation</span>
-    <span class="k">pass</span></div>
+    <span class="k">return</span> <span class="n">FriendshipStatus</span><span class="p">()</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="collect_followers"><a class="viewcode-back" href="../../02_source.html#crawlinsta.collecting.collect_followers">[docs]</a><span class="k">def</span> <span class="nf">collect_followers</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>

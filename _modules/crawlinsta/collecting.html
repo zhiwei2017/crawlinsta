@@ -181,8 +181,7 @@
 <span class="sd">        username2 (str): username of the person B.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Json: indicates whether person A is in person B&#39;s followings list or</span>
-<span class="sd">        followers list.</span>
+<span class="sd">        Json: friendship indication between person A and person B.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">FriendshipStatus</span><span class="p">()</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span></div>
 
@@ -306,20 +305,17 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Json: a list of posts containing the music.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># TODO: complete documentation</span>
-    <span class="k">pass</span></div>
+    <span class="k">return</span> <span class="n">Posts</span><span class="p">()</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="download_media"><a class="viewcode-back" href="../../02_source.html#crawlinsta.collecting.download_media">[docs]</a><span class="k">def</span> <span class="nf">download_media</span><span class="p">(</span><span class="n">media_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Download the image/video based on a media_url or a profile_picture_url.</span>
+<div class="viewcode-block" id="download_media"><a class="viewcode-back" href="../../02_source.html#crawlinsta.collecting.download_media">[docs]</a><span class="k">def</span> <span class="nf">download_media</span><span class="p">(</span><span class="n">media_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Download the image/video based on the given media_url, and store it to</span>
+<span class="sd">    the given path.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        media_url: </span>
-
-<span class="sd">    Returns:</span>
-
+<span class="sd">        media_url (str): url of the media for downloading.</span>
+<span class="sd">        path (str): path for storing the downloaded media..</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># TODO: complete documentation</span>
     <span class="k">pass</span></div>
 </pre></div>
 

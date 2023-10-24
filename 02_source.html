@@ -477,14 +477,17 @@ default, it’s 100. If it’s set to 0, collect all posts.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">download_media</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">media_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#download_media"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Download the image/video based on a media_url or a profile_picture_url.</p>
+<span class="sig-name descname"><span class="pre">download_media</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">media_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#download_media"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Download the image/video based on the given media_url, and store it to
+the given path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>media_url</strong> – </p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>media_url</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – url of the media for downloading.</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – path for storing the downloaded media..</p></li>
+</ul>
 </dd>
 </dl>
-<p>Returns:</p>
 </dd></dl>
 
 <dl class="py function">
@@ -501,8 +504,7 @@ user_B’s followings or followers.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>indicates whether person A is in person B’s followings list or
-followers list.</p>
+<dd class="field-even"><p>friendship indication between person A and person B.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Json</p>
@@ -633,7 +635,7 @@ followers list.</p>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates whether the user account is private or public.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates that the user account is private or public.Please check https://help.instagram.com/448523408565555for detailed information.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="kc">false</span>
 <span class="w">         </span><span class="p">],</span>
@@ -728,7 +730,7 @@ followers list.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.UserInfo.is_private">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_private</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#crawlinsta.schemas.UserInfo.is_private" title="Permalink to this definition"></a></dt>
-<dd><p>Indicates whether the user account is private or public.</p>
+<dd><p>Indicates that the user account is private or public.Please check <a class="reference external" href="https://help.instagram.com/448523408565555for">https://help.instagram.com/448523408565555for</a> detailed information.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -882,7 +884,7 @@ instances of <cite>UserInfo</cite>.</p>
 <span class="w">                  </span><span class="p">}</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates whether the user account is private or public.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates that the user account is private or public.Please check https://help.instagram.com/448523408565555for detailed information.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1050,7 +1052,7 @@ instances of <cite>UserInfo</cite>.</p>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker blocking reel to show in his personal feed??&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker blocking reel to show in his personal feed?&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="kc">false</span>
 <span class="w">         </span><span class="p">],</span>
@@ -1082,7 +1084,7 @@ instances of <cite>UserInfo</cite>.</p>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker bestie of the post owner? Only the uer can see his/her besties list.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker bestie of the post owner? Only the uer can see his/her besties list. Please check https://help.instagram.com/476003390920140/?cms_platform=android-app&amp;helpref=platform_switcherfor more detailed information.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="kc">false</span>
 <span class="w">         </span><span class="p">],</span>
@@ -1146,7 +1148,7 @@ instances of <cite>UserInfo</cite>.</p>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker eligible to subscribe the post owner?&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker eligible to subscribe the post owner?Please check https://help.instagram.com/478012211024479# for more details about criteria eligibility to subscriptions.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="kc">false</span>
 <span class="w">         </span><span class="p">],</span>
@@ -1208,19 +1210,19 @@ instances of <cite>UserInfo</cite>.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.FriendshipStatus.is_bestie">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_bestie</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#crawlinsta.schemas.FriendshipStatus.is_bestie" title="Permalink to this definition"></a></dt>
-<dd><p>Is the liker bestie of the post owner? Only the uer can see his/her besties list.</p>
+<dd><p>Is the liker bestie of the post owner? Only the uer can see his/her besties list. Please check <a class="reference external" href="https://help.instagram.com/476003390920140/?cms_platform=android-app&amp;helpref=platform_switcherfor">https://help.instagram.com/476003390920140/?cms_platform=android-app&amp;helpref=platform_switcherfor</a> more detailed information.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.FriendshipStatus.is_blocking_reel">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_blocking_reel</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#crawlinsta.schemas.FriendshipStatus.is_blocking_reel" title="Permalink to this definition"></a></dt>
-<dd><p>Is the liker blocking reel to show in his personal feed??</p>
+<dd><p>Is the liker blocking reel to show in his personal feed?</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.FriendshipStatus.is_eligible_to_subscribe">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_eligible_to_subscribe</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#crawlinsta.schemas.FriendshipStatus.is_eligible_to_subscribe" title="Permalink to this definition"></a></dt>
-<dd><p>Is the liker eligible to subscribe the post owner?</p>
+<dd><p>Is the liker eligible to subscribe the post owner?Please check <a class="reference external" href="https://help.instagram.com">https://help.instagram.com</a>/478012211024479# for more details about criteria eligibility to subscriptions.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -1329,7 +1331,7 @@ describe the relationship between the liker and the post owner.</p>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates whether the user account is private or public.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates that the user account is private or public.Please check https://help.instagram.com/448523408565555for detailed information.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="kc">false</span>
 <span class="w">         </span><span class="p">],</span>
@@ -1456,7 +1458,7 @@ describe the relationship between the liker and the post owner.</p>
 <span class="w">                  </span><span class="p">}</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker blocking reel to show in his personal feed??&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker blocking reel to show in his personal feed?&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1488,7 +1490,7 @@ describe the relationship between the liker and the post owner.</p>
 <span class="w">                  </span><span class="p">}</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker bestie of the post owner? Only the uer can see his/her besties list.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker bestie of the post owner? Only the uer can see his/her besties list. Please check https://help.instagram.com/476003390920140/?cms_platform=android-app&amp;helpref=platform_switcherfor more detailed information.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1552,7 +1554,7 @@ describe the relationship between the liker and the post owner.</p>
 <span class="w">                  </span><span class="p">}</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker eligible to subscribe the post owner?&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker eligible to subscribe the post owner?Please check https://help.instagram.com/478012211024479# for more details about criteria eligibility to subscriptions.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1611,7 +1613,7 @@ describe the relationship between the liker and the post owner.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Liker.is_private">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_private</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#crawlinsta.schemas.Liker.is_private" title="Permalink to this definition"></a></dt>
-<dd><p>Indicates whether the user account is private or public.</p>
+<dd><p>Indicates that the user account is private or public.Please check <a class="reference external" href="https://help.instagram.com/448523408565555for">https://help.instagram.com/448523408565555for</a> detailed information.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -1759,7 +1761,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">                  </span><span class="p">}</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker blocking reel to show in his personal feed??&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker blocking reel to show in his personal feed?&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1791,7 +1793,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">                  </span><span class="p">}</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker bestie of the post owner? Only the uer can see his/her besties list.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker bestie of the post owner? Only the uer can see his/her besties list. Please check https://help.instagram.com/476003390920140/?cms_platform=android-app&amp;helpref=platform_switcherfor more detailed information.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1855,7 +1857,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">                  </span><span class="p">}</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker eligible to subscribe the post owner?&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the liker eligible to subscribe the post owner?Please check https://help.instagram.com/478012211024479# for more details about criteria eligibility to subscriptions.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -1923,7 +1925,7 @@ instances of <cite>Liker</cite>.</p>
 <span class="w">                  </span><span class="p">}</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates whether the user account is private or public.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates that the user account is private or public.Please check https://help.instagram.com/448523408565555for detailed information.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -2436,7 +2438,7 @@ in video and how long the tagged user appears.</p>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates whether the user account is private or public.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates that the user account is private or public.Please check https://help.instagram.com/448523408565555for detailed information.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="kc">false</span>
 <span class="w">         </span><span class="p">],</span>
@@ -2563,7 +2565,7 @@ in video and how long the tagged user appears.</p>
 <span class="w">                  </span><span class="p">}</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates whether the user account is private or public.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates that the user account is private or public.Please check https://help.instagram.com/448523408565555for detailed information.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -2635,7 +2637,7 @@ in video and how long the tagged user appears.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Usertag.is_private">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_private</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#crawlinsta.schemas.Usertag.is_private" title="Permalink to this definition"></a></dt>
-<dd><p>Indicates whether the user account is private or public.</p>
+<dd><p>Indicates that the user account is private or public.Please check <a class="reference external" href="https://help.instagram.com/448523408565555for">https://help.instagram.com/448523408565555for</a> detailed information.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -3276,7 +3278,7 @@ creating/editing the post.</p>
 <span class="w">                  </span><span class="p">}</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates whether the user account is private or public.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates that the user account is private or public.Please check https://help.instagram.com/448523408565555for detailed information.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>
@@ -3353,7 +3355,7 @@ creating/editing the post.</p>
 <span class="w">                  </span><span class="p">}</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates whether the user account is private or public.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates that the user account is private or public.Please check https://help.instagram.com/448523408565555for detailed information.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">],</span>

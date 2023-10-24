@@ -99,7 +99,9 @@
                                              <span class="s2">&quot;The generated link is usually available only for couple hours.&quot;</span><span class="p">,</span>
                                  <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;https://dummy-pic.com&quot;</span><span class="p">])</span>
     <span class="n">is_private</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
-                                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Indicates whether the user account is private or public.&quot;</span><span class="p">,</span>
+                                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Indicates that the user account is private or public.&quot;</span>
+                                                   <span class="s2">&quot;Please check https://help.instagram.com/448523408565555&quot;</span>
+                                                   <span class="s2">&quot;for detailed information.&quot;</span><span class="p">,</span>
                                        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_verified</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span>
                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Indicates whether the user account is verified as business/official &quot;</span>
@@ -179,14 +181,16 @@
                                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Has the liker sent a follower request to the post owner?&quot;</span><span class="p">,</span>
                                              <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_blocking_reel</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
-                                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker blocking reel to show in his personal feed??&quot;</span><span class="p">,</span>
+                                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker blocking reel to show in his personal feed?&quot;</span><span class="p">,</span>
                                              <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_muting_reel</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
                                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker muting reel in his personal feed?&quot;</span><span class="p">,</span>
                                            <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_bestie</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
                                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker bestie of the post owner? Only the uer can &quot;</span>
-                                                  <span class="s2">&quot;see his/her besties list.&quot;</span><span class="p">,</span>
+                                                  <span class="s2">&quot;see his/her besties list. Please check &quot;</span>
+                                                  <span class="s2">&quot;https://help.instagram.com/476003390920140/?cms_platform=android-app&amp;helpref=platform_switcher&quot;</span>
+                                                  <span class="s2">&quot;for more detailed information.&quot;</span><span class="p">,</span>
                                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_restricted</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
                                           <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker&#39;s account restricted?&quot;</span><span class="p">,</span>
@@ -198,7 +202,9 @@
                                        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Has the liker subscribed the post owner?&quot;</span><span class="p">,</span>
                                        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_eligible_to_subscribe</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
-                                                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker eligible to subscribe the post owner?&quot;</span><span class="p">,</span>
+                                                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker eligible to subscribe the post owner?&quot;</span>
+                                                                 <span class="s2">&quot;Please check https://help.instagram.com/478012211024479# for &quot;</span>
+                                                                 <span class="s2">&quot;more details about criteria eligibility to subscriptions.&quot;</span><span class="p">,</span>
                                                      <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span></div>
 
 

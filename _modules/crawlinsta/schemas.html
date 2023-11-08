@@ -381,7 +381,7 @@
                                <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">])</span>
 
 
-<span class="k">class</span> <span class="nc">Post</span><span class="p">(</span><span class="n">PostEngagementInfo</span><span class="p">):</span>
+<div class="viewcode-block" id="Post"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Post">[docs]</a><span class="k">class</span> <span class="nc">Post</span><span class="p">(</span><span class="n">PostEngagementInfo</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Post information about when it was created, who is tagged in it, its</span>
 <span class="sd">    caption, location width, height etc. &quot;&quot;&quot;</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
@@ -426,14 +426,14 @@
     <span class="c1"># the url signature has a time limitation.</span>
     <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                      <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Download URL of the media, which is only accessible in a few hours.&quot;</span><span class="p">,</span>
-                     <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;https://scontent-muc2-1.cdninstagram.com/v/t39.30808-6/369866539_18384091342039171_8947783907607888457_n.jpg?stp=dst-jpg_e15&amp;_nc_ht=scontent-muc2-1.cdninstagram.com&amp;_nc_cat=107&amp;_nc_ohc=MK-DDNIWpOsAX9XOSOU&amp;edm=ABmJApAAAAAA&amp;ccb=7-5&amp;ig_cache_key=MzE3NzEzMTk0MjI3MjUxNjgwOQ%3D%3D.2-ccb7-5&amp;oh=00_AfASOeklyljD2tiuunU9AfSJplcSGFnMoJIzujuYa1DC9g&amp;oe=650EF52B&amp;_nc_sid=b41fef&quot;</span><span class="p">])</span>
+                     <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;https://scontent-muc2-1.cdninstagram.com/v/t39.30808-6/369866539_18384091342039171_8947783907607888457_n.jpg?stp=dst-jpg_e15&amp;_nc_ht=scontent-muc2-1.cdninstagram.com&amp;_nc_cat=107&amp;_nc_ohc=MK-DDNIWpOsAX9XOSOU&amp;edm=ABmJApAAAAAA&amp;ccb=7-5&amp;ig_cache_key=MzE3NzEzMTk0MjI3MjUxNjgwOQ%3D%3D.2-ccb7-5&amp;oh=00_AfASOeklyljD2tiuunU9AfSJplcSGFnMoJIzujuYa1DC9g&amp;oe=650EF52B&amp;_nc_sid=b41fef&quot;</span><span class="p">])</span></div>
 
 
-<span class="k">class</span> <span class="nc">Posts</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="Posts"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Posts">[docs]</a><span class="k">class</span> <span class="nc">Posts</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregate a list of posts into a field to easily render as a JSON response. &quot;&quot;&quot;</span>
     <span class="n">posts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Post</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A list of posts.&quot;</span><span class="p">,</span>
-                              <span class="n">examples</span><span class="o">=</span><span class="p">[])</span>
+                              <span class="n">examples</span><span class="o">=</span><span class="p">[])</span></div>
 
 
 <span class="k">class</span> <span class="nc">HashtagBasicInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>

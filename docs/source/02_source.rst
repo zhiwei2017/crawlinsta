@@ -44,10 +44,10 @@ crawlinsta.schemas
 
 .. autopydantic_model:: crawlinsta.schemas.Caption
 
-.. autopydantic_model:: crawlinsta.schemas.Media
+.. autopydantic_model:: crawlinsta.schemas.Post
     :inherited-members: BaseModel
 
-.. autopydantic_model:: crawlinsta.schemas.Medias
+.. autopydantic_model:: crawlinsta.schemas.Posts
 
 .. autopydantic_model:: crawlinsta.schemas.Hashtag
     :inherited-members: BaseModel

@@ -177,8 +177,6 @@
       <ul>
         <li><a href="02_source.html#crawlinsta.schemas.UserInfo.fullname">(UserInfo attribute)</a>
 </li>
-        <li><a href="02_source.html#crawlinsta.schemas.Usertag.fullname">(Usertag attribute)</a>
-</li>
       </ul></li>
   </ul></td>
 </tr></table>
@@ -188,12 +186,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="02_source.html#crawlinsta.schemas.Post.has_shared_to_fb">has_shared_to_fb (Post attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="02_source.html#crawlinsta.schemas.Comment.has_translation">has_translation (Comment attribute)</a>
 </li>
-      <li><a href="02_source.html#crawlinsta.schemas.SearchingResult.hashtags">hashtags (SearchingResult attribute)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="02_source.html#crawlinsta.schemas.HashtagBasicInfos.hashtags">hashtags (HashtagBasicInfos attribute)</a>
+
+      <ul>
+        <li><a href="02_source.html#crawlinsta.schemas.SearchingResult.hashtags">(SearchingResult attribute)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -214,8 +216,6 @@
         <li><a href="02_source.html#crawlinsta.schemas.Post.id">(Post attribute)</a>
 </li>
         <li><a href="02_source.html#crawlinsta.schemas.UserInfo.id">(UserInfo attribute)</a>
-</li>
-        <li><a href="02_source.html#crawlinsta.schemas.Usertag.id">(Usertag attribute)</a>
 </li>
       </ul></li>
       <li><a href="02_source.html#crawlinsta.schemas.FriendshipStatus.incoming_request">incoming_request (FriendshipStatus attribute)</a>
@@ -241,8 +241,6 @@
 </li>
         <li><a href="02_source.html#crawlinsta.schemas.UserInfo.is_private">(UserInfo attribute)</a>
 </li>
-        <li><a href="02_source.html#crawlinsta.schemas.Usertag.is_private">(Usertag attribute)</a>
-</li>
       </ul></li>
       <li><a href="02_source.html#crawlinsta.schemas.Comment.is_ranked_comment">is_ranked_comment (Comment attribute)</a>
 </li>
@@ -254,8 +252,6 @@
 
       <ul>
         <li><a href="02_source.html#crawlinsta.schemas.UserInfo.is_verified">(UserInfo attribute)</a>
-</li>
-        <li><a href="02_source.html#crawlinsta.schemas.Usertag.is_verified">(Usertag attribute)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -330,22 +326,20 @@
       </ul></li>
       <li><a href="02_source.html#crawlinsta.schemas.Comment.post_id">post_id (Comment attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="02_source.html#crawlinsta.schemas.Hashtag.posts">posts (Hashtag attribute)</a>
 
       <ul>
         <li><a href="02_source.html#crawlinsta.schemas.Posts.posts">(Posts attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="02_source.html#crawlinsta.schemas.Hashtag.profile_pic_url">profile_pic_url (Hashtag attribute)</a>
 
       <ul>
         <li><a href="02_source.html#crawlinsta.schemas.Liker.profile_pic_url">(Liker attribute)</a>
 </li>
         <li><a href="02_source.html#crawlinsta.schemas.UserInfo.profile_pic_url">(UserInfo attribute)</a>
-</li>
-        <li><a href="02_source.html#crawlinsta.schemas.Usertag.profile_pic_url">(Usertag attribute)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -400,20 +394,22 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="02_source.html#crawlinsta.schemas.Post.url">url (Post attribute)</a>
 </li>
-      <li><a href="02_source.html#crawlinsta.schemas.Usertag.user">user (Usertag attribute)</a>
+      <li><a href="02_source.html#crawlinsta.schemas.Post.user">user (Post attribute)</a>
+
+      <ul>
+        <li><a href="02_source.html#crawlinsta.schemas.Usertag.user">(Usertag attribute)</a>
 </li>
+      </ul></li>
       <li><a href="02_source.html#crawlinsta.schemas.Comment.user_id">user_id (Comment attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="02_source.html#crawlinsta.schemas.Liker.username">username (Liker attribute)</a>
 
       <ul>
         <li><a href="02_source.html#crawlinsta.schemas.UserInfo.username">(UserInfo attribute)</a>
 </li>
-        <li><a href="02_source.html#crawlinsta.schemas.Usertag.username">(Usertag attribute)</a>
-</li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="02_source.html#crawlinsta.schemas.SearchingResult.users">users (SearchingResult attribute)</a>
 
       <ul>
@@ -421,8 +417,6 @@
 </li>
       </ul></li>
       <li><a href="02_source.html#crawlinsta.schemas.Post.usertags">usertags (Post attribute)</a>
-</li>
-      <li><a href="02_source.html#crawlinsta.schemas.UserInfo.usertags_count">usertags_count (UserInfo attribute)</a>
 </li>
   </ul></td>
 </tr></table>

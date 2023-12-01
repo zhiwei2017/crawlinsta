@@ -64,7 +64,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.UserInfo.post_count"><code class="docutils literal notranslate"><span class="pre">UserInfo.post_count</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.UserInfo.profile_pic_url"><code class="docutils literal notranslate"><span class="pre">UserInfo.profile_pic_url</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.UserInfo.username"><code class="docutils literal notranslate"><span class="pre">UserInfo.username</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.UserInfo.usertags_count"><code class="docutils literal notranslate"><span class="pre">UserInfo.usertags_count</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#crawlinsta.schemas.Users"><code class="docutils literal notranslate"><span class="pre">Users</span></code></a><ul>
@@ -123,15 +122,9 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#crawlinsta.schemas.Usertag"><code class="docutils literal notranslate"><span class="pre">Usertag</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Usertag.duration_in_video_in_sec"><code class="docutils literal notranslate"><span class="pre">Usertag.duration_in_video_in_sec</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Usertag.fullname"><code class="docutils literal notranslate"><span class="pre">Usertag.fullname</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Usertag.id"><code class="docutils literal notranslate"><span class="pre">Usertag.id</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Usertag.is_private"><code class="docutils literal notranslate"><span class="pre">Usertag.is_private</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Usertag.is_verified"><code class="docutils literal notranslate"><span class="pre">Usertag.is_verified</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Usertag.position"><code class="docutils literal notranslate"><span class="pre">Usertag.position</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Usertag.profile_pic_url"><code class="docutils literal notranslate"><span class="pre">Usertag.profile_pic_url</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Usertag.start_time_in_video_in_sec"><code class="docutils literal notranslate"><span class="pre">Usertag.start_time_in_video_in_sec</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Usertag.user"><code class="docutils literal notranslate"><span class="pre">Usertag.user</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Usertag.username"><code class="docutils literal notranslate"><span class="pre">Usertag.username</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#crawlinsta.schemas.Location"><code class="docutils literal notranslate"><span class="pre">Location</span></code></a><ul>
@@ -164,11 +157,16 @@
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Post.original_width"><code class="docutils literal notranslate"><span class="pre">Post.original_width</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Post.taken_at"><code class="docutils literal notranslate"><span class="pre">Post.taken_at</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Post.url"><code class="docutils literal notranslate"><span class="pre">Post.url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Post.user"><code class="docutils literal notranslate"><span class="pre">Post.user</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Post.usertags"><code class="docutils literal notranslate"><span class="pre">Post.usertags</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#crawlinsta.schemas.Posts"><code class="docutils literal notranslate"><span class="pre">Posts</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.Posts.posts"><code class="docutils literal notranslate"><span class="pre">Posts.posts</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#crawlinsta.schemas.HashtagBasicInfos"><code class="docutils literal notranslate"><span class="pre">HashtagBasicInfos</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.HashtagBasicInfos.hashtags"><code class="docutils literal notranslate"><span class="pre">HashtagBasicInfos.hashtags</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#crawlinsta.schemas.Hashtag"><code class="docutils literal notranslate"><span class="pre">Hashtag</span></code></a><ul>
@@ -225,12 +223,14 @@
 <h2>crawlinsta.login<a class="headerlink" href="#crawlinsta-login" title="Permalink to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/crawlinsta/login.html#login"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Chrome</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Edge</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Firefox</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Safari</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Remote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cookies_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'instagram_cookies.pkl'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/crawlinsta/login.html#login"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Login to instagram with given credential, and return True if success,
 else False.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>driver</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">selenium.webdriver.remote.webdriver.WebDriver</span></code>) – selenium
+driver for controlling the browser to perform certain actions.</p></li>
 <li><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – username for login.</p></li>
 <li><p><strong>password</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – corresponding password for login.</p></li>
 </ul>
@@ -242,6 +242,40 @@ else False.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta</span> <span class="kn">import</span> <span class="n">webdriver</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="s1">&#39;path_to_chromedriver&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta.login</span> <span class="kn">import</span> <span class="n">login</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">login</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s2">&quot;your_username&quot;</span><span class="p">,</span> <span class="s2">&quot;your_password&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">driver</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">login_with_cookies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Chrome</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Edge</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Firefox</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Safari</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Remote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cookies_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'instagram_cookies.pkl'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crawlinsta/login.html#login_with_cookies"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Log into Instagram using stored cookies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>driver</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">selenium.webdriver.remote.webdriver.WebDriver</span></code>) – selenium
+driver for controlling the browser to perform certain actions.</p></li>
+<li><p><strong>cookies_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The path to the file containing cookies.
+Default is “instagram_cookies.pkl”.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta</span> <span class="kn">import</span> <span class="n">webdriver</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="s1">&#39;path_to_chromedriver&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta.login</span> <span class="kn">import</span> <span class="n">login_with_cookies</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">login_with_cookies</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s1">&#39;path_to_cookies_file.pkl&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">driver</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -249,7 +283,7 @@ else False.</p>
 <h2>crawlinsta.collecting<a class="headerlink" href="#crawlinsta-collecting" title="Permalink to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">collect_comments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">post_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_comments"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">collect_comments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Chrome</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Edge</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Firefox</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Safari</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Remote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_comments"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Collect n comments of a given post.</p>
 <p>Strategy: click the post (a button with link <cite>/p/&lt;post_code&gt;/</cite>), a list of
 comments shows in a popup. A request triggered by the clicking was sent to the path
@@ -275,14 +309,18 @@ it’s 100. If it’s set to 0, collect all comments.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">collect_followers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_followers"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Collect n followers of the given user.</p>
-<p>Strategy: click the username, get to the main page of the user, then click followers, a list of
-followers of the user shows in a popup. A request triggered by the clicking was sent to the path
+<span class="sig-name descname"><span class="pre">collect_followers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Chrome</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Edge</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Firefox</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Safari</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Remote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_followers"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Collect n followers of the given user. Anyone besides the account owner
+can get maximal 50 followers.</p>
+<p>Strategy: click the username, get to the main page of the user, then click
+followers, a list of followers of the user shows in a popup. A request
+triggered by the clicking was sent to the path
 <cite>/api/v1/friendships/&lt;user_id&gt;/followers/?count=12&amp;search_surface=follow_list_page</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>driver</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">selenium.webdriver.remote.webdriver.WebDriver</span></code>) – selenium
+driver for controlling the browser to perform certain actions.</p></li>
 <li><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – name of the user.</p></li>
 <li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – maximum number of followers, which should be collected. By default,
 it’s 100. If it’s set to 0, collect all followers.</p></li>
@@ -295,11 +333,55 @@ it’s 100. If it’s set to 0, collect all followers.</p></li>
 <dd class="field-odd"><p>Json</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta</span> <span class="kn">import</span> <span class="n">webdriver</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="s1">&#39;path_to_chromedriver&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta.login</span> <span class="kn">import</span> <span class="n">login</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">login</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s2">&quot;your_username&quot;</span><span class="p">,</span> <span class="s2">&quot;your_password&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">collect_followers</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s2">&quot;instagram_username&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">collect_followings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_followings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">collect_following_hashtags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Chrome</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Edge</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Firefox</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Safari</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Remote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_following_hashtags"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Collect n followings hashtags of the given user.</p>
+<p>Strategy: click the username, get to the main page of the user, then click
+following and click hashtags, a list of following hashtags of the user shows
+in a popup. A request triggered by the clicking was sent to the path
+<cite>/api/v1/friendships/373735170/following/?count=12</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>driver</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">selenium.webdriver.remote.webdriver.WebDriver</span></code>) – selenium
+driver for controlling the browser to perform certain actions.</p></li>
+<li><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – name of the user.</p></li>
+<li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – maximum number of followings, which should be collected.
+By default, it’s 100. If it’s set to 0, collect all followings.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>all visible followings hashtags’ information of the given user in
+json format.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Json</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta</span> <span class="kn">import</span> <span class="n">webdriver</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="s1">&#39;path_to_chromedriver&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta.login</span> <span class="kn">import</span> <span class="n">login</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">login</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s2">&quot;your_username&quot;</span><span class="p">,</span> <span class="s2">&quot;your_password&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">collect_following_hashtags</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s2">&quot;instagram_username&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">collect_followings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Chrome</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Edge</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Firefox</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Safari</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Remote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_followings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Collect n followings of the given user.</p>
 <p>Strategy: click the username, get to the main page of the user, then click following, a list of
 following of the user shows in a popup. A request triggered by the clicking was sent to the path
@@ -307,6 +389,8 @@ following of the user shows in a popup. A request triggered by the clicking was 
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>driver</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">selenium.webdriver.remote.webdriver.WebDriver</span></code>) – selenium
+driver for controlling the browser to perform certain actions.</p></li>
 <li><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – name of the user.</p></li>
 <li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – maximum number of followings, which should be collected. By default,
 it’s 100. If it’s set to 0, collect all followings.</p></li>
@@ -319,11 +403,19 @@ it’s 100. If it’s set to 0, collect all followings.</p></li>
 <dd class="field-odd"><p>Json</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta</span> <span class="kn">import</span> <span class="n">webdriver</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="s1">&#39;path_to_chromedriver&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta.login</span> <span class="kn">import</span> <span class="n">login</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">login</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s2">&quot;your_username&quot;</span><span class="p">,</span> <span class="s2">&quot;your_password&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">collect_followings</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s2">&quot;instagram_username&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">collect_hashtag_top_posts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hashtag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_hashtag_top_posts"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">collect_hashtag_top_posts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Chrome</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Edge</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Firefox</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Safari</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Remote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hashtag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_hashtag_top_posts"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Collect top posts of a given hashtag.</p>
 <p>Strategy: click the search button from the left navigation bar, and input the hashtag in
 the searchbar, and select the desired hashtag from searching results. This action will
@@ -344,7 +436,7 @@ the top posts are showed.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">collect_likers_of_post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">post_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_likers_of_post"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">collect_likers_of_post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Chrome</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Edge</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Firefox</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Safari</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Remote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_likers_of_post"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Collect the users, who likes a given post.</p>
 <p>Strategy: click the likes (a button with link <cite>/p/&lt;post_code&gt;/liked_by/</cite>), a
 list of likers shows in a popup.
@@ -368,7 +460,7 @@ it’s 100. If it’s set to 0, collect all likers.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">collect_posts_by_music_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">music_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_posts_by_music_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">collect_posts_by_music_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Chrome</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Edge</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Firefox</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Safari</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Remote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">music_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_posts_by_music_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Search for all posts containing the given music_id.</p>
 <p>Strategy: the only way to collect the posts using the same music, is to first find
 a post with this music, then click the link “original audio” to get all the posts
@@ -389,7 +481,7 @@ using this music.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">collect_posts_of_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_posts_of_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">collect_posts_of_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Chrome</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Edge</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Firefox</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Safari</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Remote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_posts_of_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Collect n posts of the given user.</p>
 <p>Strategy: click the username, get to the main page of the user, a few posts
 are displayed in the user’s main page. The request was sent to the path
@@ -401,6 +493,8 @@ to have more posts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>driver</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">selenium.webdriver.remote.webdriver.WebDriver</span></code>) – selenium
+driver for controlling the browser to perform certain actions.</p></li>
 <li><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – name of the user.</p></li>
 <li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – maximum number of posts, which should be collected. By default,
 it’s 100. If it’s set to 0, collect all posts.</p></li>
@@ -413,11 +507,19 @@ it’s 100. If it’s set to 0, collect all posts.</p></li>
 <dd class="field-odd"><p>Json</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta</span> <span class="kn">import</span> <span class="n">webdriver</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="s1">&#39;path_to_chromedriver&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta.login</span> <span class="kn">import</span> <span class="n">login</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">login</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s2">&quot;your_username&quot;</span><span class="p">,</span> <span class="s2">&quot;your_password&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">collect_posts_of_user</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s2">&quot;instagram_username&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">collect_reels_of_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_reels_of_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">collect_reels_of_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Chrome</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Edge</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Firefox</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Safari</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Remote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_reels_of_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Collect n reels of the given user.</p>
 <p>Strategy: click the username, get to the main page of the user, a few posts
 are displayed in the user’s main page. Click the button reels to see all the
@@ -430,6 +532,8 @@ to have more posts/reels.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>driver</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">selenium.webdriver.remote.webdriver.WebDriver</span></code>) – selenium
+driver for controlling the browser to perform certain actions.</p></li>
 <li><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – name of the user.</p></li>
 <li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – maximum number of reels, which should be collected. By default,
 it’s 100. If it’s set to 0, collect all posts.</p></li>
@@ -442,11 +546,19 @@ it’s 100. If it’s set to 0, collect all posts.</p></li>
 <dd class="field-odd"><p>Json</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta</span> <span class="kn">import</span> <span class="n">webdriver</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="s1">&#39;path_to_chromedriver&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta.login</span> <span class="kn">import</span> <span class="n">login</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">login</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s2">&quot;your_username&quot;</span><span class="p">,</span> <span class="s2">&quot;your_password&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">collect_reels_of_user</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s2">&quot;instagram_username&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">collect_user_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_user_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">collect_user_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Chrome</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Edge</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Firefox</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Safari</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Remote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_user_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Collect user information through username, including user_id, username,
 profile_pic_url, biography, post_count, follower_count, following_count.</p>
 <p>Strategy: click the username, get to the main page of the user, the user
@@ -457,7 +569,11 @@ sent to the path <cite>/api/v1/users/&lt;user_id&gt;/info/</cite> or
 <cite>/api/v1/users/web_profile_info/?username=&lt;user_name&gt;</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – name of the user.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>driver</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">selenium.webdriver.remote.webdriver.WebDriver</span></code>) – selenium
+driver for controlling the browser to perform certain actions.</p></li>
+<li><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – name of the user.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>user information in json format.</p>
@@ -466,11 +582,19 @@ sent to the path <cite>/api/v1/users/&lt;user_id&gt;/info/</cite> or
 <dd class="field-odd"><p>Json</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta</span> <span class="kn">import</span> <span class="n">webdriver</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="s1">&#39;path_to_chromedriver&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta.login</span> <span class="kn">import</span> <span class="n">login</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">login</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s2">&quot;your_username&quot;</span><span class="p">,</span> <span class="s2">&quot;your_password&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">collect_user_info</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s2">&quot;instagram_username&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">collect_user_tagged_posts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_user_tagged_posts"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">collect_user_tagged_posts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Chrome</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Edge</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Firefox</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Safari</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Remote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#collect_user_tagged_posts"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Collect n posts in which user was tagged.</p>
 <p>Strategy: click the username, get to the main page of the user, a few posts
 are displayed in the user’s main page. Click the button tagged to see all the
@@ -498,7 +622,7 @@ default, it’s 100. If it’s set to 0, collect all posts.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">download_media</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">media_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#download_media"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">download_media</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Chrome</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Edge</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Firefox</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Safari</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Remote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">media_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#download_media"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Download the image/video based on the given media_url, and store it to
 the given path.</p>
 <dl class="field-list simple">
@@ -513,7 +637,7 @@ the given path.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">get_friendship_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">username2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#get_friendship_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">get_friendship_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Chrome</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Edge</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Firefox</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Safari</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Remote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">username2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#get_friendship_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Get the relationship between any two users.</p>
 <p>Strategy: the only way to do it is to check if user_A is contained in
 user_B’s followings or followers.</p>
@@ -535,7 +659,7 @@ user_B’s followings or followers.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">search_with_keyword</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#search_with_keyword"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">search_with_keyword</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Chrome</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Edge</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Firefox</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Safari</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Remote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting.html#search_with_keyword"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Search hashtags or users with given keyword.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -596,14 +720,6 @@ user_B’s followings or followers.</p>
 <span class="w">            </span><span class="mi">20</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Post Count&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="nt">&quot;usertags_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Number of the times, that the user was tagged in posts.&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="mi">20</span>
-<span class="w">         </span><span class="p">],</span>
-<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usertags Count&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -685,7 +801,6 @@ user_B’s followings or followers.</p>
 <span class="w">      </span><span class="s2">&quot;following_count&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;following_tag_count&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;post_count&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;usertags_count&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;username&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;fullname&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;profile_pic_url&quot;</span><span class="p">,</span>
@@ -708,7 +823,6 @@ user_B’s followings or followers.</p>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.UserInfo.post_count" title="crawlinsta.schemas.UserInfo.post_count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">post_count</span> <span class="pre">(int)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.UserInfo.profile_pic_url" title="crawlinsta.schemas.UserInfo.profile_pic_url"><code class="xref py py-obj docutils literal notranslate"><span class="pre">profile_pic_url</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.UserInfo.username" title="crawlinsta.schemas.UserInfo.username"><code class="xref py py-obj docutils literal notranslate"><span class="pre">username</span> <span class="pre">(str)</span></code></a></p></li>
-<li><p><a class="reference internal" href="#crawlinsta.schemas.UserInfo.usertags_count" title="crawlinsta.schemas.UserInfo.usertags_count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">usertags_count</span> <span class="pre">(int)</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -778,12 +892,6 @@ user_B’s followings or followers.</p>
 <dd><p>It’s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.It’s the unique identifier for the user besides the user id,which is generated by instagram automatically.</p>
 </dd></dl>
 
-<dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="crawlinsta.schemas.UserInfo.usertags_count">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">usertags_count</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.UserInfo.usertags_count" title="Permalink to this definition"></a></dt>
-<dd><p>Number of the times, that the user was tagged in posts.</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class pydantic_model">
@@ -801,60 +909,20 @@ instances of <cite>UserInfo</cite>.</p>
 <span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;A list of user information.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="p">[</span>
-<span class="w">               </span><span class="s2">&quot;follower_count=5 following_count=5 following_tag_count=0 post_count=2 usertags_count=2 id=&#39;387381865&#39; username=&#39;dummy_user&#39; fullname=&#39;Dummy User&#39; profile_pic_url=&#39;https://dummy-pic.com&#39; is_private=None is_verified=False biography=&#39;Hello, welcome to my instagram.&#39;&quot;</span>
+<span class="w">               </span><span class="s2">&quot;id=&#39;387381865&#39; username=&#39;dummy_user&#39; fullname=&#39;Dummy User&#39; profile_pic_url=&#39;https://dummy-pic.com&#39; is_private=False is_verified=False&quot;</span>
 <span class="w">            </span><span class="p">]</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/UserInfo&quot;</span>
+<span class="w">            </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/UserBasicInfo&quot;</span>
 <span class="w">         </span><span class="p">},</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Users&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">   </span><span class="p">},</span>
 <span class="w">   </span><span class="nt">&quot;$defs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;UserInfo&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User information contains `id`, `username`, `full name`, `biography` and son on .&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;UserBasicInfo&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User basic information, contains `id`, `username`, `fullname`, `profile_pic_url` and `is_verified`.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;follower_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Number of the followers.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="mi">10</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Follower Count&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;following_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Number of the following.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="mi">10</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Following Count&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;following_tag_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Number of the tags, which are followed by the user.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="mi">0</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Following Tag Count&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;post_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Number of the posts of the user.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="mi">20</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Post Count&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;usertags_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Number of the times, that the user was tagged in posts.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="mi">20</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usertags Count&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
-<span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="p">{</span>
@@ -919,28 +987,14 @@ instances of <cite>UserInfo</cite>.</p>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is Verified&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;biography&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;A short description of the user account.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="s2">&quot;Hello, welcome to my instagram.&quot;</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Biography&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">},</span>
 <span class="w">         </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="s2">&quot;follower_count&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;following_count&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;following_tag_count&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;post_count&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;usertags_count&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;username&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;fullname&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;profile_pic_url&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;biography&quot;</span>
+<span class="w">            </span><span class="s2">&quot;profile_pic_url&quot;</span>
 <span class="w">         </span><span class="p">],</span>
-<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UserInfo&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UserBasicInfo&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">   </span><span class="p">},</span>
@@ -953,13 +1007,13 @@ instances of <cite>UserInfo</cite>.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Fields<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#crawlinsta.schemas.Users.users" title="crawlinsta.schemas.Users.users"><code class="xref py py-obj docutils literal notranslate"><span class="pre">users</span> <span class="pre">(List[crawlinsta.schemas.UserInfo])</span></code></a></p></li>
+<li><p><a class="reference internal" href="#crawlinsta.schemas.Users.users" title="crawlinsta.schemas.Users.users"><code class="xref py py-obj docutils literal notranslate"><span class="pre">users</span> <span class="pre">(List[crawlinsta.schemas.UserBasicInfo])</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Users.users">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">users</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#crawlinsta.schemas.UserInfo" title="crawlinsta.schemas.UserInfo"><span class="pre">UserInfo</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Users.users" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">users</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">UserBasicInfo</span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Users.users" title="Permalink to this definition"></a></dt>
 <dd><p>A list of user information.</p>
 </dd></dl>
 
@@ -2409,71 +2463,6 @@ in video and how long the tagged user appears.</p>
 <span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usertag information, mainly about who is tagged at which position at what time\nin video and how long the tagged user appears.&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">         </span><span class="p">],</span>
-<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;unique identifier if an user. It&#39;s 9 digits in string format.&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="s2">&quot;387381865&quot;</span>
-<span class="w">         </span><span class="p">],</span>
-<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Id&quot;</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.It&#39;s the unique identifier for the user besides the user id,which is generated by instagram automatically.&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="s2">&quot;dummy_user&quot;</span>
-<span class="w">         </span><span class="p">],</span>
-<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Username&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="nt">&quot;fullname&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters, numbers, periods, underscores and spaces.&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="s2">&quot;Dummy User&quot;</span>
-<span class="w">         </span><span class="p">],</span>
-<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Fullname&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="nt">&quot;profile_pic_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Url of the profile picture for downloading. The generated link is usually available only for couple hours.&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="s2">&quot;https://dummy-pic.com&quot;</span>
-<span class="w">         </span><span class="p">],</span>
-<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Profile Pic Url&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="nt">&quot;is_private&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">         </span><span class="p">],</span>
-<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates that the user account is private or public.Please check https://help.instagram.com/448523408565555for detailed information.&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="kc">false</span>
-<span class="w">         </span><span class="p">],</span>
-<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is Private&quot;</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="nt">&quot;is_verified&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates whether the user account is verified as business/official account or not.&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="kc">false</span>
-<span class="w">         </span><span class="p">],</span>
-<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is Verified&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
-<span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;user&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">         </span><span class="nt">&quot;allOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="p">{</span>
@@ -2612,9 +2601,6 @@ in video and how long the tagged user appears.</p>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">   </span><span class="p">},</span>
 <span class="w">   </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="s2">&quot;username&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;fullname&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;profile_pic_url&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;position&quot;</span>
 <span class="w">   </span><span class="p">]</span>
@@ -2625,15 +2611,9 @@ in video and how long the tagged user appears.</p>
 <dt class="field-odd">Fields<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Usertag.duration_in_video_in_sec" title="crawlinsta.schemas.Usertag.duration_in_video_in_sec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">duration_in_video_in_sec</span> <span class="pre">(float</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
-<li><p><a class="reference internal" href="#crawlinsta.schemas.Usertag.fullname" title="crawlinsta.schemas.Usertag.fullname"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fullname</span> <span class="pre">(str)</span></code></a></p></li>
-<li><p><a class="reference internal" href="#crawlinsta.schemas.Usertag.id" title="crawlinsta.schemas.Usertag.id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">id</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
-<li><p><a class="reference internal" href="#crawlinsta.schemas.Usertag.is_private" title="crawlinsta.schemas.Usertag.is_private"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_private</span> <span class="pre">(bool</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
-<li><p><a class="reference internal" href="#crawlinsta.schemas.Usertag.is_verified" title="crawlinsta.schemas.Usertag.is_verified"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_verified</span> <span class="pre">(bool)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Usertag.position" title="crawlinsta.schemas.Usertag.position"><code class="xref py py-obj docutils literal notranslate"><span class="pre">position</span> <span class="pre">(List[float])</span></code></a></p></li>
-<li><p><a class="reference internal" href="#crawlinsta.schemas.Usertag.profile_pic_url" title="crawlinsta.schemas.Usertag.profile_pic_url"><code class="xref py py-obj docutils literal notranslate"><span class="pre">profile_pic_url</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Usertag.start_time_in_video_in_sec" title="crawlinsta.schemas.Usertag.start_time_in_video_in_sec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start_time_in_video_in_sec</span> <span class="pre">(float</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Usertag.user" title="crawlinsta.schemas.Usertag.user"><code class="xref py py-obj docutils literal notranslate"><span class="pre">user</span> <span class="pre">(crawlinsta.schemas.UserBasicInfo)</span></code></a></p></li>
-<li><p><a class="reference internal" href="#crawlinsta.schemas.Usertag.username" title="crawlinsta.schemas.Usertag.username"><code class="xref py py-obj docutils literal notranslate"><span class="pre">username</span> <span class="pre">(str)</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2644,39 +2624,9 @@ in video and how long the tagged user appears.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="crawlinsta.schemas.Usertag.fullname">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fullname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Usertag.fullname" title="Permalink to this definition"></a></dt>
-<dd><p>It’s limited to 30 characters and must contain only letters, numbers, periods, underscores and spaces.</p>
-</dd></dl>
-
-<dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="crawlinsta.schemas.Usertag.id">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#crawlinsta.schemas.Usertag.id" title="Permalink to this definition"></a></dt>
-<dd><p>unique identifier if an user. It’s 9 digits in string format.</p>
-</dd></dl>
-
-<dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="crawlinsta.schemas.Usertag.is_private">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_private</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#crawlinsta.schemas.Usertag.is_private" title="Permalink to this definition"></a></dt>
-<dd><p>Indicates that the user account is private or public.Please check <a class="reference external" href="https://help.instagram.com/448523408565555for">https://help.instagram.com/448523408565555for</a> detailed information.</p>
-</dd></dl>
-
-<dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="crawlinsta.schemas.Usertag.is_verified">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_verified</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#crawlinsta.schemas.Usertag.is_verified" title="Permalink to this definition"></a></dt>
-<dd><p>Indicates whether the user account is verified as business/official account or not.</p>
-</dd></dl>
-
-<dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Usertag.position">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">position</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Usertag.position" title="Permalink to this definition"></a></dt>
 <dd><p>A list of two floats, which is used to identify the position of the tagged user in the post.</p>
-</dd></dl>
-
-<dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="crawlinsta.schemas.Usertag.profile_pic_url">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">profile_pic_url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Usertag.profile_pic_url" title="Permalink to this definition"></a></dt>
-<dd><p>Url of the profile picture for downloading. The generated link is usually available only for couple hours.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -2689,12 +2639,6 @@ in video and how long the tagged user appears.</p>
 <dt class="sig sig-object py" id="crawlinsta.schemas.Usertag.user">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">user</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">UserBasicInfo</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Usertag.user" title="Permalink to this definition"></a></dt>
 <dd><p>User who is tagged in the post.</p>
-</dd></dl>
-
-<dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="crawlinsta.schemas.Usertag.username">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">username</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Usertag.username" title="Permalink to this definition"></a></dt>
-<dd><p>It’s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.It’s the unique identifier for the user besides the user id,which is generated by instagram automatically.</p>
 </dd></dl>
 
 </dd></dl>
@@ -2952,6 +2896,17 @@ caption, location width, height etc.</p>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Code&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;user&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;allOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/UserBasicInfo&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User who owns the post.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;&lt;class &#39;crawlinsta.schemas.UserBasicInfo&#39;&gt;&quot;</span>
+<span class="w">         </span><span class="p">]</span>
+<span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;taken_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;When the post was created, in unix epoch time.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -2986,12 +2941,18 @@ caption, location width, height etc.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;caption&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;allOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/Caption&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">],</span>
-<span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Caption of the post.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="kc">null</span>
+<span class="w">         </span><span class="p">]</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;accessibility_caption&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Accessibility caption in text format. Alt text describes your photos for people with visual impairments. Alt text will be automatically created for your photos or you can choose to write your own.&quot;</span><span class="p">,</span>
@@ -3227,71 +3188,6 @@ caption, location width, height etc.</p>
 <span class="w">      </span><span class="nt">&quot;Usertag&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usertag information, mainly about who is tagged at which position at what time\nin video and how long the tagged user appears.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="p">{</span>
-<span class="w">                     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<span class="w">                  </span><span class="p">},</span>
-<span class="w">                  </span><span class="p">{</span>
-<span class="w">                     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
-<span class="w">                  </span><span class="p">}</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;unique identifier if an user. It&#39;s 9 digits in string format.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="s2">&quot;387381865&quot;</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Id&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.It&#39;s the unique identifier for the user besides the user id,which is generated by instagram automatically.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="s2">&quot;dummy_user&quot;</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Username&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;fullname&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters, numbers, periods, underscores and spaces.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="s2">&quot;Dummy User&quot;</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Fullname&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;profile_pic_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Url of the profile picture for downloading. The generated link is usually available only for couple hours.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="s2">&quot;https://dummy-pic.com&quot;</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Profile Pic Url&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;is_private&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="p">{</span>
-<span class="w">                     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
-<span class="w">                  </span><span class="p">},</span>
-<span class="w">                  </span><span class="p">{</span>
-<span class="w">                     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
-<span class="w">                  </span><span class="p">}</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates that the user account is private or public.Please check https://help.instagram.com/448523408565555for detailed information.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="kc">false</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is Private&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;is_verified&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates whether the user account is verified as business/official account or not.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="kc">false</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is Verified&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
-<span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;user&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;allOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="p">{</span>
@@ -3351,9 +3247,6 @@ caption, location width, height etc.</p>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">},</span>
 <span class="w">         </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="s2">&quot;username&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;fullname&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;profile_pic_url&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;position&quot;</span>
 <span class="w">         </span><span class="p">],</span>
@@ -3366,6 +3259,7 @@ caption, location width, height etc.</p>
 <span class="w">      </span><span class="s2">&quot;comment_count&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;code&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;taken_at&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;has_shared_to_fb&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;usertags&quot;</span><span class="p">,</span>
@@ -3384,7 +3278,7 @@ caption, location width, height etc.</p>
 <dt class="field-odd">Fields<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Post.accessibility_caption" title="crawlinsta.schemas.Post.accessibility_caption"><code class="xref py py-obj docutils literal notranslate"><span class="pre">accessibility_caption</span> <span class="pre">(str)</span></code></a></p></li>
-<li><p><a class="reference internal" href="#crawlinsta.schemas.Post.caption" title="crawlinsta.schemas.Post.caption"><code class="xref py py-obj docutils literal notranslate"><span class="pre">caption</span> <span class="pre">(crawlinsta.schemas.Caption)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#crawlinsta.schemas.Post.caption" title="crawlinsta.schemas.Post.caption"><code class="xref py py-obj docutils literal notranslate"><span class="pre">caption</span> <span class="pre">(crawlinsta.schemas.Caption</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Post.code" title="crawlinsta.schemas.Post.code"><code class="xref py py-obj docutils literal notranslate"><span class="pre">code</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Post.comment_count" title="crawlinsta.schemas.Post.comment_count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">comment_count</span> <span class="pre">(int)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Post.has_shared_to_fb" title="crawlinsta.schemas.Post.has_shared_to_fb"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_shared_to_fb</span> <span class="pre">(bool)</span></code></a></p></li>
@@ -3396,6 +3290,7 @@ caption, location width, height etc.</p>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Post.original_width" title="crawlinsta.schemas.Post.original_width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">original_width</span> <span class="pre">(int)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Post.taken_at" title="crawlinsta.schemas.Post.taken_at"><code class="xref py py-obj docutils literal notranslate"><span class="pre">taken_at</span> <span class="pre">(int)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Post.url" title="crawlinsta.schemas.Post.url"><code class="xref py py-obj docutils literal notranslate"><span class="pre">url</span> <span class="pre">(str)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#crawlinsta.schemas.Post.user" title="crawlinsta.schemas.Post.user"><code class="xref py py-obj docutils literal notranslate"><span class="pre">user</span> <span class="pre">(crawlinsta.schemas.UserBasicInfo)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Post.usertags" title="crawlinsta.schemas.Post.usertags"><code class="xref py py-obj docutils literal notranslate"><span class="pre">usertags</span> <span class="pre">(List[crawlinsta.schemas.Usertag])</span></code></a></p></li>
 </ul>
 </dd>
@@ -3408,7 +3303,7 @@ caption, location width, height etc.</p>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Post.caption">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">caption</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#crawlinsta.schemas.Caption" title="crawlinsta.schemas.Caption"><span class="pre">Caption</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Post.caption" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">caption</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#crawlinsta.schemas.Caption" title="crawlinsta.schemas.Caption"><span class="pre">Caption</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Post.caption" title="Permalink to this definition"></a></dt>
 <dd><p>Caption of the post.</p>
 </dd></dl>
 
@@ -3476,6 +3371,12 @@ caption, location width, height etc.</p>
 <dt class="sig sig-object py" id="crawlinsta.schemas.Post.url">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Post.url" title="Permalink to this definition"></a></dt>
 <dd><p>Download URL of the media, which is only accessible in a few hours.</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="crawlinsta.schemas.Post.user">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">user</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">UserBasicInfo</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Post.user" title="Permalink to this definition"></a></dt>
+<dd><p>User who owns the post.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -3650,6 +3551,17 @@ caption, location width, height etc.</p>
 <span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Code&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;user&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;allOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                  </span><span class="p">{</span>
+<span class="w">                     </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/UserBasicInfo&quot;</span>
+<span class="w">                  </span><span class="p">}</span>
+<span class="w">               </span><span class="p">],</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User who owns the post.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                  </span><span class="s2">&quot;&lt;class &#39;crawlinsta.schemas.UserBasicInfo&#39;&gt;&quot;</span>
+<span class="w">               </span><span class="p">]</span>
+<span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;taken_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;When the post was created, in unix epoch time.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -3684,12 +3596,18 @@ caption, location width, height etc.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;caption&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;allOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="p">{</span>
 <span class="w">                     </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/Caption&quot;</span>
+<span class="w">                  </span><span class="p">},</span>
+<span class="w">                  </span><span class="p">{</span>
+<span class="w">                     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
 <span class="w">                  </span><span class="p">}</span>
 <span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Caption of the post.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                  </span><span class="kc">null</span>
+<span class="w">               </span><span class="p">]</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;accessibility_caption&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Accessibility caption in text format. Alt text describes your photos for people with visual impairments. Alt text will be automatically created for your photos or you can choose to write your own.&quot;</span><span class="p">,</span>
@@ -3741,6 +3659,7 @@ caption, location width, height etc.</p>
 <span class="w">            </span><span class="s2">&quot;comment_count&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;code&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;taken_at&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;has_shared_to_fb&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;usertags&quot;</span><span class="p">,</span>
@@ -3835,71 +3754,6 @@ caption, location width, height etc.</p>
 <span class="w">      </span><span class="nt">&quot;Usertag&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usertag information, mainly about who is tagged at which position at what time\nin video and how long the tagged user appears.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="p">{</span>
-<span class="w">                     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<span class="w">                  </span><span class="p">},</span>
-<span class="w">                  </span><span class="p">{</span>
-<span class="w">                     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
-<span class="w">                  </span><span class="p">}</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;unique identifier if an user. It&#39;s 9 digits in string format.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="s2">&quot;387381865&quot;</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Id&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.It&#39;s the unique identifier for the user besides the user id,which is generated by instagram automatically.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="s2">&quot;dummy_user&quot;</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Username&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;fullname&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters, numbers, periods, underscores and spaces.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="s2">&quot;Dummy User&quot;</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Fullname&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;profile_pic_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Url of the profile picture for downloading. The generated link is usually available only for couple hours.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="s2">&quot;https://dummy-pic.com&quot;</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Profile Pic Url&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;is_private&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="p">{</span>
-<span class="w">                     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
-<span class="w">                  </span><span class="p">},</span>
-<span class="w">                  </span><span class="p">{</span>
-<span class="w">                     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
-<span class="w">                  </span><span class="p">}</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates that the user account is private or public.Please check https://help.instagram.com/448523408565555for detailed information.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="kc">false</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is Private&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;is_verified&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates whether the user account is verified as business/official account or not.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="kc">false</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is Verified&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
-<span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;user&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;allOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="p">{</span>
@@ -3959,9 +3813,6 @@ caption, location width, height etc.</p>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">},</span>
 <span class="w">         </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="s2">&quot;username&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;fullname&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;profile_pic_url&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;position&quot;</span>
 <span class="w">         </span><span class="p">],</span>
@@ -3986,6 +3837,97 @@ caption, location width, height etc.</p>
 <dt class="sig sig-object py" id="crawlinsta.schemas.Posts.posts">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">posts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#crawlinsta.schemas.Post" title="crawlinsta.schemas.Post"><span class="pre">Post</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Posts.posts" title="Permalink to this definition"></a></dt>
 <dd><p>A list of posts.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class pydantic_model">
+<dt class="sig sig-object py" id="crawlinsta.schemas.HashtagBasicInfos">
+<em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HashtagBasicInfos</span></span><a class="reference internal" href="_modules/crawlinsta/schemas.html#HashtagBasicInfos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crawlinsta.schemas.HashtagBasicInfos" title="Permalink to this definition"></a></dt>
+<dd><p>A list of hashtag basic infos are contained for storing user following
+hashtags information.</p>
+<p><details  class="autodoc_pydantic_collapsable_json">
+<summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;HashtagBasicInfos&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;A list of hashtag basic infos are contained for storing user following\nhashtags information.&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;hashtags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Found hashtags matched to the keywords.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">[</span>
+<span class="w">               </span><span class="s2">&quot;id=&#39;17843654935044234&#39; name=&#39;primeleague&#39; post_count=16 profile_pic_url=&#39;&#39;&quot;</span>
+<span class="w">            </span><span class="p">]</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/HashtagBasicInfo&quot;</span>
+<span class="w">         </span><span class="p">},</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hashtags&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">   </span><span class="p">},</span>
+<span class="w">   </span><span class="nt">&quot;$defs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;HashtagBasicInfo&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hashtag basic information&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Unique identifier of the hashtag.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                  </span><span class="s2">&quot;17843820562040860&quot;</span>
+<span class="w">               </span><span class="p">],</span>
+<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Id&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;name of the hashtag.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                  </span><span class="s2">&quot;asiangames&quot;</span>
+<span class="w">               </span><span class="p">],</span>
+<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Name&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;post_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Count of the posts with the hashtag.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                  </span><span class="mi">405268</span>
+<span class="w">               </span><span class="p">],</span>
+<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Post Count&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;profile_pic_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hashtag profile picture url. It&#39;s created by instagram using one of the popular pictures from posts with the hashtag.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                  </span><span class="s2">&quot;https://scontent-muc2-1.cdninstagram.com/v/t51.2885-15/384945060_3382351958743676_8236780213784037973_n.heic?stp=dst-jpg_e35&amp;_nc_ht=scontent-muc2-1.cdninstagram.com&amp;_nc_cat=108&amp;_nc_ohc=z0_PSswODrcAX-UzX_h&amp;edm=AGyKU4gBAAAA&amp;ccb=7-5&amp;ig_cache_key=MzIwNDA1MjAyOTI2NTQ2Nzc0OA%3D%3D.2-ccb7-5&amp;oh=00_AfDfikF5zUMBZVxEx7KCDJDMEa7xnrtU3FQAKRMl8DgUVw&amp;oe=651FC6D7&amp;_nc_sid=2011ad&quot;</span>
+<span class="w">               </span><span class="p">],</span>
+<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Profile Pic Url&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">},</span>
+<span class="w">         </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;name&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;post_count&quot;</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;HashtagBasicInfo&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</details></p><dl class="field-list simple">
+<dt class="field-odd">Fields<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#crawlinsta.schemas.HashtagBasicInfos.hashtags" title="crawlinsta.schemas.HashtagBasicInfos.hashtags"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hashtags</span> <span class="pre">(List[crawlinsta.schemas.HashtagBasicInfo])</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="crawlinsta.schemas.HashtagBasicInfos.hashtags">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hashtags</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">HashtagBasicInfo</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#crawlinsta.schemas.HashtagBasicInfos.hashtags" title="Permalink to this definition"></a></dt>
+<dd><p>Found hashtags matched to the keywords.</p>
 </dd></dl>
 
 </dd></dl>
@@ -4025,6 +3967,7 @@ caption, location width, height etc.</p>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;profile_pic_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hashtag profile picture url. It&#39;s created by instagram using one of the popular pictures from posts with the hashtag.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="s2">&quot;https://scontent-muc2-1.cdninstagram.com/v/t51.2885-15/384945060_3382351958743676_8236780213784037973_n.heic?stp=dst-jpg_e35&amp;_nc_ht=scontent-muc2-1.cdninstagram.com&amp;_nc_cat=108&amp;_nc_ohc=z0_PSswODrcAX-UzX_h&amp;edm=AGyKU4gBAAAA&amp;ccb=7-5&amp;ig_cache_key=MzIwNDA1MjAyOTI2NTQ2Nzc0OA%3D%3D.2-ccb7-5&amp;oh=00_AfDfikF5zUMBZVxEx7KCDJDMEa7xnrtU3FQAKRMl8DgUVw&amp;oe=651FC6D7&amp;_nc_sid=2011ad&quot;</span>
@@ -4222,6 +4165,17 @@ caption, location width, height etc.</p>
 <span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Code&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;user&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;allOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                  </span><span class="p">{</span>
+<span class="w">                     </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/UserBasicInfo&quot;</span>
+<span class="w">                  </span><span class="p">}</span>
+<span class="w">               </span><span class="p">],</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User who owns the post.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                  </span><span class="s2">&quot;&lt;class &#39;crawlinsta.schemas.UserBasicInfo&#39;&gt;&quot;</span>
+<span class="w">               </span><span class="p">]</span>
+<span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;taken_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;When the post was created, in unix epoch time.&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -4256,12 +4210,18 @@ caption, location width, height etc.</p>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;caption&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;allOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="p">{</span>
 <span class="w">                     </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/Caption&quot;</span>
+<span class="w">                  </span><span class="p">},</span>
+<span class="w">                  </span><span class="p">{</span>
+<span class="w">                     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
 <span class="w">                  </span><span class="p">}</span>
 <span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Caption of the post.&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                  </span><span class="kc">null</span>
+<span class="w">               </span><span class="p">]</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;accessibility_caption&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Accessibility caption in text format. Alt text describes your photos for people with visual impairments. Alt text will be automatically created for your photos or you can choose to write your own.&quot;</span><span class="p">,</span>
@@ -4313,6 +4273,7 @@ caption, location width, height etc.</p>
 <span class="w">            </span><span class="s2">&quot;comment_count&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;code&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;taken_at&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;has_shared_to_fb&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;usertags&quot;</span><span class="p">,</span>
@@ -4407,71 +4368,6 @@ caption, location width, height etc.</p>
 <span class="w">      </span><span class="nt">&quot;Usertag&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usertag information, mainly about who is tagged at which position at what time\nin video and how long the tagged user appears.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="p">{</span>
-<span class="w">                     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<span class="w">                  </span><span class="p">},</span>
-<span class="w">                  </span><span class="p">{</span>
-<span class="w">                     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
-<span class="w">                  </span><span class="p">}</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;unique identifier if an user. It&#39;s 9 digits in string format.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="s2">&quot;387381865&quot;</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Id&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.It&#39;s the unique identifier for the user besides the user id,which is generated by instagram automatically.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="s2">&quot;dummy_user&quot;</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Username&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;fullname&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It&#39;s limited to 30 characters and must contain only letters, numbers, periods, underscores and spaces.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="s2">&quot;Dummy User&quot;</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Fullname&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;profile_pic_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Url of the profile picture for downloading. The generated link is usually available only for couple hours.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="s2">&quot;https://dummy-pic.com&quot;</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Profile Pic Url&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;is_private&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="p">{</span>
-<span class="w">                     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
-<span class="w">                  </span><span class="p">},</span>
-<span class="w">                  </span><span class="p">{</span>
-<span class="w">                     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
-<span class="w">                  </span><span class="p">}</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates that the user account is private or public.Please check https://help.instagram.com/448523408565555for detailed information.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="kc">false</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is Private&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;is_verified&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Indicates whether the user account is verified as business/official account or not.&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                  </span><span class="kc">false</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is Verified&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span>
-<span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;user&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;allOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                  </span><span class="p">{</span>
@@ -4531,9 +4427,6 @@ caption, location width, height etc.</p>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">},</span>
 <span class="w">         </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="s2">&quot;username&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;fullname&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;profile_pic_url&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;position&quot;</span>
 <span class="w">         </span><span class="p">],</span>
@@ -4545,7 +4438,6 @@ caption, location width, height etc.</p>
 <span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;name&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;post_count&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;profile_pic_url&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;is_trending&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="s2">&quot;posts&quot;</span>
 <span class="w">   </span><span class="p">]</span>
@@ -4598,7 +4490,7 @@ caption, location width, height etc.</p>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Hashtag.profile_pic_url">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">profile_pic_url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.Hashtag.profile_pic_url" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">profile_pic_url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#crawlinsta.schemas.Hashtag.profile_pic_url" title="Permalink to this definition"></a></dt>
 <dd><p>Hashtag profile picture url. It’s created by instagram using one of the popular pictures from posts with the hashtag.</p>
 </dd></dl>
 

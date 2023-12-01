@@ -49,11 +49,14 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Crawlinsta</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#user-guide">User Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#how-to-install">How to Install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#how-to-use">How to Use</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-use">How to Use</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#create-browser-driver">Create Browser Driver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#login">Login</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#crawling">Crawling</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#maintainers">Maintainers</a></li>
@@ -98,25 +101,131 @@ to trigger the javascript in browser to send requests to the server for a specif
 and meanwhile selenium-wire will keep tracking on the network and capture the responses
 for data extraction purpose.</p>
 </section>
-<section id="prerequisites">
-<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
-<p>To install the dependencies listed in <cite>requirements/base.txt</cite>, you can use:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install -r requirements/base.txt
-</pre></div>
-</div>
-</section>
 <section id="user-guide">
 <h2>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this heading"></a></h2>
 <section id="how-to-install">
 <h3>How to Install<a class="headerlink" href="#how-to-install" title="Permalink to this heading"></a></h3>
-<p>Please check the section <a class="reference external" href="./docs/source/02_installation.rst">Installation</a> for detailed information.</p>
+<p>Please install it via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">zhiwei2017</span><span class="o">/</span><span class="n">crawlinsta</span><span class="o">.</span><span class="n">git</span><span class="nd">@init</span>
+</pre></div>
+</div>
 </section>
 <section id="how-to-use">
 <h3>How to Use<a class="headerlink" href="#how-to-use" title="Permalink to this heading"></a></h3>
-<p>Please check the section <a class="reference external" href="./docs/source/03_usage.rst">Usage</a> for detailed information.</p>
+<section id="create-browser-driver">
+<h4>Create Browser Driver<a class="headerlink" href="#create-browser-driver" title="Permalink to this heading"></a></h4>
+<p>To create a browser driver, you need to first import <strong>webdriver</strong> from
+<strong>crawlinsta</strong> package and initiate a browser instance via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta</span> <span class="kn">import</span> <span class="n">webdriver</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="s1">&#39;path_to_chromedriver&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;Do some crawling with driver&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">driver</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If you don’t specify the Chrome driver path, the default one will be used.</p>
+<p>Please remember to call:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">driver</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>when you finish the crawling.</p>
 </section>
-<section id="documentation">
-<h3>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading"></a></h3>
+<section id="login">
+<h4>Login<a class="headerlink" href="#login" title="Permalink to this heading"></a></h4>
+<p>For the first time login, you need to prepare your username and password, and
+use the function <strong>login</strong> from module <strong>crawlinsta.login</strong>, such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta.login</span> <span class="kn">import</span> <span class="n">login</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">login</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s2">&quot;your_username&quot;</span><span class="p">,</span> <span class="s2">&quot;your_password&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Once you login with your username and password, a cookie will be created with
+default name <em>instagram_cookies.pkl</em>. You can use the function <strong>login_with_cookies</strong>
+from module <strong>crawlinsta.login</strong> to login with the cookie file, such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crawlinsta.login</span> <span class="kn">import</span> <span class="n">login_with_cookies</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">login_with_cookies</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="crawling">
+<h4>Crawling<a class="headerlink" href="#crawling" title="Permalink to this heading"></a></h4>
+<p>Current available crawling functions:</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Title</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 30%" />
+<col style="width: 30%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Function Parameters</p></th>
+<th class="head"><p>Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>crawlinsta.collecting.collect_user_info</p></td>
+<td><p>Collects user information for the given <cite>username</cite></p></td>
+<td><ul class="simple">
+<li><p>driver: browser driver instance</p></li>
+<li><p>username (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): username to crawl</p></li>
+</ul>
+</td>
+<td><p>collect_user_info(driver, “dummy_instagram_username”)</p></td>
+</tr>
+<tr class="row-odd"><td><p>crawlinsta.collecting.collect_posts_of_user</p></td>
+<td><p>Collects n posts from the account with given <cite>username</cite></p></td>
+<td><ul class="simple">
+<li><p>driver: browser driver instance</p></li>
+<li><p>username (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): username to crawl</p></li>
+<li><p>n (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>): maximum number of posts, which should be collected. By default, it’s 100. If it’s set to 0, collect all posts.</p></li>
+</ul>
+</td>
+<td><p>collect_posts_of_user(driver, “dummy_instagram_username”, 100)</p></td>
+</tr>
+<tr class="row-even"><td><p>crawlinsta.collecting.collect_reels_of_user</p></td>
+<td><p>Collects n reels from the account with given <cite>username</cite></p></td>
+<td><ul class="simple">
+<li><p>driver: browser driver instance</p></li>
+<li><p>username (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): username to crawl</p></li>
+<li><p>n (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>): maximum number of reels, which should be collected. By default, it’s 100. If it’s set to 0, collect all reels.</p></li>
+</ul>
+</td>
+<td><p>collect_reels_of_user(driver, “dummy_instagram_username”, 100)</p></td>
+</tr>
+<tr class="row-odd"><td><p>crawlinsta.collecting.collect_followers</p></td>
+<td><p>Collects n followers from the account with given <cite>username</cite></p></td>
+<td><ul class="simple">
+<li><p>driver: browser driver instance</p></li>
+<li><p>username (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): username to crawl</p></li>
+<li><p>n (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>): maximum number of followers, which should be collected. By default, it’s 100. If it’s set to 0, collect all followers.</p></li>
+</ul>
+</td>
+<td><p>collect_followers(driver, “dummy_instagram_username”, 100)</p></td>
+</tr>
+<tr class="row-even"><td><p>crawlinsta.collecting.collect_followings</p></td>
+<td><p>Collects n following users from the account with given <cite>username</cite></p></td>
+<td><ul class="simple">
+<li><p>driver: browser driver instance</p></li>
+<li><p>username (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): username to crawl</p></li>
+<li><p>n (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>): maximum number of following users, which should be collected. By default, it’s 100. If it’s set to 0, collect all following users.</p></li>
+</ul>
+</td>
+<td><p>collect_following(driver, “dummy_instagram_username”, 100)</p></td>
+</tr>
+<tr class="row-odd"><td><p>crawlinsta.collecting.collect_following_hashtags</p></td>
+<td><p>Collects n following hashtags from the account with given <cite>username</cite></p></td>
+<td><ul class="simple">
+<li><p>driver: browser driver instance</p></li>
+<li><p>username (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): username to crawl</p></li>
+<li><p>n (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>): maximum number of following hashtags, which should be collected. By default, it’s 100. If it’s set to 0, collect all following hashtags.</p></li>
+</ul>
+</td>
+<td><p>collect_following_hashtags(driver, “dummy_instagram_username”, 100)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
 </section>
 </section>
 <section id="maintainers">

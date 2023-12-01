@@ -76,7 +76,7 @@
              
   <h1>Source code for crawlinsta.schemas</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">ForwardRef</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">ForwardRef</span><span class="p">,</span> <span class="n">Optional</span>
 
 
 <span class="k">class</span> <span class="nc">UserBasicInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -125,9 +125,6 @@
     <span class="n">post_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of the posts of the user.&quot;</span><span class="p">,</span>
                              <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">])</span>
-    <span class="n">usertags_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of the times, that the user was tagged in posts.&quot;</span><span class="p">,</span>
-                                <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">])</span>
 
 
 <div class="viewcode-block" id="UserInfo"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.UserInfo">[docs]</a><span class="k">class</span> <span class="nc">UserInfo</span><span class="p">(</span><span class="n">UserBasicInfo</span><span class="p">,</span> <span class="n">UserEngagementInfo</span><span class="p">):</span>
@@ -140,19 +137,14 @@
 <div class="viewcode-block" id="Users"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Users">[docs]</a><span class="k">class</span> <span class="nc">Users</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An aggregation class to have the field `users` for storing a list of</span>
 <span class="sd">    instances of `UserInfo`.&quot;&quot;&quot;</span>
-    <span class="n">users</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">UserInfo</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                  <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A list of user information.&quot;</span><span class="p">,</span>
-                                  <span class="n">examples</span><span class="o">=</span><span class="p">[[</span><span class="n">UserInfo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;387381865&quot;</span><span class="p">,</span>
-                                                      <span class="n">username</span><span class="o">=</span><span class="s2">&quot;dummy_user&quot;</span><span class="p">,</span>
-                                                      <span class="n">fullname</span><span class="o">=</span><span class="s2">&quot;Dummy User&quot;</span><span class="p">,</span>
-                                                      <span class="n">profile_pic_url</span><span class="o">=</span><span class="s2">&quot;https://dummy-pic.com&quot;</span><span class="p">,</span>
-                                                      <span class="n">is_verified</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                                                      <span class="n">follower_count</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-                                                      <span class="n">following_count</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-                                                      <span class="n">following_tag_count</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                                                      <span class="n">post_count</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                                                      <span class="n">usertags_count</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                                                      <span class="n">biography</span><span class="o">=</span><span class="s2">&quot;Hello, welcome to my instagram.&quot;</span><span class="p">)]])</span></div>
+    <span class="n">users</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">UserBasicInfo</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A list of user information.&quot;</span><span class="p">,</span>
+                                       <span class="n">examples</span><span class="o">=</span><span class="p">[[</span><span class="n">UserBasicInfo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;387381865&quot;</span><span class="p">,</span>
+                                                                <span class="n">username</span><span class="o">=</span><span class="s2">&quot;dummy_user&quot;</span><span class="p">,</span>
+                                                                <span class="n">fullname</span><span class="o">=</span><span class="s2">&quot;Dummy User&quot;</span><span class="p">,</span>
+                                                                <span class="n">profile_pic_url</span><span class="o">=</span><span class="s2">&quot;https://dummy-pic.com&quot;</span><span class="p">,</span>
+                                                                <span class="n">is_verified</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                                <span class="n">is_private</span><span class="o">=</span><span class="kc">False</span><span class="p">)]])</span></div>
 
 
 <div class="viewcode-block" id="FriendshipStatus"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.FriendshipStatus">[docs]</a><span class="k">class</span> <span class="nc">FriendshipStatus</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -308,7 +300,7 @@
                                                        <span class="n">child_comments</span><span class="o">=</span><span class="p">[])]])</span></div>
 
 
-<div class="viewcode-block" id="Usertag"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Usertag">[docs]</a><span class="k">class</span> <span class="nc">Usertag</span><span class="p">(</span><span class="n">UserBasicInfo</span><span class="p">):</span>
+<div class="viewcode-block" id="Usertag"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Usertag">[docs]</a><span class="k">class</span> <span class="nc">Usertag</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Usertag information, mainly about who is tagged at which position at what time</span>
 <span class="sd">    in video and how long the tagged user appears.&quot;&quot;&quot;</span>
     <span class="n">user</span><span class="p">:</span> <span class="n">UserBasicInfo</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
@@ -391,6 +383,9 @@
                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Short code of the post url. Can be used in &quot;</span>
                                   <span class="s2">&quot;form of www.instagram.com/&lt;code&gt; to access the post.&quot;</span><span class="p">,</span>
                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Cx4I1irBSnk&quot;</span><span class="p">])</span>
+    <span class="n">user</span><span class="p">:</span> <span class="n">UserBasicInfo</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;User who owns the post.&quot;</span><span class="p">,</span>
+                                <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="n">UserBasicInfo</span><span class="p">])</span>
     <span class="n">taken_at</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                           <span class="n">description</span><span class="o">=</span><span class="s2">&quot;When the post was created, in unix epoch time.&quot;</span><span class="p">,</span>
                           <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">1695060863</span><span class="p">])</span>
@@ -403,9 +398,9 @@
     <span class="n">media_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Media type: Photo, Video, IGTV, Reel, Album.&quot;</span><span class="p">,</span>
                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Photo&quot;</span><span class="p">])</span>
-    <span class="n">caption</span><span class="p">:</span> <span class="n">Caption</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Caption of the post.&quot;</span><span class="p">,</span>
-                             <span class="n">examples</span><span class="o">=</span><span class="p">[])</span>
+    <span class="n">caption</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Caption</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Caption of the post.&quot;</span><span class="p">,</span>
+                                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">])</span>
     <span class="n">accessibility_caption</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                                        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Accessibility caption in text format. Alt text describes &quot;</span>
                                                    <span class="s2">&quot;your photos for people with visual impairments. Alt text &quot;</span>
@@ -447,14 +442,25 @@
     <span class="n">post_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Count of the posts with the hashtag.&quot;</span><span class="p">,</span>
                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">405268</span><span class="p">])</span>
+    <span class="n">profile_pic_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                 <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Hashtag profile picture url. It&#39;s created by instagram using one of the &quot;</span>
+                                             <span class="s2">&quot;popular pictures from posts with the hashtag.&quot;</span><span class="p">,</span>
+                                 <span class="n">examples</span><span class="o">=</span><span class="p">[</span>
+                                     <span class="s2">&quot;https://scontent-muc2-1.cdninstagram.com/v/t51.2885-15/384945060_3382351958743676_8236780213784037973_n.heic?stp=dst-jpg_e35&amp;_nc_ht=scontent-muc2-1.cdninstagram.com&amp;_nc_cat=108&amp;_nc_ohc=z0_PSswODrcAX-UzX_h&amp;edm=AGyKU4gBAAAA&amp;ccb=7-5&amp;ig_cache_key=MzIwNDA1MjAyOTI2NTQ2Nzc0OA%3D%3D.2-ccb7-5&amp;oh=00_AfDfikF5zUMBZVxEx7KCDJDMEa7xnrtU3FQAKRMl8DgUVw&amp;oe=651FC6D7&amp;_nc_sid=2011ad&quot;</span><span class="p">])</span>
+
+
+<div class="viewcode-block" id="HashtagBasicInfos"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.HashtagBasicInfos">[docs]</a><span class="k">class</span> <span class="nc">HashtagBasicInfos</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A list of hashtag basic infos are contained for storing user following</span>
+<span class="sd">    hashtags information.&quot;&quot;&quot;</span>
+    <span class="n">hashtags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">HashtagBasicInfo</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">([],</span>
+                                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Found hashtags matched to the keywords.&quot;</span><span class="p">,</span>
+                                             <span class="n">examples</span><span class="o">=</span><span class="p">[[</span><span class="n">HashtagBasicInfo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;17843654935044234&quot;</span><span class="p">,</span>
+                                                                        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;primeleague&quot;</span><span class="p">,</span>
+                                                                        <span class="n">post_count</span><span class="o">=</span><span class="mi">16</span><span class="p">)]])</span></div>
 
 
 <div class="viewcode-block" id="Hashtag"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Hashtag">[docs]</a><span class="k">class</span> <span class="nc">Hashtag</span><span class="p">(</span><span class="n">HashtagBasicInfo</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Hashtag information&quot;&quot;&quot;</span>
-    <span class="n">profile_pic_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                 <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Hashtag profile picture url. It&#39;s created by instagram using one of the &quot;</span>
-                                             <span class="s2">&quot;popular pictures from posts with the hashtag.&quot;</span><span class="p">,</span>
-                                 <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;https://scontent-muc2-1.cdninstagram.com/v/t51.2885-15/384945060_3382351958743676_8236780213784037973_n.heic?stp=dst-jpg_e35&amp;_nc_ht=scontent-muc2-1.cdninstagram.com&amp;_nc_cat=108&amp;_nc_ohc=z0_PSswODrcAX-UzX_h&amp;edm=AGyKU4gBAAAA&amp;ccb=7-5&amp;ig_cache_key=MzIwNDA1MjAyOTI2NTQ2Nzc0OA%3D%3D.2-ccb7-5&amp;oh=00_AfDfikF5zUMBZVxEx7KCDJDMEa7xnrtU3FQAKRMl8DgUVw&amp;oe=651FC6D7&amp;_nc_sid=2011ad&quot;</span><span class="p">])</span>
     <span class="n">is_trending</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is it a trending hashtag?&quot;</span><span class="p">,</span>
                               <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>

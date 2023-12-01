@@ -123,8 +123,11 @@
                                      <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of the tags, which are followed by the user.&quot;</span><span class="p">,</span>
                                      <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">post_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of the posts of the user.&quot;</span><span class="p">,</span>
-                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">])</span>
+                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of the posts of the user.&quot;</span><span class="p">,</span>
+                            <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">])</span>
+    <span class="n">usertags_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span>
+                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of the times, that the user was tagged in posts.&quot;</span><span class="p">,</span>
+                                <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">])</span>
 
 
 <div class="viewcode-block" id="UserInfo"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.UserInfo">[docs]</a><span class="k">class</span> <span class="nc">UserInfo</span><span class="p">(</span><span class="n">UserBasicInfo</span><span class="p">,</span> <span class="n">UserEngagementInfo</span><span class="p">):</span>

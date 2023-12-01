@@ -64,6 +64,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.UserInfo.post_count"><code class="docutils literal notranslate"><span class="pre">UserInfo.post_count</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.UserInfo.profile_pic_url"><code class="docutils literal notranslate"><span class="pre">UserInfo.profile_pic_url</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.UserInfo.username"><code class="docutils literal notranslate"><span class="pre">UserInfo.username</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#crawlinsta.schemas.UserInfo.usertags_count"><code class="docutils literal notranslate"><span class="pre">UserInfo.usertags_count</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#crawlinsta.schemas.Users"><code class="docutils literal notranslate"><span class="pre">Users</span></code></a><ul>
@@ -722,6 +723,15 @@ user_B’s followings or followers.</p>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Post Count&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
 <span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;usertags_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Number of the times, that the user was tagged in posts.&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="mi">20</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usertags Count&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
+<span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="p">{</span>
@@ -823,6 +833,7 @@ user_B’s followings or followers.</p>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.UserInfo.post_count" title="crawlinsta.schemas.UserInfo.post_count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">post_count</span> <span class="pre">(int)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.UserInfo.profile_pic_url" title="crawlinsta.schemas.UserInfo.profile_pic_url"><code class="xref py py-obj docutils literal notranslate"><span class="pre">profile_pic_url</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#crawlinsta.schemas.UserInfo.username" title="crawlinsta.schemas.UserInfo.username"><code class="xref py py-obj docutils literal notranslate"><span class="pre">username</span> <span class="pre">(str)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#crawlinsta.schemas.UserInfo.usertags_count" title="crawlinsta.schemas.UserInfo.usertags_count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">usertags_count</span> <span class="pre">(int)</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -890,6 +901,12 @@ user_B’s followings or followers.</p>
 <dt class="sig sig-object py" id="crawlinsta.schemas.UserInfo.username">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">username</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#crawlinsta.schemas.UserInfo.username" title="Permalink to this definition"></a></dt>
 <dd><p>It’s limited to 30 characters and must contain only letters in lowercase, numbers, periods, and underscores.It’s the unique identifier for the user besides the user id,which is generated by instagram automatically.</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="crawlinsta.schemas.UserInfo.usertags_count">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">usertags_count</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#crawlinsta.schemas.UserInfo.usertags_count" title="Permalink to this definition"></a></dt>
+<dd><p>Number of the times, that the user was tagged in posts.</p>
 </dd></dl>
 
 </dd></dl>

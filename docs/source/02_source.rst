@@ -49,6 +49,9 @@ crawlinsta.schemas
 
 .. autopydantic_model:: crawlinsta.schemas.Posts
 
+.. autopydantic_model:: crawlinsta.schemas.HashtagBasicInfos
+    :inherited-members: BaseModel
+
 .. autopydantic_model:: crawlinsta.schemas.Hashtag
     :inherited-members: BaseModel
 

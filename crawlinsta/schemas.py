@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, ForwardRef, Union, Optional
+from typing import List, ForwardRef, Optional
 
 
 class UserBasicInfo(BaseModel):
@@ -46,9 +46,9 @@ class UserEngagementInfo(BaseModel):
                                      description="Number of the tags, which are followed by the user.",
                                      examples=[0])
     post_count: int = Field(...,
-                             description="Number of the posts of the user.",
-                             examples=[20])
-    usertags_count: int = Field(...,
+                            description="Number of the posts of the user.",
+                            examples=[20])
+    usertags_count: int = Field(0,
                                 description="Number of the times, that the user was tagged in posts.",
                                 examples=[20])
 
@@ -63,19 +63,14 @@ class UserInfo(UserBasicInfo, UserEngagementInfo):
 class Users(BaseModel):
     """An aggregation class to have the field `users` for storing a list of
     instances of `UserInfo`."""
-    users: List[UserInfo] = Field(...,
-                                  description="A list of user information.",
-                                  examples=[[UserInfo(id="387381865",
-                                                      username="dummy_user",
-                                                      fullname="Dummy User",
-                                                      profile_pic_url="https://dummy-pic.com",
-                                                      is_verified=False,
-                                                      follower_count=5,
-                                                      following_count=5,
-                                                      following_tag_count=0,
-                                                      post_count=2,
-                                                      usertags_count=2,
-                                                      biography="Hello, welcome to my instagram.")]])
+    users: List[UserBasicInfo] = Field(...,
+                                       description="A list of user information.",
+                                       examples=[[UserBasicInfo(id="387381865",
+                                                                username="dummy_user",
+                                                                fullname="Dummy User",
+                                                                profile_pic_url="https://dummy-pic.com",
+                                                                is_verified=False,
+                                                                is_private=False)]])
 
 
 class FriendshipStatus(BaseModel):
@@ -231,7 +226,7 @@ class Comments(BaseModel):
                                                        child_comments=[])]])
 
 
-class Usertag(UserBasicInfo):
+class Usertag(BaseModel):
     """Usertag information, mainly about who is tagged at which position at what time
     in video and how long the tagged user appears."""
     user: UserBasicInfo = Field(...,
@@ -314,6 +309,9 @@ class Post(PostEngagementInfo):
                       description="Short code of the post url. Can be used in "
                                   "form of www.instagram.com/<code> to access the post.",
                       examples=["Cx4I1irBSnk"])
+    user: UserBasicInfo = Field(...,
+                                description="User who owns the post.",
+                                examples=[UserBasicInfo])
     taken_at: int = Field(...,
                           description="When the post was created, in unix epoch time.",
                           examples=[1695060863])
@@ -326,9 +324,9 @@ class Post(PostEngagementInfo):
     media_type: str = Field(...,
                             description="Media type: Photo, Video, IGTV, Reel, Album.",
                             examples=["Photo"])
-    caption: Caption = Field(...,
-                             description="Caption of the post.",
-                             examples=[])
+    caption: Optional[Caption] = Field(...,
+                                       description="Caption of the post.",
+                                       examples=[None])
     accessibility_caption: str = Field(...,
                                        description="Accessibility caption in text format. Alt text describes "
                                                    "your photos for people with visual impairments. Alt text "
@@ -370,14 +368,25 @@ class HashtagBasicInfo(BaseModel):
     post_count: int = Field(...,
                             description="Count of the posts with the hashtag.",
                             examples=[405268])
+    profile_pic_url: str = Field("",
+                                 description="Hashtag profile picture url. It's created by instagram using one of the "
+                                             "popular pictures from posts with the hashtag.",
+                                 examples=[
+                                     "https://scontent-muc2-1.cdninstagram.com/v/t51.2885-15/384945060_3382351958743676_8236780213784037973_n.heic?stp=dst-jpg_e35&_nc_ht=scontent-muc2-1.cdninstagram.com&_nc_cat=108&_nc_ohc=z0_PSswODrcAX-UzX_h&edm=AGyKU4gBAAAA&ccb=7-5&ig_cache_key=MzIwNDA1MjAyOTI2NTQ2Nzc0OA%3D%3D.2-ccb7-5&oh=00_AfDfikF5zUMBZVxEx7KCDJDMEa7xnrtU3FQAKRMl8DgUVw&oe=651FC6D7&_nc_sid=2011ad"])
+
+
+class HashtagBasicInfos(BaseModel):
+    """A list of hashtag basic infos are contained for storing user following
+    hashtags information."""
+    hashtags: List[HashtagBasicInfo] = Field([],
+                                             description="Found hashtags matched to the keywords.",
+                                             examples=[[HashtagBasicInfo(id="17843654935044234",
+                                                                        name="primeleague",
+                                                                        post_count=16)]])
 
 
 class Hashtag(HashtagBasicInfo):
     """Hashtag information"""
-    profile_pic_url: str = Field(...,
-                                 description="Hashtag profile picture url. It's created by instagram using one of the "
-                                             "popular pictures from posts with the hashtag.",
-                                 examples=["https://scontent-muc2-1.cdninstagram.com/v/t51.2885-15/384945060_3382351958743676_8236780213784037973_n.heic?stp=dst-jpg_e35&_nc_ht=scontent-muc2-1.cdninstagram.com&_nc_cat=108&_nc_ohc=z0_PSswODrcAX-UzX_h&edm=AGyKU4gBAAAA&ccb=7-5&ig_cache_key=MzIwNDA1MjAyOTI2NTQ2Nzc0OA%3D%3D.2-ccb7-5&oh=00_AfDfikF5zUMBZVxEx7KCDJDMEa7xnrtU3FQAKRMl8DgUVw&oe=651FC6D7&_nc_sid=2011ad"])
     is_trending: bool = Field(...,
                               description="Is it a trending hashtag?",
                               examples=[False])

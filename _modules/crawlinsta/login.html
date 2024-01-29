@@ -127,6 +127,9 @@
 
     <span class="c1"># Store cookies in a file</span>
     <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">driver</span><span class="o">.</span><span class="n">get_cookies</span><span class="p">(),</span> <span class="nb">open</span><span class="p">(</span><span class="n">cookies_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+
+    <span class="n">not_turn_on_notifications_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s1">&#39;//button[@tabindex=&quot;0&quot;][text()=&quot;Not Now&quot;]&#39;</span><span class="p">)</span>
+    <span class="n">not_turn_on_notifications_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
@@ -153,7 +156,10 @@
     <span class="k">for</span> <span class="n">cookie</span> <span class="ow">in</span> <span class="n">cookies</span><span class="p">:</span>
         <span class="n">driver</span><span class="o">.</span><span class="n">add_cookie</span><span class="p">(</span><span class="n">cookie</span><span class="p">)</span>
     <span class="n">driver</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
-    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># Example: Wait for the page to load after setting cookies</span></div>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># Example: Wait for the page to load after setting cookies</span>
+
+    <span class="n">not_turn_on_notifications_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s1">&#39;//button[@tabindex=&quot;0&quot;][text()=&quot;Not Now&quot;]&#39;</span><span class="p">)</span>
+    <span class="n">not_turn_on_notifications_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span></div>
 </pre></div>
 
            </div>
@@ -163,7 +169,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Zhiwei Zhang.</p>
+    <p>&#169; Copyright 2024, Zhiwei Zhang.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

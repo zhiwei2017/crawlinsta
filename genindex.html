@@ -130,14 +130,26 @@
 </li>
       <li><a href="02_source.html#crawlinsta.schemas.Post.code">code (Post attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="02_source.html#crawlinsta.schemas.Post.comment_count">comment_count (Post attribute)</a>
 </li>
       <li><a href="02_source.html#crawlinsta.schemas.Comment.comment_like_count">comment_like_count (Comment attribute)</a>
 </li>
       <li><a href="02_source.html#crawlinsta.schemas.Comments.comments">comments (Comments attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="02_source.html#crawlinsta.schemas.Comments.count">count (Comments attribute)</a>
+
+      <ul>
+        <li><a href="02_source.html#crawlinsta.schemas.HashtagBasicInfos.count">(HashtagBasicInfos attribute)</a>
+</li>
+        <li><a href="02_source.html#crawlinsta.schemas.Likers.count">(Likers attribute)</a>
+</li>
+        <li><a href="02_source.html#crawlinsta.schemas.Posts.count">(Posts attribute)</a>
+</li>
+        <li><a href="02_source.html#crawlinsta.schemas.Users.count">(Users attribute)</a>
+</li>
+      </ul></li>
       <li><a href="02_source.html#crawlinsta.schemas.Caption.created_at_utc">created_at_utc (Caption attribute)</a>
 
       <ul>
@@ -211,8 +223,6 @@
 </li>
         <li><a href="02_source.html#crawlinsta.schemas.Liker.id">(Liker attribute)</a>
 </li>
-        <li><a href="02_source.html#crawlinsta.schemas.Location.id">(Location attribute)</a>
-</li>
         <li><a href="02_source.html#crawlinsta.schemas.Post.id">(Post attribute)</a>
 </li>
         <li><a href="02_source.html#crawlinsta.schemas.UserInfo.id">(UserInfo attribute)</a>
@@ -280,6 +290,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="02_source.html#crawlinsta.schemas.Post.media_type">media_type (Post attribute)</a>
 </li>
+      <li><a href="02_source.html#crawlinsta.schemas.MusicPosts.music">music (MusicPosts attribute)</a>
+
+      <ul>
+        <li><a href="02_source.html#crawlinsta.schemas.Post.music">(Post attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="02_source.html#crawlinsta.schemas.FriendshipStatus.muting">muting (FriendshipStatus attribute)</a>
@@ -291,11 +307,7 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="02_source.html#crawlinsta.schemas.Hashtag.name">name (Hashtag attribute)</a>
-
-      <ul>
-        <li><a href="02_source.html#crawlinsta.schemas.Location.name">(Location attribute)</a>
 </li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -316,6 +328,10 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="02_source.html#crawlinsta.schemas.SearchingResult.personalised">personalised (SearchingResult attribute)</a>
+</li>
+      <li><a href="02_source.html#crawlinsta.schemas.SearchingResult.places">places (SearchingResult attribute)</a>
+</li>
       <li><a href="02_source.html#crawlinsta.schemas.Usertag.position">position (Usertag attribute)</a>
 </li>
       <li><a href="02_source.html#crawlinsta.schemas.Hashtag.post_count">post_count (Hashtag attribute)</a>
@@ -324,10 +340,10 @@
         <li><a href="02_source.html#crawlinsta.schemas.UserInfo.post_count">(UserInfo attribute)</a>
 </li>
       </ul></li>
-      <li><a href="02_source.html#crawlinsta.schemas.Comment.post_id">post_id (Comment attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="02_source.html#crawlinsta.schemas.Comment.post_id">post_id (Comment attribute)</a>
+</li>
       <li><a href="02_source.html#crawlinsta.schemas.Hashtag.posts">posts (Hashtag attribute)</a>
 
       <ul>
@@ -392,7 +408,7 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="02_source.html#crawlinsta.schemas.Post.url">url (Post attribute)</a>
+      <li><a href="02_source.html#crawlinsta.schemas.Post.urls">urls (Post attribute)</a>
 </li>
       <li><a href="02_source.html#crawlinsta.schemas.Post.user">user (Post attribute)</a>
 
@@ -432,7 +448,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Zhiwei Zhang.</p>
+    <p>&#169; Copyright 2024, Zhiwei Zhang.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

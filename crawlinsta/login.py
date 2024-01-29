@@ -50,6 +50,9 @@ def login(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
     # Store cookies in a file
     pickle.dump(driver.get_cookies(), open(cookies_path, "wb"))
+
+    not_turn_on_notifications_btn = driver.find_element(By.XPATH, '//button[@tabindex="0"][text()="Not Now"]')
+    not_turn_on_notifications_btn.click()
     return True
 
 
@@ -77,3 +80,6 @@ def login_with_cookies(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         driver.add_cookie(cookie)
     driver.refresh()
     time.sleep(5)  # Example: Wait for the page to load after setting cookies
+
+    not_turn_on_notifications_btn = driver.find_element(By.XPATH, '//button[@tabindex="0"][text()="Not Now"]')
+    not_turn_on_notifications_btn.click()

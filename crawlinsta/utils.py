@@ -2,14 +2,37 @@ import json
 from pydantic import Json
 from seleniumwire.utils import decode
 from seleniumwire.request import Request, Response
-from typing import List
+from typing import List, Union
 
 JSON_RESPONSE_CONTENT_TYPE = "application/json; charset=utf-8"
 
 
-def filter_request(requests: List[Request],
+def filter_requests(requests: List[Request],
+                    response_content_type: str = JSON_RESPONSE_CONTENT_TYPE) -> List[Request]:
+    """
+
+    Args:
+        requests (:obj:`list` of :obj:`seleniumwire.request.Request`):
+        response_content_type (str):
+
+    Returns:
+        :obj:`seleniumwire.request.Request`:
+    """
+    if not requests:
+        raise ValueError("No requests to filter.")
+    result = []
+    for request in requests:
+        if not request.response:
+            continue
+        elif request.response.headers['Content-Type'] != response_content_type:
+            continue
+        result.append(request)
+    return result
+
+
+def search_request(requests: List[Request],
                    request_url: str,
-                   response_content_type: str = JSON_RESPONSE_CONTENT_TYPE) -> Request:
+                   response_content_type: str = JSON_RESPONSE_CONTENT_TYPE) -> Union[int, None]:
     """
 
     Args:
@@ -21,18 +44,16 @@ def filter_request(requests: List[Request],
         :obj:`seleniumwire.request.Request`:
     """
     if not requests:
-        raise ValueError("No requests to filter.")
-    result = None
-    for request in requests:
+        raise ValueError("No requests to search.")
+    for i, request in enumerate(requests):
         if request.url != request_url:
             continue
         elif not request.response:
             continue
         elif request.response.headers['Content-Type'] != response_content_type:
             continue
-        result = request
-        break
-    return result
+        return i
+    raise ValueError(f"No json response to the url '{request_url}' found.")
 
 
 def get_json_data(response: Response) -> Json:

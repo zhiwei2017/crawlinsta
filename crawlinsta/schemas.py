@@ -156,9 +156,6 @@ class Likers(BaseModel):
                        examples=[100])
 
 
-Comment = ForwardRef('Comment')
-
-
 class Comment(BaseModel):
     """Relevant information about a comment, including `id`, `user_id`, `post_id`
     `type` etc."""
@@ -167,32 +164,33 @@ class Comment(BaseModel):
     id: str = Field(...,
                     description="Unique identifier of the comment. It consists of 17 digits.",
                     examples=["18016617763686865"])
-    user_id: str = Field(...,
-                         description="Id reference to the user, who made the comment.",
-                         examples=["8659188880"])
+    user: UserBasicInfo = Field(...,
+                                description="User, who made the comment.",
+                                examples=[UserBasicInfo(id="387381865",
+                                                        username="dummy_user")])
     post_id: str = Field(...,
-                         description="Id reference to the user, who made the comment.",
+                         description="Id reference to the post.",
                          examples=["3194677555662724330"])
     created_at_utc: int = Field(...,
                                 description="Timestamp of when the comment was made.",
                                 examples=[1695060863])
-    status: str = Field(...,
-                        description="Status of the comment, Active or Inactive. The inactive comments "
-                                    "refers to the comments which are hidden by the post owner with certain"
-                                    "conditions, such as filtered with certain words, default spam filter, or"
-                                    "manually controlled by the post owner.",
-                        examples=["Active"])
-    share_enabled: bool = Field(...,
-                                description="Is the comment enabled for sharing? Generally all the visible commends"
+    status: Optional[str] = Field(None,
+                                  description="Status of the comment, Active or Inactive. The inactive comments "
+                                              "refers to the comments which are hidden by the post owner with certain"
+                                              "conditions, such as filtered with certain words, default spam filter, or"
+                                              "manually controlled by the post owner.",
+                                  examples=["Active"])
+    share_enabled: Optional[bool] = Field(None,
+                                          description="Is the comment enabled for sharing? Generally all the visible commends"
                                             "are legit for sharing, only the hidden commends are not enabled for "
                                             "sharing. This is a duplicated feature of status.",
-                                examples=[True])
-    is_ranked_comment: bool = Field(...,
-                                    description="Is the comment a ranked one? The Instagram comments feature "
+                                          examples=[True])
+    is_ranked_comment: Optional[bool] = Field(None,
+                                              description="Is the comment a ranked one? The Instagram comments feature "
                                                 "is set up in such a way that it shows first the comments of "
                                                 "people you follow. Or, sometimes, a comment by a verified "
                                                 "account or a comment that is most liked shows up first.",
-                                    examples=[True])
+                                              examples=[True])
     text: str = Field(...,
                       description="Comment content in free text format. The Instagram comment character "
                                   "limit is also 2200 characters, just like the caption. Instagram comments"
@@ -214,9 +212,6 @@ class Comment(BaseModel):
     comment_like_count: int = Field(...,
                                     description="Number of people liked the comment.",
                                     examples=[1])
-    child_comments: List[Comment] = Field(...,
-                                          description="Comments for this comment.",
-                                          examples=[[]])
 
 
 class Comments(BaseModel):

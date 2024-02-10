@@ -9,8 +9,8 @@ from selenium.webdriver.common.by import By
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union
 from .schemas import (
-    UserBasicInfo, UserProfile, UserInfo, Users, Liker, Likers, Comments,
-    Caption, PostBasicInfo, Posts, MusicPosts, HashtagBasicInfo,
+    UserBasicInfo, UserProfile, UserInfo, Users, Liker, Likers, Comment,
+    Comments, Caption, PostBasicInfo, Posts, MusicPosts, HashtagBasicInfo,
     HashtagBasicInfos, Hashtag, SearchingResultHashtag, SearchingResultUser,
     LocationBasicInfo, Place, SearchingResultPlace, SearchingResult,
     FriendshipStatus, Music
@@ -866,7 +866,131 @@ def collect_comments(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> from crawlinsta.collecting import collect_comments
         >>> collect_comments(driver, "WGDBS3D", 100)
     """
-    return Comments(comments=[], count=0).model_dump(mode="json")
+    def find_request(json_requests, url, post_id):
+        if not json_requests:
+            raise ValueError("No requests to search.")
+        for i, request in enumerate(json_requests):
+            if request.url != url:
+                continue
+            request_data = parse_qs(request.body.decode())
+            variables = json.loads(request_data.get("variables", ['{}'])[0])
+            if not request_data.get("doc_id"):
+                continue
+            elif request_data.get("doc_id")[0] != "7017986744986324":
+                continue
+            elif not variables:
+                continue
+            elif not variables.get("media_id"):
+                continue
+            elif variables.get("media_id") != post_id:
+                continue
+            return i
+        raise ValueError(f"No json response to the url '{target_url}' found.")
+
+    def find_cached_data():
+        scripts = driver.find_elements(By.XPATH, '//script[@type="application/json"]')
+        script_data = None
+        for script in scripts:
+            if "xdt_api__v1__media__media_id__comments__connection" not in script.get_attribute("innerHTML"):
+                continue
+            script_data = script
+            break
+
+        if not script_data:
+            return []
+
+        all_data = json.loads(script_data.get_attribute("innerHTML"))["require"][0][-1]
+
+        json_data = []
+        for data in all_data:
+            if not data["__bbox"]:
+                continue
+            for subdata in data["__bbox"]["require"][0]:
+                if not isinstance(subdata, list):
+                    continue
+                elif not subdata:
+                    continue
+                for item in subdata:
+                    if "__bbox" not in item:
+                        continue
+                    elif "result" not in item["__bbox"]:
+                        continue
+                    elif not item["__bbox"]["result"]:
+                        continue
+                    json_data.append(item["__bbox"]["result"])
+        return json_data
+
+    if n < 0:
+        raise ValueError("Parameter 'n' must be bigger than or equal to 0.")
+
+    results = []
+    remaining = n
+
+    driver.get(f"{INSTAGRAM_DOMAIN}/p/{post_code}/")
+    time.sleep(random.randint(4, 6))
+
+    # get the media id for later requests filtering
+    meta_tag_xpath = "//meta[@property='al:ios:url']"
+    meta_tag = driver.find_element(By.XPATH, meta_tag_xpath)
+    post_id = re.findall("\d+", meta_tag.get_attribute("content"))
+    if not post_id:
+        return Comments(comments=[], count=0).model_dump(mode="json")
+    post_id = post_id[0]
+
+    json_requests = filter_requests(driver.requests, "text/javascript; charset=utf-8")
+    del driver.requests
+
+    target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
+
+    cached_data = find_cached_data()
+
+    if cached_data:
+        for data in cached_data:
+            json_data = data["data"]["xdt_api__v1__media__media_id__comments__connection"]
+            results.append(json_data)
+            remaining -= len(json_data["edges"])
+    else:
+        idx = find_request(json_requests, target_url, post_id)
+        request = json_requests.pop(idx)
+        json_data = get_json_data(request.response)["data"]["xdt_api__v1__media__media_id__comments__connection"]
+        results.append(json_data)
+        remaining -= len(json_data["edges"])
+
+    while results[-1]["paging_info"]['has_next_page']:
+        if n > 0 >= remaining:
+            break
+        comment_lists = driver.find_elements(By.XPATH, '//div[@class="x78zum5 xdt5ytf x1iyjqo2"]/div[@class="x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh x1uhb9sk x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh x1nhvcw1 x17adc0v"]')
+        ActionChains(driver).scroll_to_element(comment_lists[-1]).perform()
+        time.sleep(random.randint(4, 6))
+        json_requests += filter_requests(driver.requests, "text/javascript; charset=utf-8")
+        del driver.requests
+
+        idx = find_request(json_requests, target_url, post_id)
+        request = json_requests.pop(idx)
+        json_data = get_json_data(request.response)
+        results.append(json_data)
+        remaining -= len(json_data["edges"])
+
+    comments = []
+    for json_data in results:
+        for item in json_data["edges"]:
+            comment_dict = item["node"]
+            default_created_at_timestamp = comment_dict.get("created_at", 0),
+            comment = Comment(id=extract_id(comment_dict),
+                              user=UserBasicInfo(id=extract_id(comment_dict["user"]),
+                                                 username=comment_dict["user"]["username"]),
+                              post_id=post_id,
+                              created_at_utc=comment_dict.get("created_at_utc", default_created_at_timestamp),
+                              status=comment_dict.get("status"),
+                              share_enabled=comment_dict.get("share_enabled"),
+                              is_ranked_comment=comment_dict.get("is_ranked_comment"),
+                              text=comment_dict["text"],
+                              has_translation=comment_dict.get("has_translation", False),
+                              is_liked_by_posst_owner=comment_dict.get("has_liked_comment", False),
+                              comment_like_count=comment_dict.get("comment_like_count", 0))
+            comments.append(comment)
+
+    return Comments(comments=comments, count=len(comments)).model_dump(mode="json")
 
 
 def search_with_keyword(driver: Union[Chrome, Edge, Firefox, Safari, Remote],

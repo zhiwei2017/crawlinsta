@@ -16,8 +16,25 @@ from .schemas import (
     FriendshipStatus, Music
 )
 from .utils import search_request, get_json_data, filter_requests
-from .decorators import driver_implicit_wait
+from .decorators import driver_implicit_wait, non_negative_collect_number
 from .data_extraction import extract_post, extract_id, extract_music_info, extract_sound_info
+
+__all__ = [
+    "collect_user_info",
+    "collect_posts_of_user",
+    "collect_reels_of_user",
+    "collect_user_tagged_posts",
+    "get_friendship_status",
+    "collect_followers",
+    "collect_followings",
+    "collect_following_hashtags",
+    "collect_likers_of_post",
+    "collect_comments_of_post",
+    "search_with_keyword",
+    "collect_hashtag_top_posts",
+    "collect_posts_by_music_id",
+    "download_media"
+]
 
 INSTAGRAM_DOMAIN = "https://www.instagram.com"
 GRAPHQL_QUERY_PATH = "graphql/query"
@@ -136,6 +153,28 @@ def collect_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> from crawlinsta.collecting import collect_posts_of_user
         >>> collect_posts_of_user(driver, "instagram_username", 100)
     """
+    def find_request(json_requests, url, username, after=""):
+        if not json_requests:
+            raise ValueError("No requests to search.")
+        for i, request in enumerate(json_requests):
+            if request.url != url:
+                continue
+            request_data = parse_qs(request.body.decode())
+            av = request_data.get("av", [''])[0]
+            variables = json.loads(request_data.get("variables", ['{}'])[0])
+            if not av:
+                continue
+            elif av != "17841461911219001":
+                continue
+            elif not variables:
+                continue
+            elif variables.get("username", "") != username:
+                continue
+            elif variables.get("after", "") != after:
+                continue
+            return i
+        raise ValueError(f"No json response to the url '{url}' found.")
+
     if n < 0:
         raise ValueError("Parameter 'n' must be bigger than or equal to 0.")
 
@@ -143,39 +182,36 @@ def collect_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     remaining = n
 
     driver.get(f'{INSTAGRAM_DOMAIN}/{username}/')
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.randint(5, 7))
 
-    json_requests = filter_requests(driver.requests)
+    json_requests = filter_requests(driver.requests, "text/javascript; charset=utf-8")
     del driver.requests
     # get first 12 documents
-    target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/feed/user/{username}/username/?count=12"
-    idx = search_request(json_requests, target_url)
+    target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
+    idx = find_request(json_requests, target_url, username)
     request = json_requests.pop(idx)
-    json_data = get_json_data(request.response)
+    json_data = get_json_data(request.response)["data"]["xdt_api__v1__feed__user_timeline_graphql_connection"]
     results.append(json_data)
-    remaining -= json_data["num_results"]
+    remaining -= len(json_data["edges"])
 
-    while results[-1]['more_available']:
-        if n > 0 >= remaining:
-            break
+    while results[-1]['page_info']["has_next_page"] and remaining > 0:
         footer = driver.find_element(By.XPATH, "//footer")
         ActionChains(driver).scroll_to_element(footer).perform()
 
-        time.sleep(random.randint(4, 6))
-        json_requests += filter_requests(driver.requests)
+        time.sleep(random.randint(7, 10))
+        json_requests += filter_requests(driver.requests, "text/javascript; charset=utf-8")
         del driver.requests
 
-        target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/feed/user/{results[-1]['user']['pk']}/?count=12&max_id={results[-1]['next_max_id']}"
-        idx = search_request(json_requests, target_url)
+        idx = find_request(json_requests, target_url, username, after=results[-1]['page_info']["end_cursor"])
         request = json_requests.pop(idx)
-        json_data = get_json_data(request.response)
+        json_data = get_json_data(request.response)["data"]["xdt_api__v1__feed__user_timeline_graphql_connection"]
         results.append(json_data)
-        remaining -= json_data["num_results"]
+        remaining -= len(json_data["edges"])
 
     posts = []
     for result in results:
-        for item in result['items']:
-            post = extract_post(item)
+        for item in result['edges']:
+            post = extract_post(item["node"])
             posts.append(post)
     posts = posts[:n]
     return Posts(posts=posts, count=len(posts)).model_dump(mode="json")
@@ -839,9 +875,9 @@ def collect_likers_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     return Likers(likers=likers, count=len(likers)).model_dump(mode="json")
 
 
-def collect_comments(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
-                     post_code: str,
-                     n: int = 100) -> Json:
+def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
+                             post_code: str,
+                             n: int = 100) -> Json:
     """Collect n comments of a given post.
 
     Strategy: click the post (a button with link `/p/<post_code>/`), a list of
@@ -863,8 +899,8 @@ def collect_comments(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> driver = webdriver.Chrome('path_to_chromedriver')
         >>> from crawlinsta.login import login
         >>> login(driver, "your_username", "your_password")
-        >>> from crawlinsta.collecting import collect_comments
-        >>> collect_comments(driver, "WGDBS3D", 100)
+        >>> from crawlinsta.collecting import collect_comments_of_post
+        >>> collect_comments_of_post(driver, "WGDBS3D", 100)
     """
     def find_request(json_requests, url, post_id):
         if not json_requests:

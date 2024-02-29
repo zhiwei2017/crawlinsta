@@ -1,5 +1,36 @@
 from pydantic import BaseModel, Field, ConfigDict
 from typing import List, ForwardRef, Optional, Union
+import typing_extensions
+
+
+class PreferDefaultsModel(BaseModel):
+    """
+    Pydantic model that will use default values in place of an explicitly passed `None` value.
+    This is helpful when consuming APIs payloads which may explicitly define a field as `null`
+    rather than omitting it.
+    """
+
+    def _field_allows_none(self, field_name):
+        """
+        Returns True if the field is exists in the model's __fields__ and it's allow_none property is True.
+        Returns False otherwise.
+        """
+        field = self.model_fields.get(field_name)
+        if field is None:
+            return False
+        allow_none = type(None) in typing_extensions.get_args(field.annotation)
+        return allow_none
+
+    def __init__(self, **data):
+        """
+        Removes any fields from the data which are None and are not allowed to be None.
+        The results are then passed to the super class's init method.
+        """
+        data_without_null_fields = {k: v for k, v in data.items() if (
+                v is not None
+                or self._field_allows_none(k)
+        )}
+        super().__init__(**data_without_null_fields)
 
 
 class UserBasicInfo(BaseModel):
@@ -17,13 +48,13 @@ class UserBasicInfo(BaseModel):
                           examples=["dummy_user"])
 
 
-class UserProfile(UserBasicInfo):
+class UserProfile(PreferDefaultsModel, UserBasicInfo):
     """User basic information, contains `id`, `username`, `fullname`, `profile_pic_url` and `is_verified`."""
-    fullname: str = Field(...,
+    fullname: str = Field("",
                           description="It's limited to 30 characters and must contain only "
                                       "letters, numbers, periods, underscores and spaces.",
                           examples=["Dummy User"])
-    profile_pic_url: str = Field(...,
+    profile_pic_url: str = Field("",
                                  description="Url of the profile picture for downloading. "
                                              "The generated link is usually available only for couple hours.",
                                  examples=["https://dummy-pic.com"])
@@ -38,20 +69,20 @@ class UserProfile(UserBasicInfo):
                                         examples=[False])
 
 
-class UserEngagementInfo(BaseModel):
+class UserEngagementInfo(PreferDefaultsModel):
     """User engagement information, contains mainly about the interactions between the given user with
     other users or posts. It contains fields like `follower_count`, `following_count`, `following_tag_count`,
     `post_count`, `usertags_count`."""
-    follower_count: int = Field(...,
+    follower_count: int = Field(0,
                                 description="Number of the followers.",
                                 examples=[10])
-    following_count: int = Field(...,
+    following_count: int = Field(0,
                                  description="Number of the following.",
                                  examples=[10])
-    following_tag_count: int = Field(...,
+    following_tag_count: int = Field(0,
                                      description="Number of the tags, which are followed by the user.",
                                      examples=[0])
-    post_count: int = Field(...,
+    post_count: int = Field(0,
                             description="Number of the posts of the user.",
                             examples=[20])
     usertags_count: int = Field(0,
@@ -61,15 +92,15 @@ class UserEngagementInfo(BaseModel):
 
 class UserInfo(UserProfile, UserEngagementInfo):
     """User information contains `id`, `username`, `full name`, `biography` and son on ."""
-    biography: str = Field(...,
+    biography: str = Field("",
                            description="A short description of the user account.",
                            examples=["Hello, welcome to my instagram."])
 
 
-class Users(BaseModel):
+class Users(PreferDefaultsModel):
     """An aggregation class to have the field `users` for storing a list of
     instances of `UserInfo`."""
-    users: List[UserProfile] = Field(...,
+    users: List[UserProfile] = Field([],
                                      description="A list of user information.",
                                      examples=[[UserProfile(id="387381865",
                                                             username="dummy_user",
@@ -77,17 +108,17 @@ class Users(BaseModel):
                                                             profile_pic_url="https://dummy-pic.com",
                                                             is_verified=False,
                                                             is_private=False)]])
-    count: int = Field(...,
+    count: int = Field(0,
                        description="Number of users contained.",
                        examples=[100])
 
 
-class FriendshipStatus(BaseModel):
+class FriendshipStatus(PreferDefaultsModel):
     """Describe the relationship between the liker and the post owner. """
-    following: bool = Field(...,
+    following: bool = Field(False,
                             description="Does the liker follow the post owner?",
                             examples=[False])
-    followed_by: bool = Field(...,
+    followed_by: bool = Field(False,
                               description="Does the post owner follow the liker?",
                               examples=[False])
     blocking: Optional[bool] = Field(None,
@@ -97,7 +128,7 @@ class FriendshipStatus(BaseModel):
     muting: Optional[bool] = Field(None,
                                    description="Is the post owner muted by the liker?",
                                    examples=[False])
-    is_private: bool = Field(...,
+    is_private: bool = Field(False,
                              description="Is the liker's account private? For a private account, "
                                          "it's not displayed in likes.",
                              examples=[False])
@@ -145,18 +176,18 @@ class Liker(UserProfile):
                                                 examples=[])
 
 
-class Likers(BaseModel):
+class Likers(PreferDefaultsModel):
     """An aggregation class to have the field `likers` for storing a list of
     instances of `Liker`."""
-    likers: List[Liker] = Field(...,
+    likers: List[Liker] = Field([],
                                 description="A list of likers.",
                                 examples=[[]])
-    count: int = Field(...,
+    count: int = Field(0,
                        description="Number of likers contained.",
                        examples=[100])
 
 
-class Comment(BaseModel):
+class Comment(PreferDefaultsModel):
     """Relevant information about a comment, including `id`, `user_id`, `post_id`
     `type` etc."""
     model_config = ConfigDict(coerce_numbers_to_str=True)
@@ -171,7 +202,7 @@ class Comment(BaseModel):
     post_id: str = Field(...,
                          description="Id reference to the post.",
                          examples=["3194677555662724330"])
-    created_at_utc: int = Field(...,
+    created_at_utc: int = Field(0,
                                 description="Timestamp of when the comment was made.",
                                 examples=[1695060863])
     status: Optional[str] = Field(None,
@@ -191,12 +222,12 @@ class Comment(BaseModel):
                                                 "people you follow. Or, sometimes, a comment by a verified "
                                                 "account or a comment that is most liked shows up first.",
                                               examples=[True])
-    text: str = Field(...,
+    text: str = Field("",
                       description="Comment content in free text format. The Instagram comment character "
                                   "limit is also 2200 characters, just like the caption. Instagram comments"
                                   " can only contain up to 30 hashtags.",
                       examples=["Cool stuff!"])
-    has_translation: bool = Field(...,
+    has_translation: bool = Field(False,
                                   description="Does the comment have a translation? "
                                               "Captions and comments on posts in feed, "
                                               "as well as the bio that you include on your profile, "
@@ -206,20 +237,21 @@ class Comment(BaseModel):
                                               "translation, you can tap See translation below the text "
                                               "to see it.",
                                   examples=[True])
-    is_liked_by_post_owner: bool = Field(...,
+    is_liked_by_post_owner: bool = Field(False,
                                          description="Is the comment liked by the post owner?",
                                          examples=[True])
-    comment_like_count: int = Field(...,
+    comment_like_count: int = Field(0,
                                     description="Number of people liked the comment.",
                                     examples=[1])
 
 
-class Comments(BaseModel):
+class Comments(PreferDefaultsModel):
     """An aggregation of comments."""
-    comments: List[Comment] = Field(...,
+    comments: List[Comment] = Field([],
                                     description="A list of comments.",
                                     examples=[[Comment(id="18016617763686865",
-                                                       user_id="8659188880",
+                                                       user=UserBasicInfo(id="387381865",
+                                                                          username="dummy_user"),
                                                        post_id="3194677555662724330",
                                                        type=0,
                                                        created_at_utc=1695060863,
@@ -233,12 +265,12 @@ class Comments(BaseModel):
                                                        has_liked_comment=True,
                                                        comment_like_count=1,
                                                        child_comments=[])]])
-    count: int = Field(...,
+    count: int = Field(0,
                        description="Number of comments contained.",
                        examples=[100])
 
 
-class Usertag(BaseModel):
+class Usertag(PreferDefaultsModel):
     """Usertag information, mainly about who is tagged at which position at what time
     in video and how long the tagged user appears."""
     user: UserProfile = Field(...,
@@ -249,7 +281,7 @@ class Usertag(BaseModel):
                                                     profile_pic_url="https://dummy-pic.com",
                                                     is_verified=False,
                                                     is_private=None)])
-    position: List[float] = Field(...,
+    position: List[float] = Field([0.0, 0.0],
                                   description="A list of two floats, which is "
                                               "used to identify the position of "
                                               "the tagged user in the post.",
@@ -264,7 +296,7 @@ class Usertag(BaseModel):
                                                       examples=[None])
 
 
-class LocationBasicInfo(BaseModel):
+class LocationBasicInfo(PreferDefaultsModel):
     """Location information, contains location name, city, longitude, latitude and
      address etc. The location information is provided by the post owner, while
      creating/editing the post."""
@@ -282,31 +314,31 @@ class Location(LocationBasicInfo):
     """Location information, contains location name, city, longitude, latitude and
      address etc. The location information is provided by the post owner, while
      creating/editing the post."""
-    short_name: str = Field(...,
+    short_name: str = Field("",
                             description="Short name of the location",
                             examples=["Kedro-beach"])
-    city: str = Field(...,
+    city: str = Field("",
                       description="to which city the location belongs",
                       examples=["Kántanos, Khania, Greece"])
-    lng: float = Field(...,
+    lng: float = Field(0.0,
                        description="Longitude of the location.",
                        examples=[23.5619])
-    lat: float = Field(...,
+    lat: float = Field(0.0,
                        description="Latitude of the location.",
                        examples=[35.26861])
-    address: str = Field(...,
+    address: str = Field("",
                          description="Address of the location. Typically is empty.",
                          examples=[""])
 
 
-class Caption(BaseModel):
+class Caption(PreferDefaultsModel):
     """Caption of the post."""
     model_config = ConfigDict(coerce_numbers_to_str=True)
 
     id: Optional[str] = Field(None,
                               description="Unique identifier of the caption.",
                               examples=["1107837019238536"])
-    text: str = Field(...,
+    text: str = Field("",
                       description="Text content of the caption. The Instagram caption character "
                                   "limit is also 2200 characters, just like the comment. "
                                   "Instagram caption can only contain up to 30 hashtags.",
@@ -316,12 +348,12 @@ class Caption(BaseModel):
                                           examples=[1693213015])
 
 
-class PostEngagementInfo(BaseModel):
+class PostEngagementInfo(PreferDefaultsModel):
     """Post engagement information about count of likes and count of comments."""
-    like_count: int = Field(...,
+    like_count: int = Field(0,
                             description="Count of likes.",
                             examples=[10])
-    comment_count: int = Field(...,
+    comment_count: int = Field(0,
                                description="Count of comments.",
                                examples=[10])
 
@@ -342,16 +374,16 @@ class PostBasicInfo(PostEngagementInfo):
                                 description="User who owns the post.",
                                 examples=[UserBasicInfo(id="387381865",
                                                         username="dummy_user")])
-    taken_at: int = Field(...,
+    taken_at: int = Field(0,
                           description="When the post was created, in unix epoch time.",
                           examples=[1695060863])
     media_type: str = Field(...,
                             description="Media type: Photo, Video, IGTV, Reel, Album.",
                             examples=["Photo"])
-    caption: Optional[Caption] = Field(...,
+    caption: Optional[Caption] = Field(None,
                                        description="Caption of the post.",
                                        examples=[None])
-    accessibility_caption: str = Field(...,
+    accessibility_caption: str = Field("",
                                        description="Accessibility caption in text format. Alt text describes "
                                                    "your photos for people with visual impairments. Alt text "
                                                    "will be automatically created for your photos or you can "
@@ -366,13 +398,12 @@ class PostBasicInfo(PostEngagementInfo):
                                              "get the downloading url of the media.",
                                  examples=[1440])
     # the url signature has a time limitation.
-    urls: List[str] = Field(...,
+    urls: List[str] = Field([],
                             description="Download URL of the media, which is only accessible in a few hours.",
-                            examples=[[
-                                          "https://scontent-muc2-1.cdninstagram.com/v/t39.30808-6/369866539_18384091342039171_8947783907607888457_n.jpg"]])
+                            examples=[["https://scontent-muc2-1.cdninstagram.com/v/t39.30808-6/369866539_18384091342039171_8947783907607888457_n.jpg"]])
 
 
-class MusicBasicInfo(BaseModel):
+class MusicBasicInfo(PreferDefaultsModel):
     """Music information about its url, duration, title, originally from which
     post it comes, artist etc."""
     model_config = ConfigDict(coerce_numbers_to_str=True)
@@ -383,7 +414,7 @@ class MusicBasicInfo(BaseModel):
     is_trending_in_clips: bool = Field(False,
                                        description="Is this music trending in clips?",
                                        examples=[True, False])
-    ig_artist: Optional[UserProfile] = Field(...,
+    ig_artist: Optional[UserProfile] = Field(None,
                                              description="Instagram artist who created this audio.",
                                              examples=[UserProfile(id="387381865",
                                                                    username="dummy_user",
@@ -401,10 +432,10 @@ class MusicBasicInfo(BaseModel):
 class Music(MusicBasicInfo):
     """Extended Music information, contains time created, original post id,
     clips count and photos count."""
-    clips_count: int = Field(...,
+    clips_count: int = Field(0,
                              description="Number of clips are using this music.",
                              examples=[12])
-    photos_count: int = Field(...,
+    photos_count: int = Field(0,
                               description="Number of photos are using this music.",
                               examples=[10])
 
@@ -420,10 +451,10 @@ class Post(PostBasicInfo):
                                                     profile_pic_url="https://dummy-pic.com",
                                                     is_verified=False,
                                                     is_private=None)])
-    has_shared_to_fb: bool = Field(...,
+    has_shared_to_fb: bool = Field(False,
                                    description="Is the post shared to facebook?",
                                    examples=[False])
-    usertags: List[Usertag] = Field(...,
+    usertags: List[Usertag] = Field([],
                                     description="Usertags appear in the post.",
                                     examples=[])
     location: Optional[Location] = Field(None,
@@ -442,12 +473,12 @@ class Post(PostBasicInfo):
                                                                      title="Original audio")])
 
 
-class Posts(BaseModel):
+class Posts(PreferDefaultsModel):
     """Aggregate a list of posts into a field to easily render as a JSON response. """
-    posts: Union[List[Post], List[PostBasicInfo]] = Field(...,
+    posts: Union[List[Post], List[PostBasicInfo]] = Field([],
                                                           description="A list of posts.",
                                                           examples=[])
-    count: int = Field(...,
+    count: int = Field(0,
                        description="Number of posts contained.",
                        examples=[100])
 
@@ -459,7 +490,7 @@ class MusicPosts(Posts):
                          examples=[])
 
 
-class HashtagBasicInfo(BaseModel):
+class HashtagBasicInfo(PreferDefaultsModel):
     """Hashtag basic information"""
     model_config = ConfigDict(coerce_numbers_to_str=True)
 
@@ -469,17 +500,16 @@ class HashtagBasicInfo(BaseModel):
     name: str = Field(...,
                       description="name of the hashtag.",
                       examples=["asiangames"])
-    post_count: int = Field(...,
+    post_count: int = Field(0,
                             description="Count of the posts with the hashtag.",
                             examples=[405268])
     profile_pic_url: str = Field("",
                                  description="Hashtag profile picture url. It's created by instagram using one of the "
                                              "popular pictures from posts with the hashtag.",
-                                 examples=[
-                                     "https://scontent-muc2-1.cdninstagram.com/v/t51.2885-15/384945060_3382351958743676_8236780213784037973_n.heic?stp=dst-jpg_e35&_nc_ht=scontent-muc2-1.cdninstagram.com&_nc_cat=108&_nc_ohc=z0_PSswODrcAX-UzX_h&edm=AGyKU4gBAAAA&ccb=7-5&ig_cache_key=MzIwNDA1MjAyOTI2NTQ2Nzc0OA%3D%3D.2-ccb7-5&oh=00_AfDfikF5zUMBZVxEx7KCDJDMEa7xnrtU3FQAKRMl8DgUVw&oe=651FC6D7&_nc_sid=2011ad"])
+                                 examples=["https://scontent-muc2-1.cdninstagram.com/v/t51.2885-15/384945060_3382351958743676_8236780213784037973_n.heic?stp=dst-jpg_e35&_nc_ht=scontent-muc2-1.cdninstagram.com&_nc_cat=108&_nc_ohc=z0_PSswODrcAX-UzX_h&edm=AGyKU4gBAAAA&ccb=7-5&ig_cache_key=MzIwNDA1MjAyOTI2NTQ2Nzc0OA%3D%3D.2-ccb7-5&oh=00_AfDfikF5zUMBZVxEx7KCDJDMEa7xnrtU3FQAKRMl8DgUVw&oe=651FC6D7&_nc_sid=2011ad"])
 
 
-class HashtagBasicInfos(BaseModel):
+class HashtagBasicInfos(PreferDefaultsModel):
     """A list of hashtag basic infos are contained for storing user following
     hashtags information."""
     hashtags: List[HashtagBasicInfo] = Field([],
@@ -487,14 +517,14 @@ class HashtagBasicInfos(BaseModel):
                                              examples=[[HashtagBasicInfo(id="17843654935044234",
                                                                          name="primeleague",
                                                                          post_count=16)]])
-    count: int = Field(...,
+    count: int = Field(0,
                        description="Number of hashtags contained.",
                        examples=[100])
 
 
 class Hashtag(HashtagBasicInfo):
     """Hashtag information"""
-    is_trending: bool = Field(...,
+    is_trending: bool = Field(False,
                               description="Is it a trending hashtag?",
                               examples=[False])
     related_tags: Optional[List[str]] = Field(None,
@@ -504,15 +534,15 @@ class Hashtag(HashtagBasicInfo):
     subtitle: str = Field("",
                           description="subtitle of the hastag.",
                           examples=["See a few top posts each week"])
-    posts: List[Post] = Field(...,
+    posts: List[Post] = Field([],
                               description="A list of top posts. Instagram only shows top posts (up to 30) from "
                                           "the hashtag.",
-                              examples=[])
+                              examples=[[]])
 
 
-class SearchingResultBasicInfo(BaseModel):
+class SearchingResultBasicInfo(PreferDefaultsModel):
     """Hashtag appears in searching result."""
-    position: int = Field(...,
+    position: int = Field(0,
                           description="Position of the search result.",
                           examples=[0, 1])
 
@@ -538,7 +568,7 @@ class SearchingResultUser(SearchingResultBasicInfo):
                                                     is_private=None)])
 
 
-class Place(BaseModel):
+class Place(PreferDefaultsModel):
     location: LocationBasicInfo = Field(...,
                                         description="Place appears in the search result at the associated position.",
                                         examples=[LocationBasicInfo(id="213502500",
@@ -546,7 +576,7 @@ class Place(BaseModel):
     subtitle: str = Field("",
                           description="Subtitle of the place, normally it can be in a different language.",
                           examples=["Puerto Del Rosario, Canarias, Spain"])
-    title: str = Field(...,
+    title: str = Field("",
                        description="Title of the place, normally it can be in a different language.",
                        examples=["Morro Jable"])
 
@@ -561,7 +591,7 @@ class SearchingResultPlace(SearchingResultBasicInfo):
                                          title="Beijing, China")])
 
 
-class SearchingResult(BaseModel):
+class SearchingResult(PreferDefaultsModel):
     """Searching result contains found hashtags and/or users."""
     hashtags: List[SearchingResultHashtag] = Field([],
                                                    description="Found hashtags matched to the keywords.",
@@ -587,6 +617,6 @@ class SearchingResult(BaseModel):
                                                                                    name="Beijing, China"),
                                                                                            subtitle="",
                                                                                            title="Beijing, China"))]])
-    personalised: bool = Field(...,
+    personalised: bool = Field(False,
                                description="Indicate whether the searching result is personalised or not.",
                                examples=[True, False])

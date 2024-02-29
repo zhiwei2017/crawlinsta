@@ -1,8 +1,14 @@
 import pickle
 import time
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union
+
+__all__ = [
+    "login",
+    "login_with_cookies"
+]
 
 
 def login(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
@@ -17,6 +23,7 @@ def login(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
          driver for controlling the browser to perform certain actions.
         username (str): username for login.
         password (str): corresponding password for login.
+        cookies_path (str): The path to the file to store cookies.
 
     Returns:
         bool: True, if login successes; otherwise False.
@@ -35,6 +42,12 @@ def login(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     # Sleep to ensure the page loads properly
     time.sleep(5)
 
+    try:
+        decline_optional_cookies_btn = driver.find_element(By.XPATH, '//button[@tabindex="0"][text()="Decline optional cookies"]')
+        decline_optional_cookies_btn.click()
+    except NoSuchElementException:
+        pass
+
     username_field = driver.find_element(By.NAME, 'username')
     password_field = driver.find_element(By.NAME, 'password')
 
@@ -51,8 +64,11 @@ def login(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     # Store cookies in a file
     pickle.dump(driver.get_cookies(), open(cookies_path, "wb"))
 
-    not_turn_on_notifications_btn = driver.find_element(By.XPATH, '//button[@tabindex="0"][text()="Not Now"]')
-    not_turn_on_notifications_btn.click()
+    try:
+        not_turn_on_notifications_btn = driver.find_element(By.XPATH, '//button[@tabindex="0"][text()="Not Now"]')
+        not_turn_on_notifications_btn.click()
+    except NoSuchElementException:
+        pass
     return True
 
 
@@ -75,11 +91,21 @@ def login_with_cookies(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> driver.quit()
     """
     driver.get('https://www.instagram.com/')
+
+    try:
+        decline_optional_cookies_btn = driver.find_element(By.XPATH, '//button[@tabindex="0"][text()="Decline optional cookies"]')
+        decline_optional_cookies_btn.click()
+    except NoSuchElementException:
+        pass
+
     cookies = pickle.load(open(cookies_path, "rb"))
     for cookie in cookies:
         driver.add_cookie(cookie)
     driver.refresh()
     time.sleep(5)  # Example: Wait for the page to load after setting cookies
 
-    not_turn_on_notifications_btn = driver.find_element(By.XPATH, '//button[@tabindex="0"][text()="Not Now"]')
-    not_turn_on_notifications_btn.click()
+    try:
+        not_turn_on_notifications_btn = driver.find_element(By.XPATH, '//button[@tabindex="0"][text()="Not Now"]')
+        not_turn_on_notifications_btn.click()
+    except NoSuchElementException:
+        pass

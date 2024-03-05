@@ -40,7 +40,7 @@ class UserBasicInfo(BaseModel):
     id: Optional[str] = Field(None,
                               description="unique identifier if an user. It's 9 digits in string format.",
                               examples=["387381865"])
-    username: str = Field(...,
+    username: str = Field("",
                           description="It's limited to 30 characters and must contain only "
                                       "letters in lowercase, numbers, periods, and underscores."
                                       "It's the unique identifier for the user besides the user id,"
@@ -115,12 +115,12 @@ class Users(PreferDefaultsModel):
 
 class FriendshipStatus(PreferDefaultsModel):
     """Describe the relationship between the liker and the post owner. """
-    following: bool = Field(False,
-                            description="Does the liker follow the post owner?",
-                            examples=[False])
-    followed_by: bool = Field(False,
-                              description="Does the post owner follow the liker?",
-                              examples=[False])
+    following: Optional[bool] = Field(None,
+                                      description="Does the liker follow the post owner?",
+                                      examples=[False])
+    followed_by: Optional[bool] = Field(False,
+                                        description="Does the post owner follow the liker?",
+                                        examples=[False])
     blocking: Optional[bool] = Field(None,
                                      description="Is the liker blocked by the post owner? "
                                                  "Blocked users' likes are not showed.",
@@ -128,10 +128,10 @@ class FriendshipStatus(PreferDefaultsModel):
     muting: Optional[bool] = Field(None,
                                    description="Is the post owner muted by the liker?",
                                    examples=[False])
-    is_private: bool = Field(False,
-                             description="Is the liker's account private? For a private account, "
-                                         "it's not displayed in likes.",
-                             examples=[False])
+    is_private: Optional[bool] = Field(False,
+                                       description="Is the liker's account private? For a private account, "
+                                                   "it's not displayed in likes.",
+                                       examples=[False])
     incoming_request: Optional[bool] = Field(None,
                                              description="Has the post owner sent a follower request to the liker?",
                                              examples=[False])
@@ -202,9 +202,9 @@ class Comment(PreferDefaultsModel):
     post_id: str = Field(...,
                          description="Id reference to the post.",
                          examples=["3194677555662724330"])
-    created_at_utc: int = Field(0,
-                                description="Timestamp of when the comment was made.",
-                                examples=[1695060863])
+    created_at_utc: Optional[int] = Field(None,
+                                          description="Timestamp of when the comment was made.",
+                                          examples=[1695060863])
     status: Optional[str] = Field(None,
                                   description="Status of the comment, Active or Inactive. The inactive comments "
                                               "refers to the comments which are hidden by the post owner with certain"
@@ -237,9 +237,9 @@ class Comment(PreferDefaultsModel):
                                               "translation, you can tap See translation below the text "
                                               "to see it.",
                                   examples=[True])
-    is_liked_by_post_owner: bool = Field(False,
-                                         description="Is the comment liked by the post owner?",
-                                         examples=[True])
+    is_liked_by_post_owner: Optional[bool] = Field(None,
+                                                   description="Is the comment liked by the post owner?",
+                                                   examples=[True])
     comment_like_count: int = Field(0,
                                     description="Number of people liked the comment.",
                                     examples=[1])
@@ -281,11 +281,11 @@ class Usertag(PreferDefaultsModel):
                                                     profile_pic_url="https://dummy-pic.com",
                                                     is_verified=False,
                                                     is_private=None)])
-    position: List[float] = Field([0.0, 0.0],
-                                  description="A list of two floats, which is "
-                                              "used to identify the position of "
-                                              "the tagged user in the post.",
-                                  examples=[[0.6794871795, 0.7564102564]])
+    position: Optional[List[float]] = Field(None,
+                                            description="A list of two floats, which is "
+                                                        "used to identify the position of "
+                                                        "the tagged user in the post.",
+                                            examples=[[0.6794871795, 0.7564102564]])
     start_time_in_video_in_sec: Optional[float] = Field(None,
                                                         description="Start time in video in seconds "
                                                                     "when the tagged user shows up",
@@ -320,12 +320,12 @@ class Location(LocationBasicInfo):
     city: str = Field("",
                       description="to which city the location belongs",
                       examples=["Kántanos, Khania, Greece"])
-    lng: float = Field(0.0,
-                       description="Longitude of the location.",
-                       examples=[23.5619])
-    lat: float = Field(0.0,
-                       description="Latitude of the location.",
-                       examples=[35.26861])
+    lng: Optional[float] = Field(None,
+                                 description="Longitude of the location.",
+                                 examples=[23.5619])
+    lat: Optional[float] = Field(None,
+                                 description="Latitude of the location.",
+                                 examples=[35.26861])
     address: str = Field("",
                          description="Address of the location. Typically is empty.",
                          examples=[""])
@@ -374,9 +374,9 @@ class PostBasicInfo(PostEngagementInfo):
                                 description="User who owns the post.",
                                 examples=[UserBasicInfo(id="387381865",
                                                         username="dummy_user")])
-    taken_at: int = Field(0,
-                          description="When the post was created, in unix epoch time.",
-                          examples=[1695060863])
+    taken_at: Optional[int] = Field(None,
+                                    description="When the post was created, in unix epoch time.",
+                                    examples=[1695060863])
     media_type: str = Field(...,
                             description="Media type: Photo, Video, IGTV, Reel, Album.",
                             examples=["Photo"])
@@ -414,14 +414,16 @@ class MusicBasicInfo(PreferDefaultsModel):
     is_trending_in_clips: bool = Field(False,
                                        description="Is this music trending in clips?",
                                        examples=[True, False])
-    ig_artist: Optional[UserProfile] = Field(None,
-                                             description="Instagram artist who created this audio.",
-                                             examples=[UserProfile(id="387381865",
-                                                                   username="dummy_user",
-                                                                   fullname="Dummy User",
-                                                                   profile_pic_url="https://dummy-pic.com",
-                                                                   is_verified=False,
-                                                                   is_private=None)])
+    artist: Optional[UserProfile] = Field(None,
+                                          description="Artist who created this audio/music. For a music, it will only "
+                                                      "contain the name of the artist. For a sound, it will contain the"
+                                                      "creator's instagram information, such as id, username etc.",
+                                          examples=[UserProfile(id="387381865",
+                                                                username="dummy_user",
+                                                                fullname="Dummy User",
+                                                                profile_pic_url="https://dummy-pic.com",
+                                                                is_verified=False,
+                                                                is_private=None)])
     title: str = Field("Original audio", description="Title.", examples=["Original audio"])
     duration_in_ms: Optional[int] = Field(None, description="Music duration", examples=[6617])
     url: Optional[str] = Field(None,
@@ -451,9 +453,9 @@ class Post(PostBasicInfo):
                                                     profile_pic_url="https://dummy-pic.com",
                                                     is_verified=False,
                                                     is_private=None)])
-    has_shared_to_fb: bool = Field(False,
-                                   description="Is the post shared to facebook?",
-                                   examples=[False])
+    has_shared_to_fb: Optional[bool] = Field(None,
+                                             description="Is the post shared to facebook?",
+                                             examples=[False])
     usertags: List[Usertag] = Field([],
                                     description="Usertags appear in the post.",
                                     examples=[])
@@ -542,7 +544,7 @@ class Hashtag(HashtagBasicInfo):
 
 class SearchingResultBasicInfo(PreferDefaultsModel):
     """Hashtag appears in searching result."""
-    position: int = Field(0,
+    position: int = Field(...,
                           description="Position of the search result.",
                           examples=[0, 1])
 
@@ -617,6 +619,6 @@ class SearchingResult(PreferDefaultsModel):
                                                                                    name="Beijing, China"),
                                                                                            subtitle="",
                                                                                            title="Beijing, China"))]])
-    personalised: bool = Field(False,
+    personalised: bool = Field(...,
                                description="Indicate whether the searching result is personalised or not.",
                                examples=[True, False])

@@ -10,28 +10,28 @@ from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union
 from .schemas import (
     UserBasicInfo, UserProfile, UserInfo, Users, Liker, Likers, Comment,
-    Comments, Caption, PostBasicInfo, Posts, MusicPosts, HashtagBasicInfo,
+    Comments, Posts, MusicPosts, HashtagBasicInfo,
     HashtagBasicInfos, Hashtag, SearchingResultHashtag, SearchingResultUser,
     LocationBasicInfo, Place, SearchingResultPlace, SearchingResult,
     FriendshipStatus, Music
 )
 from .utils import search_request, get_json_data, filter_requests
-from .decorators import driver_implicit_wait, non_negative_collect_number
+from .decorators import driver_implicit_wait
 from .data_extraction import extract_post, extract_id, extract_music_info, extract_sound_info
 
 __all__ = [
     "collect_user_info",
     "collect_posts_of_user",
     "collect_reels_of_user",
-    "collect_user_tagged_posts",
+    "collect_tagged_posts_of_user",
     "get_friendship_status",
-    "collect_followers",
-    "collect_followings",
-    "collect_following_hashtags",
+    "collect_followers_of_user",
+    "collect_followings_of_user",
+    "collect_following_hashtags_of_user",
     "collect_likers_of_post",
     "collect_comments_of_post",
     "search_with_keyword",
-    "collect_hashtag_top_posts",
+    "collect_top_posts_of_hashtag",
     "collect_posts_by_music_id",
     "download_media"
 ]
@@ -40,7 +40,6 @@ INSTAGRAM_DOMAIN = "https://www.instagram.com"
 GRAPHQL_QUERY_PATH = "graphql/query"
 API_VERSION = "api/v1"
 FOLLOWING_DOC_ID = "17901966028246171"
-TAGGED_POST_DOC_ID = "17946422347485809"
 
 
 @driver_implicit_wait(10)
@@ -153,7 +152,7 @@ def collect_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> from crawlinsta.collecting import collect_posts_of_user
         >>> collect_posts_of_user(driver, "instagram_username", 100)
     """
-    def find_request(json_requests, url, username, after=""):
+    def find_request(json_requests, url, username, doc_id="7354141574647290", after=""):
         if not json_requests:
             raise ValueError("No requests to search.")
         for i, request in enumerate(json_requests):
@@ -161,10 +160,12 @@ def collect_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                 continue
             request_data = parse_qs(request.body.decode())
             av = request_data.get("av", [''])[0]
-            variables = json.loads(request_data.get("variables", ['{}'])[0])
+            variables = json.loads(request_data.get("variables", ["{}"])[0])
             if not av:
                 continue
             elif av != "17841461911219001":
+                continue
+            elif doc_id != request_data.get("doc_id", [''])[0]:
                 continue
             elif not variables:
                 continue
@@ -175,14 +176,14 @@ def collect_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
             return i
         raise ValueError(f"No json response to the url '{url}' found.")
 
-    if n < 0:
-        raise ValueError("Parameter 'n' must be bigger than or equal to 0.")
+    if n <= 0:
+        raise ValueError("The number of posts to collect must be a positive integer.")
 
     results = []
     remaining = n
 
     driver.get(f'{INSTAGRAM_DOMAIN}/{username}/')
-    time.sleep(random.randint(5, 7))
+    time.sleep(random.randint(4, 6))
 
     json_requests = filter_requests(driver.requests, "text/javascript; charset=utf-8")
     del driver.requests
@@ -198,11 +199,11 @@ def collect_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         footer = driver.find_element(By.XPATH, "//footer")
         ActionChains(driver).scroll_to_element(footer).perform()
 
-        time.sleep(random.randint(7, 10))
+        time.sleep(random.randint(4, 6))
         json_requests += filter_requests(driver.requests, "text/javascript; charset=utf-8")
         del driver.requests
 
-        idx = find_request(json_requests, target_url, username, after=results[-1]['page_info']["end_cursor"])
+        idx = find_request(json_requests, target_url, username, doc_id="7784658434954494", after=results[-1]['page_info']["end_cursor"])
         request = json_requests.pop(idx)
         json_data = get_json_data(request.response)["data"]["xdt_api__v1__feed__user_timeline_graphql_connection"]
         results.append(json_data)
@@ -250,8 +251,33 @@ def collect_reels_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> from crawlinsta.collecting import collect_reels_of_user
         >>> collect_reels_of_user(driver, "instagram_username", 100)
     """
-    if n < 0:
-        raise ValueError("Parameter 'n' must be bigger than or equal to 0.")
+    def find_request(json_requests, url, user_id, doc_id="7191572580905225", after=""):
+        if not json_requests:
+            raise ValueError("No requests to search.")
+        for i, request in enumerate(json_requests):
+            if request.url != url:
+                continue
+            request_data = parse_qs(request.body.decode())
+            av = request_data.get("av", [''])[0]
+            variables = json.loads(request_data.get("variables", ["{}"])[0])
+            if not av:
+                continue
+            elif av != "17841461911219001":
+                continue
+            elif request_data.get("doc_id", [''])[0] != doc_id:
+                continue
+            elif not variables:
+                continue
+            elif variables.get("data", dict()).get("target_user_id", "") != user_id:
+                continue
+            elif variables.get("after", "") != after:
+                print(variables.get("after", ""), after)
+                continue
+            return i
+        raise ValueError(f"No json response to the url '{url}' found.")
+
+    if n <= 0:
+        raise ValueError("The number of reels to collect must be a positive integer.")
 
     results = []
     remaining = n
@@ -259,46 +285,53 @@ def collect_reels_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     driver.get(f'{INSTAGRAM_DOMAIN}/{username}/reels/')
     time.sleep(random.randint(4, 6))
 
+    # get user id
     json_requests = filter_requests(driver.requests)
-    del driver.requests
-
-    # get first 12 documents
-    target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/clips/user/"
+    target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username={username}"
     idx = search_request(json_requests, target_url)
     request = json_requests.pop(idx)
     json_data = get_json_data(request.response)
+    user_data = json_data["data"]['user']
+    user_id = extract_id(user_data)
+
+    json_requests = filter_requests(driver.requests, "text/javascript; charset=utf-8")
+    del driver.requests
+
+    # get first 12 documents
+    target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
+    idx = find_request(json_requests, target_url, user_id)
+    request = json_requests.pop(idx)
+    json_data = get_json_data(request.response)["data"]["xdt_api__v1__clips__user__connection_v2"]
     results.append(json_data)
-    remaining -= len(json_data["items"])
+    remaining -= len(json_data["edges"])
 
-    while results[-1]['paging_info']['more_available']:
-        if n > 0 >= remaining:
-            break
-
+    while results[-1]['page_info']["has_next_page"] and remaining > 0:
         footer = driver.find_element(By.XPATH, "//footer")
         ActionChains(driver).scroll_to_element(footer).perform()
 
         time.sleep(random.randint(4, 6))
-        json_requests += filter_requests(driver.requests)
+        json_requests += filter_requests(driver.requests, "text/javascript; charset=utf-8")
         del driver.requests
 
-        idx = search_request(json_requests, target_url)
+        idx = find_request(json_requests, target_url, user_id, "7631884496822310",
+                           results[-1]['page_info']["end_cursor"])
         request = json_requests.pop(idx)
-        json_data = get_json_data(request.response)
+        json_data = get_json_data(request.response)["data"]["xdt_api__v1__clips__user__connection_v2"]
         results.append(json_data)
-        remaining -= len(json_data["items"])
+        remaining -= len(json_data["edges"])
 
     posts = []
     for result in results:
-        for item in result['items']:
-            post = extract_post(item['media'])
+        for item in result['edges']:
+            post = extract_post(item['node']["media"])
             posts.append(post)
     posts = posts[:n]
     return Posts(posts=posts, count=len(posts)).model_dump(mode="json")
 
 
-def collect_user_tagged_posts(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
-                              username: str,
-                              n: int = 100) -> Json:
+def collect_tagged_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
+                                 username: str,
+                                 n: int = 100) -> Json:
     """Collect n posts in which user was tagged.
 
     Strategy: click the username, get to the main page of the user, a few posts
@@ -322,21 +355,44 @@ def collect_user_tagged_posts(driver: Union[Chrome, Edge, Firefox, Safari, Remot
         >>> driver = webdriver.Chrome('path_to_chromedriver')
         >>> from crawlinsta.login import login
         >>> login(driver, "your_username", "your_password")
-        >>> from crawlinsta.collecting import collect_user_tagged_posts
-        >>> collect_user_tagged_posts(driver, "instagram_username", 100)
+        >>> from crawlinsta.collecting import collect_tagged_posts_of_user
+        >>> collect_tagged_posts_of_user(driver, "instagram_username", 100)
     """
-    if n < 0:
-        raise ValueError("Parameter 'n' must be bigger than or equal to 0.")
+    def find_request(json_requests, url, user_id, doc_id="7289408964443685", after=""):
+        if not json_requests:
+            raise ValueError("No requests to search.")
+        for i, request in enumerate(json_requests):
+            if request.url != url:
+                continue
+            request_data = parse_qs(request.body.decode())
+            av = request_data.get("av", [''])[0]
+            variables = json.loads(request_data.get("variables", ["{}"])[0])
+            if not av:
+                continue
+            elif av != "17841461911219001":
+                continue
+            elif doc_id != request_data.get("doc_id", [''])[0]:
+                continue
+            elif not variables:
+                continue
+            elif variables.get("user_id", "") != user_id:
+                continue
+            elif variables.get("after", "") != after:
+                continue
+            return i
+        raise ValueError(f"No json response to the url '{url}' found.")
+
+    if n <= 0:
+        raise ValueError("The number of tagged posts to collect must be a positive integer.")
 
     results = []
     remaining = n
 
-    driver.get(f'{INSTAGRAM_DOMAIN}/{username}/tagged')
+    driver.get(f'{INSTAGRAM_DOMAIN}/{username}/tagged/')
     time.sleep(random.randint(4, 6))
 
+    # get user id
     json_requests = filter_requests(driver.requests)
-    del driver.requests
-
     target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username={username}"
     idx = search_request(json_requests, target_url)
     request = json_requests.pop(idx)
@@ -344,63 +400,39 @@ def collect_user_tagged_posts(driver: Union[Chrome, Edge, Firefox, Safari, Remot
     user_data = json_data["data"]['user']
     user_id = extract_id(user_data)
 
+    json_requests = filter_requests(driver.requests, "text/javascript; charset=utf-8")
+    del driver.requests
+
     # get first 12 documents
-    variables = dict(id=user_id, first=12)
-    query_dict = dict(doc_id=TAGGED_POST_DOC_ID, variables=json.dumps(variables, separators=(',', ':')))
-    target_url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}/?{urlencode(query_dict, quote_via=quote)}"
-    idx = search_request(json_requests, target_url)
+    target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
+    idx = find_request(json_requests, target_url, user_id)
     request = json_requests.pop(idx)
-    json_data = get_json_data(request.response)
-    results.append(json_data["data"]["user"]["edge_user_to_photos_of_you"])
-    remaining -= results[-1]["count"]
+    json_data = get_json_data(request.response)["data"]["xdt_api__v1__usertags__user_id__feed_connection"]
+    results.append(json_data)
+    remaining -= len(json_data["edges"])
 
-    while results[-1]['page_info']['has_next_page']:
-        if n > 0 >= remaining:
-            break
-
+    while results[-1]['page_info']["has_next_page"] and remaining > 0:
         footer = driver.find_element(By.XPATH, "//footer")
         ActionChains(driver).scroll_to_element(footer).perform()
 
         time.sleep(random.randint(4, 6))
-        json_requests += filter_requests(driver.requests)
+        json_requests += filter_requests(driver.requests, "text/javascript; charset=utf-8")
         del driver.requests
 
-        variables = dict(id=user_id, after=results[-1]['page_info']['end_cursor'], first=12)
-        query_dict = dict(doc_id=TAGGED_POST_DOC_ID, variables=json.dumps(variables, separators=(',', ':')))
-        target_url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}/?{urlencode(query_dict, quote_via=quote)}"
-        idx = search_request(json_requests, target_url)
+        idx = find_request(json_requests, target_url, user_id, "6933349160067627",
+                           results[-1]['page_info']["end_cursor"])
         request = json_requests.pop(idx)
-        json_data = get_json_data(request.response)
-        results.append(json_data["data"]["user"]["edge_user_to_photos_of_you"])
-        remaining -= results[-1]["count"]
+        json_data = get_json_data(request.response)["data"]["xdt_api__v1__usertags__user_id__feed_connection"]
+        results.append(json_data)
+        remaining -= len(json_data["edges"])
 
-    tagged_posts = []
+    posts = []
     for result in results:
         for item in result['edges']:
-            item = item['node']
-
-            caption = None
-            if item['edge_media_to_caption']['edges']:
-                caption = Caption(text=item['edge_media_to_caption']['edges'][0]["node"]["text"])
-
-            user = UserBasicInfo(id=extract_id(item["owner"]),
-                                 username=item["owner"]["username"])
-
-            post = PostBasicInfo(id=extract_id(item),
-                                 code=item['shortcode'],
-                                 user=user,
-                                 taken_at=item['taken_at_timestamp'],
-                                 media_type=item['__typename'],
-                                 caption=caption,
-                                 accessibility_caption=item['accessibility_caption'],
-                                 original_width=item['dimensions']['width'],
-                                 original_height=item['dimensions']['height'],
-                                 urls=[item["display_url"]],
-                                 like_count=item['edge_media_preview_like']['count'],
-                                 comment_count=item['edge_media_to_comment']['count'])
-            tagged_posts.append(post)
-    tagged_posts = tagged_posts[:n]
-    return Posts(posts=tagged_posts, count=len(tagged_posts)).model_dump(mode="json")
+            post = extract_post(item['node'])
+            posts.append(post)
+    posts = posts[:n]
+    return Posts(posts=posts, count=len(posts)).model_dump(mode="json")
 
 
 def get_friendship_status(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
@@ -491,9 +523,9 @@ def get_friendship_status(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
 
 @driver_implicit_wait(10)
-def collect_followers(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
-                      username: str,
-                      n: int = 100) -> Json:
+def collect_followers_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
+                              username: str,
+                              n: int = 100) -> Json:
     """Collect n followers of the given user. Anyone besides the account owner
     can get maximal 50 followers.
 
@@ -517,11 +549,11 @@ def collect_followers(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> driver = webdriver.Chrome('path_to_chromedriver')
         >>> from crawlinsta.login import login
         >>> login(driver, "your_username", "your_password")
-        >>> from crawlinsta.collecting import collect_followers
-        >>> collect_followers(driver, "instagram_username", 100)
+        >>> from crawlinsta.collecting import collect_followers_of_user
+        >>> collect_followers_of_user(driver, "instagram_username", 100)
     """
-    if n < 0:
-        raise ValueError("Parameter 'n' must be bigger than or equal to 0.")
+    if n <= 0:
+        raise ValueError("The number of followers to collect must be a positive integer.")
 
     results = []
     remaining = n
@@ -556,10 +588,7 @@ def collect_followers(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     results.append(json_data)
     remaining -= len(json_data["users"])
 
-    while 'next_max_id' in results[-1]:
-        if n > 0 >= remaining:
-            break
-
+    while 'next_max_id' in results[-1] and remaining > 0:
         followers_bottom = driver.find_element(By.XPATH, "//div[@class='_aano']//div[@role='progressbar']")
         ActionChains(driver).scroll_to_element(followers_bottom).perform()
 
@@ -568,8 +597,8 @@ def collect_followers(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         json_requests += filter_requests(driver.requests)
         del driver.requests
 
-        query_dict = dict(count=12, max_id=results[-1]['next_max_id'])
-        target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/following/?{urlencode(query_dict, quote_via=quote)}"
+        query_dict = dict(count=12, max_id=results[-1]['next_max_id'], search_surface="follow_list_page")
+        target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/followers/?{urlencode(query_dict, quote_via=quote)}"
         idx = search_request(json_requests, target_url)
         request = json_requests.pop(idx)
         json_data = get_json_data(request.response)
@@ -591,9 +620,9 @@ def collect_followers(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
 
 @driver_implicit_wait(10)
-def collect_followings(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
-                       username: str,
-                       n: int = 100) -> Json:
+def collect_followings_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
+                               username: str,
+                               n: int = 100) -> Json:
     """Collect n followings of the given user.
 
     Strategy: click the username, get to the main page of the user, then click following, a list of
@@ -615,11 +644,11 @@ def collect_followings(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> driver = webdriver.Chrome('path_to_chromedriver')
         >>> from crawlinsta.login import login
         >>> login(driver, "your_username", "your_password")
-        >>> from crawlinsta.collecting import collect_followings
-        >>> collect_followings(driver, "instagram_username", 100)
+        >>> from crawlinsta.collecting import collect_followings_of_user
+        >>> collect_followings_of_user(driver, "instagram_username", 100)
     """
-    if n < 0:
-        raise ValueError("Parameter 'n' must be bigger than or equal to 0.")
+    if n <= 0:
+        raise ValueError("The number of following users to collect must be a positive integer.")
 
     results = []
     remaining = n
@@ -654,10 +683,7 @@ def collect_followings(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     results.append(json_data)
     remaining -= len(json_data["users"])
 
-    while 'next_max_id' in results[-1]:
-        if n > 0 >= remaining:
-            break
-
+    while 'next_max_id' in results[-1] and remaining > 0:
         following_bottom = driver.find_element(By.XPATH, "//div[@class='_aano']//div[@role='progressbar']")
         ActionChains(driver).scroll_to_element(following_bottom).perform()
 
@@ -689,9 +715,9 @@ def collect_followings(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
 
 @driver_implicit_wait(10)
-def collect_following_hashtags(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
-                               username: str,
-                               n: int = 100) -> Json:
+def collect_following_hashtags_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
+                                       username: str,
+                                       n: int = 100) -> Json:
     """Collect n followings hashtags of the given user.
 
     Strategy: click the username, get to the main page of the user, then click
@@ -715,11 +741,11 @@ def collect_following_hashtags(driver: Union[Chrome, Edge, Firefox, Safari, Remo
         >>> driver = webdriver.Chrome('path_to_chromedriver')
         >>> from crawlinsta.login import login
         >>> login(driver, "your_username", "your_password")
-        >>> from crawlinsta.collecting import collect_following_hashtags
-        >>> collect_following_hashtags(driver, "instagram_username", 100)
+        >>> from crawlinsta.collecting import collect_following_hashtags_of_user
+        >>> collect_following_hashtags_of_user(driver, "instagram_username", 100)
     """
-    if n < 0:
-        raise ValueError("Parameter 'n' must be bigger than or equal to 0.")
+    if n <= 0:
+        raise ValueError("The number of following hashtags to collect must be a positive integer.")
 
     results = []
     remaining = n
@@ -813,8 +839,8 @@ def collect_likers_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> from crawlinsta.collecting import collect_likers_of_post
         >>> collect_likers_of_post(driver, "WGDBS3D", 100)
     """
-    if n < 0:
-        raise ValueError("Parameter 'n' must be bigger than or equal to 0.")
+    if n <= 0:
+        raise ValueError("The number of likers to collect must be a positive integer.")
 
     results = []
 
@@ -921,7 +947,7 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
             elif variables.get("media_id") != post_id:
                 continue
             return i
-        raise ValueError(f"No json response to the url '{target_url}' found.")
+        raise ValueError(f"No json response to the url '{url}' found.")
 
     def find_cached_data():
         scripts = driver.find_elements(By.XPATH, '//script[@type="application/json"]')
@@ -956,8 +982,8 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
                     json_data.append(item["__bbox"]["result"])
         return json_data
 
-    if n < 0:
-        raise ValueError("Parameter 'n' must be bigger than or equal to 0.")
+    if n <= 0:
+        raise ValueError("The number of comments to collect must be a positive integer.")
 
     results = []
     remaining = n
@@ -1049,6 +1075,23 @@ def search_with_keyword(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> from crawlinsta.collecting import search_with_keyword
         >>> search_with_keyword(driver, "asian games", True)
     """
+    def find_request(json_requests, url, keyword):
+        if not json_requests:
+            raise ValueError("No requests to search.")
+        for i, request in enumerate(json_requests):
+            if request.url != url:
+                continue
+            request_data = parse_qs(request.body.decode())
+            variables = json.loads(request_data.get("variables", ['{}'])[0])
+            if not variables:
+                continue
+            elif pers and variables.get("data", dict(query=""))["query"] != keyword:
+                continue
+            elif not pers and variables.get("query") != keyword:
+                continue
+            return i
+        raise ValueError(f"No json response to the url '{url}' found.")
+
     driver.get(f'{INSTAGRAM_DOMAIN}')
     time.sleep(random.randint(4, 6))
 
@@ -1072,27 +1115,12 @@ def search_with_keyword(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     del driver.requests
 
     target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
-    if not json_requests:
-        raise ValueError("No requests to search.")
-    idx = None
-    for i, request in enumerate(json_requests):
-        if request.url != target_url:
-            continue
-        variables = json.loads(parse_qs(request.body.decode()).get("variables", ['{}'])[0])
-        if not variables:
-            continue
-        elif pers and variables.get("data", dict(query=""))["query"] != keyword:
-            continue
-        elif not pers and variables.get("query") != keyword:
-            continue
-        idx = i
-        break
-    if idx is None:
-        raise ValueError(f"No json response to the url '{target_url}' found.")
+    idx = find_request(json_requests, target_url, keyword)
     request = json_requests.pop(idx)
     json_data = get_json_data(request.response)
     data_key = "xdt_api__v1__fbsearch__topsearch_connection" if pers else "xdt_api__v1__fbsearch__non_profiled_serp"
     json_data = json_data["data"][data_key]
+
     hashtags = []
     places = []
     if pers:
@@ -1136,8 +1164,8 @@ def search_with_keyword(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     return searching_result.model_dump(mode="json")
 
 
-def collect_hashtag_top_posts(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
-                              hashtag: str) -> Json:
+def collect_top_posts_of_hashtag(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
+                                 hashtag: str) -> Json:
     """Collect top posts of a given hashtag.
 
     Strategy: click the search button from the left navigation bar, and input the hashtag in
@@ -1156,8 +1184,8 @@ def collect_hashtag_top_posts(driver: Union[Chrome, Edge, Firefox, Safari, Remot
         >>> driver = webdriver.Chrome('path_to_chromedriver')
         >>> from crawlinsta.login import login
         >>> login(driver, "your_username", "your_password")
-        >>> from crawlinsta.collecting import collect_hashtag_top_posts
-        >>> collect_hashtag_top_posts(driver, "asiangames", True)
+        >>> from crawlinsta.collecting import collect_top_posts_of_hashtag
+        >>> collect_top_posts_of_hashtag(driver, "asiangames", True)
     """
     driver.get(f'{INSTAGRAM_DOMAIN}/explore/tags/{hashtag}')
     time.sleep(random.randint(4, 6))
@@ -1218,26 +1246,22 @@ def collect_posts_by_music_id(driver: Union[Chrome, Edge, Firefox, Safari, Remot
         >>> from crawlinsta.collecting import collect_posts_by_music_id
         >>> collect_posts_by_music_id(driver, "664212705901923", 100)
     """
-    def find_request(json_requests, url, music_id, first=False):
+    def find_request(json_requests, url, music_id, max_id=""):
         if not json_requests:
             raise ValueError("No requests to search.")
         for i, request in enumerate(json_requests):
             if request.url != url:
                 continue
             request_data = parse_qs(request.body.decode())
-            if first and "max_id" in request_data:
+            if request_data.get("max_id", [""])[0] != max_id:
                 continue
-            elif not first and "max_id" not in request_data:
-                continue
-            elif 'audio_cluster_id' not in request_data:
-                continue
-            elif request_data["audio_cluster_id"][0] != music_id:
+            elif request_data.get("audio_cluster_id", [""])[0] != music_id:
                 continue
             return i
-        raise ValueError(f"No json response to the url '{target_url}' found.")
+        raise ValueError(f"No json response to the url '{url}' found.")
 
-    if n < 0:
-        raise ValueError("Parameter 'n' must be bigger than or equal to 0.")
+    if n <= 0:
+        raise ValueError("The number of posts to collect must be a positive integer.")
 
     results = []
     remaining = n
@@ -1249,15 +1273,13 @@ def collect_posts_by_music_id(driver: Union[Chrome, Edge, Firefox, Safari, Remot
     del driver.requests
     # get first 12 documents
     target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/clips/music/"
-    idx = find_request(json_requests, target_url, music_id, True)
+    idx = find_request(json_requests, target_url, music_id)
     request = json_requests.pop(idx)
     json_data = get_json_data(request.response)
     results.append(json_data)
     remaining -= len(json_data["items"])
 
-    while results[-1]["paging_info"]['more_available']:
-        if n > 0 >= remaining:
-            break
+    while results[-1]["paging_info"]['more_available'] and remaining > 0:
         footer = driver.find_element(By.XPATH, "//footer")
         ActionChains(driver).scroll_to_element(footer).perform()
 
@@ -1265,7 +1287,7 @@ def collect_posts_by_music_id(driver: Union[Chrome, Edge, Firefox, Safari, Remot
         json_requests += filter_requests(driver.requests)
         del driver.requests
 
-        idx = find_request(json_requests, target_url, music_id, False)
+        idx = find_request(json_requests, target_url, music_id, results[-1]["paging_info"]['max_id'])
         request = json_requests.pop(idx)
         json_data = get_json_data(request.response)
         results.append(json_data)

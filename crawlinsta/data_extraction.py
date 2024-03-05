@@ -23,17 +23,12 @@ def extract_post_urls(post_info_dict: Dict[str, Any]) -> List[str]:
 
 
 def extract_music_info(music_info_dict: Dict[str, Any]) -> Union[MusicBasicInfo, None]:
-    ig_artist = None
-    if music_info_dict["music_consumption_info"].get("ig_artist"):
-        ig_artist = UserProfile(id=extract_id(music_info_dict["music_consumption_info"]["ig_artist"]),
-                                username=music_info_dict["music_consumption_info"]["ig_artist"]["username"],
-                                fullname=music_info_dict["music_consumption_info"]["ig_artist"].get("fullname"),
-                                profile_pic_url=music_info_dict["music_consumption_info"]["ig_artist"].get("profile_pic_url"),
-                                is_verified=music_info_dict["music_consumption_info"]["ig_artist"].get("is_verified"),
-                                is_private=music_info_dict["music_consumption_info"]["ig_artist"].get("is_private"))
+    artist = None
+    if music_info_dict["music_asset_info"].get("display_artist"):
+        artist = UserProfile(fullname=music_info_dict["music_asset_info"]["display_artist"])
     music = MusicBasicInfo(id=music_info_dict["music_asset_info"]["audio_cluster_id"],
                            is_trending_in_clips=music_info_dict["music_consumption_info"].get("is_trending_in_clips"),
-                           ig_artist=ig_artist,
+                           artist=artist,
                            title=music_info_dict["music_asset_info"].get("title"),
                            duration_in_ms=music_info_dict["music_asset_info"].get("duration_in_ms"),
                            url=music_info_dict["music_asset_info"].get("progressive_download_url"))
@@ -51,7 +46,7 @@ def extract_sound_info(sound_info_dict: Dict[str, Any]) -> Union[MusicBasicInfo,
                                 is_private=sound_info_dict["ig_artist"].get("is_private"))
     music = MusicBasicInfo(id=sound_info_dict["audio_asset_id"],
                            is_trending_in_clips=sound_info_dict["consumption_info"].get("is_trending_in_clips"),
-                           ig_artist=ig_artist,
+                           artist=ig_artist,
                            title=sound_info_dict.get("original_audio_title"),
                            duration_in_ms=sound_info_dict.get("duration_in_ms"),
                            url=sound_info_dict.get("progressive_download_url"))
@@ -59,7 +54,7 @@ def extract_sound_info(sound_info_dict: Dict[str, Any]) -> Union[MusicBasicInfo,
 
 
 def extract_music(post_info_dict: Dict[str, Any]) -> Union[MusicBasicInfo, None]:
-    metadata = post_info_dict["clips_metadata"]
+    metadata = post_info_dict.get("clips_metadata")
     if not metadata:
         return None
     audio_type = metadata.get("audio_type")
@@ -122,7 +117,7 @@ def extract_post(post_info_dict: Dict[str, Any]) -> Post:
 
     owner = post_info_dict["user"]
     user = UserProfile(id=extract_id(owner),
-                       username=owner["username"],
+                       username=owner.get("username"),
                        fullname=owner.get("full_name"),
                        profile_pic_url=owner.get("profile_pic_url"),
                        is_private=owner.get("is_private"),

@@ -1339,7 +1339,7 @@ def download_media(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     for req in driver.requests:
         if not req.response:
             continue
-        elif 'content-type' not in req.response.headers:
+        elif 'Content-Type' not in req.response.headers:
             continue
         elif req.url != media_url:
             continue
@@ -1347,7 +1347,7 @@ def download_media(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         break
     if not request:
         raise ValueError(f"Media from {media_url} cannot be downloaded.")
-    file_extension = request.response.headers["content-type"].split("/")[1]
+    file_extension = request.response.headers["Content-Type"].split("/")[1]
     with open(f"{file_name}.{file_extension}", "wb") as f:
         f.write(request.response.body)
         f.close()

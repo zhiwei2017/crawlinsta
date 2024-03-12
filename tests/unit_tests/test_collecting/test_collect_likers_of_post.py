@@ -5,11 +5,11 @@ from crawlinsta.collecting import INSTAGRAM_DOMAIN, API_VERSION, collect_likers_
 
 
 class MockedDriver:
-    def __init__(self, media_id="3283079976352304185",
+    def __init__(self, post_id="3283079976352304185",
                  data_file="tests/resources/likers/likers.json"):
         self.requests = []
         self.call_find_element_number = 0
-        self.media_id = media_id
+        self.post_id = post_id
         self.data_file = data_file
 
     def implicitly_wait(self, seconds):
@@ -21,9 +21,9 @@ class MockedDriver:
     def find_element(self, by, value):
         mocked_element = mock.Mock()
         if not self.call_find_element_number:
-            mocked_element.get_attribute = mock.Mock(return_value=self.media_id)
+            mocked_element.get_attribute = mock.Mock(return_value=self.post_id)
         else:
-            url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/media/{self.media_id}/likers/"
+            url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/media/{self.post_id}/likers/"
             with open(self.data_file, "r") as file:
                 data = json.load(file)
             response = mock.Mock(headers={"Content-Type": "application/json; charset=utf-8",

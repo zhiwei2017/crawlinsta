@@ -8,7 +8,7 @@ def test_driver_implicit_wait():
     seconds = 10
 
     @driver_implicit_wait(seconds)
-    def test_function(driver):
+    def test_function(chrome_driver):
         pass
 
     test_function(driver)

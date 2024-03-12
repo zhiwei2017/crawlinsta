@@ -45,7 +45,7 @@ flake8:
 
 # Install requirements for testing and run tests
 test:
-	poetry run pytest
+	poetry run pytest tests/unit_tests
 
 # build wheel package
 build:

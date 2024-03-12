@@ -2,13 +2,12 @@ import json
 from pydantic import Json
 from seleniumwire.utils import decode
 from seleniumwire.request import Request, Response
-from typing import List, Union
-
-JSON_RESPONSE_CONTENT_TYPE = "application/json; charset=utf-8"
+from typing import List, Union, Optional
+from .constants import INSTAGRAM_DOMAIN, API_VERSION, JsonResponseContentType
 
 
 def filter_requests(requests: List[Request],
-                    response_content_type: str = JSON_RESPONSE_CONTENT_TYPE) -> List[Request]:
+                    response_content_type: str = JsonResponseContentType.application_json) -> List[Request]:
     """
 
     Args:
@@ -32,16 +31,20 @@ def filter_requests(requests: List[Request],
 
 def search_request(requests: List[Request],
                    request_url: str,
-                   response_content_type: str = JSON_RESPONSE_CONTENT_TYPE) -> Union[int, None]:
+                   response_content_type: Optional[str] = JsonResponseContentType.application_json,
+                   additional_search_func: callable = None,
+                   *args, **kwargs) -> Union[int, None]:
     """
+
 
     Args:
         requests (:obj:`list` of :obj:`seleniumwire.request.Request`):
-        request_url (str):
-        response_content_type (str):
+        request_url (str): The url to search for.
+        response_content_type (Optional[str]): The content type of the response.
+        additional_search_func (callable): Additional search function to apply.
 
     Returns:
-        :obj:`seleniumwire.request.Request`:
+        int: The index of the request in the list of requests.
     """
     if not requests:
         raise ValueError("No requests to search.")
@@ -50,10 +53,14 @@ def search_request(requests: List[Request],
             continue
         elif not request.response:
             continue
-        elif request.response.headers['Content-Type'] != response_content_type:
+        elif 'Content-Type' not in request.response.headers:
+            continue
+        elif response_content_type and request.response.headers['Content-Type'] != response_content_type:
+            continue
+        elif additional_search_func and not additional_search_func(request, *args, **kwargs):
             continue
         return i
-    raise ValueError(f"No json response to the url '{request_url}' found.")
+    raise ValueError(f"No response with content-type [{response_content_type}] to the url '{request_url}' found.")
 
 
 def get_json_data(response: Response) -> Json:
@@ -114,3 +121,34 @@ def get_media_type(media_type: int, product_type: str):
             return "Album"
         case other:
             raise ValueError("Invalid media_type")
+
+
+def get_user_data(requests: List[Request], username) -> Union[str, None]:
+    """
+
+    Args:
+        requests ():
+        username ():
+
+    Returns:
+
+    """
+    json_requests = filter_requests(requests)
+    target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username={username}"
+    idx = search_request(json_requests, target_url)
+    request = json_requests.pop(idx)
+    json_data = get_json_data(request.response)
+    return json_data["data"]['user']
+
+
+def find_brackets(text: str) -> List[tuple]:
+    stack = []
+    brackets = []
+    for i, char in enumerate(text):
+        if char == "{":
+            stack.append(i)
+        elif char == "}":
+            if not stack:
+                break
+            brackets.append((stack.pop(), i))
+    return brackets

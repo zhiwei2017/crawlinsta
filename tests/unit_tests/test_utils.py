@@ -1,5 +1,9 @@
 import pytest
-from crawlinsta.utils import filter_requests, search_request, get_json_data, get_media_type
+from crawlinsta.utils import (
+    filter_requests, search_request, get_json_data, get_media_type,
+    get_user_data, find_brackets
+)
+from crawlinsta.constants import JsonResponseContentType, INSTAGRAM_DOMAIN, API_VERSION
 from seleniumwire.request import Request, Response
 
 
@@ -33,12 +37,14 @@ def test_search_request_empty_requests_fail():
 
 
 def test_search_request_not_found_fail():
-    with pytest.raises(ValueError, match="No json response to the url 'http://dummy.com' found."):
+    with pytest.raises(ValueError, match="No response with content-type \[application/json; charset=utf-8\] to the url 'http://dummy.com' found."):
         search_request([Request(method="GET", url="http://dummy.com", headers=[])],
                        request_url="http://dummy.com")
 
 
 def test_search_request_success():
+    def check_request_header(request, header):
+        return header in request.headers
     request1 = Request(method="GET", url="http://dummy.com", headers=[])
 
     request2 = Request(method="GET", url="http://dummy.com/2/", headers=[])
@@ -53,11 +59,21 @@ def test_search_request_success():
     request4 = Request(method="GET", url="http://dummy.com/2/", headers=[])
     request4.response = response2
 
-    requests = [request1, request2, request3, request4]
+    response3 = Response(status_code=200, reason="ok", headers=[])
+    request5 = Request(method="GET", url="http://dummy.com/2/", headers=[])
+    request5.response = response3
 
-    result = search_request(requests, request_url="http://dummy.com/2/")
+    response4 = Response(status_code=200, reason="ok", headers=[('Content-Type',
+                                                                 "application/json; charset=utf-8")])
+    request6 = Request(method="GET", url="http://dummy.com/2/", headers=[('Content-Type',
+                                                                 "application/json; charset=utf-8")])
+    request6.response = response4
 
-    assert result == 3
+    requests = [request1, request2, request3, request4, request5, request6]
+
+    result = search_request(requests, "http://dummy.com/2/", JsonResponseContentType.application_json, check_request_header, "Content-Type")
+
+    assert result == 5
 
 
 def test_get_json_data():
@@ -92,3 +108,39 @@ def test_get_media_type_success():
 
     result = get_media_type(8, "album")
     assert result == "Album"
+
+
+def test_get_user_data():
+    url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username=1234"
+    request1 = Request(method="GET", url=f"{url}/2/", headers=[])
+
+    request2 = Request(method="GET", url=url, headers=[])
+
+    response3 = Response(status_code=200, reason="ok", headers=[('Content-Type',
+                                                                 "application/xform; charset=utf-8")])
+    request3 = Request(method="GET", url=url, headers=[])
+    request3.response = response3
+
+    response4 = Response(status_code=200, reason="ok", headers=[('Content-Type',
+                                                                 "application/json; charset=utf-8")],
+                         body=b'{"data": {"user": "dummy"}}')
+    request4 = Request(method="GET", url=url, headers=[])
+    request4.response = response4
+
+    response5 = Response(status_code=200, reason="ok", headers=[])
+    request5 = Request(method="GET", url=url, headers=[])
+    request5.response = response5
+
+    requests = [request1, request2, request3, request4, request5]
+
+    result = get_user_data(requests, "1234")
+
+    assert result == "dummy"
+
+
+def test_find_brackets():
+    result = find_brackets("{{{{}}}}")
+    assert result == [(3, 4), (2, 5), (1, 6), (0, 7)]
+
+    result = find_brackets("{{{{}}}}}{}")
+    assert result == [(3, 4), (2, 5), (1, 6), (0, 7)]

@@ -1,3 +1,4 @@
+import logging
 import pickle
 import time
 from selenium.common.exceptions import NoSuchElementException
@@ -9,6 +10,8 @@ __all__ = [
     "login",
     "login_with_cookies"
 ]
+
+logger = logging.getLogger("crawlinsta")
 
 
 def login(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
@@ -46,7 +49,7 @@ def login(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         decline_optional_cookies_btn = driver.find_element(By.XPATH, '//button[@tabindex="0"][text()="Decline optional cookies"]')
         decline_optional_cookies_btn.click()
     except NoSuchElementException:
-        pass
+        logger.error("Optional cookies popup not found")
 
     username_field = driver.find_element(By.NAME, 'username')
     password_field = driver.find_element(By.NAME, 'password')
@@ -68,7 +71,7 @@ def login(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         not_turn_on_notifications_btn = driver.find_element(By.XPATH, '//button[@tabindex="0"][text()="Not Now"]')
         not_turn_on_notifications_btn.click()
     except NoSuchElementException:
-        pass
+        logger.error("Notifications popup not found")
     return True
 
 
@@ -96,7 +99,7 @@ def login_with_cookies(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         decline_optional_cookies_btn = driver.find_element(By.XPATH, '//button[@tabindex="0"][text()="Decline optional cookies"]')
         decline_optional_cookies_btn.click()
     except NoSuchElementException:
-        pass
+        logger.error("Optional cookies popup not found")
 
     cookies = pickle.load(open(cookies_path, "rb"))
     for cookie in cookies:
@@ -108,4 +111,4 @@ def login_with_cookies(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         not_turn_on_notifications_btn = driver.find_element(By.XPATH, '//button[@tabindex="0"][text()="Not Now"]')
         not_turn_on_notifications_btn.click()
     except NoSuchElementException:
-        pass
+        logger.error("Notifications popup not found")

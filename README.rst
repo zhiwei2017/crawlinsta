@@ -17,7 +17,7 @@ How to Install
 
 Please install it via::
 
-    pip install git+https://github.com/zhiwei2017/crawlinsta.git@init
+    pip install git+https://github.com/zhiwei2017/crawlinsta.git@master
 
 How to Use
 ++++++++++
@@ -29,7 +29,7 @@ To create a browser driver, you need to first import **webdriver** from
 
     >>> from crawlinsta import webdriver
     >>> driver = webdriver.Chrome('path_to_chromedriver')
-    >>> "Do some crawling with driver"
+    >>> # Do some crawling with driver
     >>> driver.quit()
 
 If you don't specify the Chrome driver path, the default one will be used.
@@ -74,42 +74,236 @@ Current available crawling functions:
      -
         * driver: browser driver instance
         * username (:obj:`str`): username to crawl
-     - collect_user_info(driver, "dummy_instagram_username")
+     - ::
+
+        from crawlinsta import webdriver
+        from crawlinsta.login import login, login_with_cookies
+        from crawlinsta.collecting import collect_user_info
+        driver = webdriver.Chrome('path_to_chromedriver')
+        # if you already used once the login function, you can use the
+        # login_with_cookies function to login with the cookie file.
+        login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
+        collect_user_info(driver, "dummy_instagram_username")
+
    * - crawlinsta.collecting.collect_posts_of_user
      - Collects n posts from the account with given `username`
      -
         * driver: browser driver instance
         * username (:obj:`str`): username to crawl
         * n (:obj:`int`): maximum number of posts, which should be collected. By default, it's 100. If it's set to 0, collect all posts.
-     - collect_posts_of_user(driver, "dummy_instagram_username", 100)
+     - ::
+
+        from crawlinsta import webdriver
+        from crawlinsta.login import login, login_with_cookies
+        from crawlinsta.collecting import collect_posts_of_user
+        driver = webdriver.Chrome('path_to_chromedriver')
+        # if you already used once the login function, you can use the
+        # login_with_cookies function to login with the cookie file.
+        login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
+        collect_posts_of_user(driver, "dummy_instagram_username", 100)
+
    * - crawlinsta.collecting.collect_reels_of_user
      - Collects n reels from the account with given `username`
      -
         * driver: browser driver instance
         * username (:obj:`str`): username to crawl
         * n (:obj:`int`): maximum number of reels, which should be collected. By default, it's 100. If it's set to 0, collect all reels.
-     - collect_reels_of_user(driver, "dummy_instagram_username", 100)
-   * - crawlinsta.collecting.collect_followers
+     - ::
+
+        from crawlinsta import webdriver
+        from crawlinsta.login import login, login_with_cookies
+        from crawlinsta.collecting import collect_reels_of_user
+        driver = webdriver.Chrome('path_to_chromedriver')
+        # if you already used once the login function, you can use the
+        # login_with_cookies function to login with the cookie file.
+        login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
+        collect_reels_of_user(driver, "dummy_instagram_username", 100)
+
+   * - crawlinsta.collecting.collect_tagged_posts_of_user
+     - Collects n posts in which the user with given `username` is tagged
+     -
+        * driver: browser driver instance
+        * username (:obj:`str`): username to crawl
+        * n (:obj:`int`): maximum number of tagged posts, which should be collected. By default, it's 100. If it's set to 0, collect all tagged posts.
+     - ::
+
+        from crawlinsta import webdriver
+        from crawlinsta.login import login, login_with_cookies
+        from crawlinsta.collecting import collect_tagged_posts_of_user
+        driver = webdriver.Chrome('path_to_chromedriver')
+        # if you already used once the login function, you can use the
+        # login_with_cookies function to login with the cookie file.
+        login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
+        collect_tagged_posts_of_user(driver, "dummy_instagram_username", 100)
+
+   * - crawlinsta.collecting.get_friendship_status
+     - Get the relationship between the user with `username1` and the user with `username2`, i.e. finding out who is following whom.
+     -
+        * driver: browser driver instance
+        * username1 (:obj:`str`): username of the person A.
+        * username2 (:obj:`str`): username of the person B.
+     - ::
+
+        from crawlinsta import webdriver
+        from crawlinsta.login import login, login_with_cookies
+        from crawlinsta.collecting import get_friendship_status
+        driver = webdriver.Chrome('path_to_chromedriver')
+        # if you already used once the login function, you can use the
+        # login_with_cookies function to login with the cookie file.
+        login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
+        get_friendship_status(driver, "dummy_instagram_username1", "dummy_instagram_username2")
+
+   * - crawlinsta.collecting.collect_followers_of_user
      - Collects n followers from the account with given `username`
      -
         * driver: browser driver instance
         * username (:obj:`str`): username to crawl
         * n (:obj:`int`): maximum number of followers, which should be collected. By default, it's 100. If it's set to 0, collect all followers.
-     - collect_followers(driver, "dummy_instagram_username", 100)
-   * - crawlinsta.collecting.collect_followings
+     - ::
+
+        from crawlinsta import webdriver
+        from crawlinsta.login import login, login_with_cookies
+        from crawlinsta.collecting import collect_followers_of_user
+        driver = webdriver.Chrome('path_to_chromedriver')
+        # if you already used once the login function, you can use the
+        # login_with_cookies function to login with the cookie file.
+        login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
+        collect_followers_of_user(driver, "dummy_instagram_username", 100)
+
+   * - crawlinsta.collecting.collect_followings_of_user
      - Collects n following users from the account with given `username`
      -
         * driver: browser driver instance
         * username (:obj:`str`): username to crawl
         * n (:obj:`int`): maximum number of following users, which should be collected. By default, it's 100. If it's set to 0, collect all following users.
-     - collect_following(driver, "dummy_instagram_username", 100)
-   * - crawlinsta.collecting.collect_following_hashtags
+     - ::
+
+        from crawlinsta import webdriver
+        from crawlinsta.login import login, login_with_cookies
+        from crawlinsta.collecting import collect_followings_of_user
+        driver = webdriver.Chrome('path_to_chromedriver')
+        # if you already used once the login function, you can use the
+        # login_with_cookies function to login with the cookie file.
+        login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
+        collect_followings_of_user(driver, "dummy_instagram_username", 100)
+
+   * - crawlinsta.collecting.collect_following_hashtags_of_user
      - Collects n following hashtags from the account with given `username`
      -
         * driver: browser driver instance
         * username (:obj:`str`): username to crawl
         * n (:obj:`int`): maximum number of following hashtags, which should be collected. By default, it's 100. If it's set to 0, collect all following hashtags.
-     - collect_following_hashtags(driver, "dummy_instagram_username", 100)
+     - ::
+
+        from crawlinsta import webdriver
+        from crawlinsta.login import login, login_with_cookies
+        from crawlinsta.collecting import collect_following_hashtags_of_user
+        driver = webdriver.Chrome('path_to_chromedriver')
+        # if you already used once the login function, you can use the
+        # login_with_cookies function to login with the cookie file.
+        login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
+        collect_following_hashtags_of_user(driver, "dummy_instagram_username", 100)
+
+   * - crawlinsta.collecting.collect_likers_of_post
+     - Collect the users, who likes a given post.
+     -
+        * driver: browser driver instance
+        * post_code (:obj:`str`): post code, used for generating post directly accessible url.
+        * n (:obj:`int`): maximum number of likers, which should be collected. By default, it's 100. If it's set to 0, collect all likers.
+     - ::
+
+        from crawlinsta import webdriver
+        from crawlinsta.login import login, login_with_cookies
+        from crawlinsta.collecting import collect_likers_of_post
+        driver = webdriver.Chrome('path_to_chromedriver')
+        # if you already used once the login function, you can use the
+        # login_with_cookies function to login with the cookie file.
+        login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
+        collect_likers_of_post(driver, "dummy_post_code", 100)
+
+   * - crawlinsta.collecting.collect_comments_of_post
+     - Collect n comments of a given post.
+     -
+        * driver: browser driver instance
+        * post_code (:obj:`str`): post code, used for generating post directly accessible url.
+        * n (:obj:`int`): maximum number of comments, which should be collected. By default, it's 100. If it's set to 0, collect all comments.
+     - ::
+
+        from crawlinsta import webdriver
+        from crawlinsta.login import login, login_with_cookies
+        from crawlinsta.collecting import collect_comments_of_post
+        driver = webdriver.Chrome('path_to_chromedriver')
+        # if you already used once the login function, you can use the
+        # login_with_cookies function to login with the cookie file.
+        login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
+        collect_comments_of_post(driver, "dummy_post_code", 100)
+
+   * - crawlinsta.collecting.search_with_keyword
+     - Search hashtags or users with given keyword.
+     -
+        * driver: browser driver instance
+        * keyword (:obj:`str`): keyword for searching.
+        * pers (:obj:`bool`): indicating whether results should be personalized or not.
+     - ::
+
+        from crawlinsta import webdriver
+        from crawlinsta.login import login, login_with_cookies
+        from crawlinsta.collecting import search_with_keyword
+        driver = webdriver.Chrome('path_to_chromedriver')
+        # if you already used once the login function, you can use the
+        # login_with_cookies function to login with the cookie file.
+        login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
+        search_with_keyword(driver, "dummy_searching_keyword", pers=True)
+
+   * - crawlinsta.collecting.collect_top_posts_of_hashtag
+     - Collect top posts of a given hashtag.
+     -
+        * driver: browser driver instance
+        * hashtag (:obj:`str`): hashtag
+     - ::
+
+        from crawlinsta import webdriver
+        from crawlinsta.login import login, login_with_cookies
+        from crawlinsta.collecting import collect_top_posts_of_hashtag
+        driver = webdriver.Chrome('path_to_chromedriver')
+        # if you already used once the login function, you can use the
+        # login_with_cookies function to login with the cookie file.
+        login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
+        collect_top_posts_of_hashtag(driver, "dummy_hashtag")
+
+   * - crawlinsta.collecting.collect_posts_by_music_id
+     - Collect n posts containing the given music_id. If n is set to 0, collect all posts.
+     -
+        * driver: browser driver instance.
+        * music_id (:obj:`str`): id of the music.
+        * n (:obj:`int`): maximum number of posts, which should be collected. By default, it's 100. If it's set to 0, collect all posts.
+     - ::
+
+        from crawlinsta import webdriver
+        from crawlinsta.login import login, login_with_cookies
+        from crawlinsta.collecting import collect_posts_by_music_id
+        driver = webdriver.Chrome('path_to_chromedriver')
+        # if you already used once the login function, you can use the
+        # login_with_cookies function to login with the cookie file.
+        login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
+        collect_posts_by_music_id(driver, "dummy_music_id", 100)
+
+   * - crawlinsta.collecting.download_media
+     - Download the image/video based on the given media_url, and store it to the given path.
+     -
+        * driver: browser driver instance
+        * media_url (:obj:`str`): url of the media for downloading.
+        * file_name (:obj:`str`): path for storing the downloaded media.
+     - ::
+
+        from crawlinsta import webdriver
+        from crawlinsta.login import login, login_with_cookies
+        from crawlinsta.collecting import download_media
+        driver = webdriver.Chrome('path_to_chromedriver')
+        # if you already used once the login function, you can use the
+        # login_with_cookies function to login with the cookie file.
+        login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
+        download_media(driver, "dummy_media_url", "dummy")
 
 Maintainers
 -----------

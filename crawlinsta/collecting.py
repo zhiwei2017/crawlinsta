@@ -46,19 +46,11 @@ logger = logging.getLogger("crawlinsta")
 @driver_implicit_wait(10)
 def collect_user_info(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                       username: str) -> Json:
-    """Collect user information through username, including user_id, username,
-    profile_pic_url, biography, post_count, follower_count, following_count.
-
-    Strategy: click the username, get to the main page of the user, the user
-    information is returned in the response body.
-
-    Alternatively, put the mouse over the user's name in home page, the user
-    information will show in a popup. A request triggered by the mouseover was
-    sent to the path `/api/v1/users/<user_id>/info/` or
-    `/api/v1/users/web_profile_info/?username=<user_name>`
+    """Collect user information through `username`, including `user_id`, `username`,
+    `profile_pic_url`, `biography`, `post_count`, `follower_count`, `following_count`.
 
     Args:
-        driver (:obj:`selenium.webdriver.remote.webdriver.WebDriver`): selenium
+        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
          driver for controlling the browser to perform certain actions.
         username (str): name of the user.
 
@@ -67,10 +59,12 @@ def collect_user_info(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
     Examples:
         >>> from crawlinsta import webdriver
-        >>> driver = webdriver.Chrome('path_to_chromedriver')
-        >>> from crawlinsta.login import login
-        >>> login(driver, "your_username", "your_password")
+        >>> from crawlinsta.login import login, login_with_cookies
         >>> from crawlinsta.collecting import collect_user_info
+        >>> driver = webdriver.Chrome('path_to_chromedriver')
+        >>> # if you already used once the login function, you can use the
+        >>> # login_with_cookies function to login with the cookie file.
+        >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> collect_user_info(driver, "instagram_username")
     """
     driver.get(f'{INSTAGRAM_DOMAIN}/{username}/')
@@ -121,18 +115,10 @@ def collect_user_info(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 def collect_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                           username: str,
                           n: int = 100) -> Json:
-    """Collect n posts of the given user.
-
-    Strategy: click the username, get to the main page of the user, a few posts
-    are displayed in the user's main page. The request was sent to the path
-    `/api/v1/feed/user/<user_name>/username/?count=6` to get the posts and a
-    next_max_id for loading other posts. To load the other posts, move the mouse
-    to the bottom of the page, it will trigger another request sent to
-    `/api/v1/feed/user/<user_id>/?count=12&max_id=<next_max_id>`
-    to have more posts.
+    """Collect n posts of the given user. If n is set to 0, collect all posts.
 
     Args:
-        driver (:obj:`selenium.webdriver.remote.webdriver.WebDriver`): selenium
+        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
          driver for controlling the browser to perform certain actions.
         username (str): name of the user.
         n (int): maximum number of posts, which should be collected. By default,
@@ -143,10 +129,12 @@ def collect_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
     Examples:
         >>> from crawlinsta import webdriver
-        >>> driver = webdriver.Chrome('path_to_chromedriver')
-        >>> from crawlinsta.login import login
-        >>> login(driver, "your_username", "your_password")
+        >>> from crawlinsta.login import login, login_with_cookies
         >>> from crawlinsta.collecting import collect_posts_of_user
+        >>> driver = webdriver.Chrome('path_to_chromedriver')
+        >>> # if you already used once the login function, you can use the
+        >>> # login_with_cookies function to login with the cookie file.
+        >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> collect_posts_of_user(driver, "instagram_username", 100)
     """
     def check_request_data(request, username, after=""):
@@ -211,19 +199,10 @@ def collect_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 def collect_reels_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                           username: str,
                           n: int = 100) -> Json:
-    """Collect n reels of the given user.
-
-    Strategy: click the username, get to the main page of the user, a few posts
-    are displayed in the user's main page. Click the button reels to see all the
-    reels from the user.The request was sent to the path
-    `/api/v1/feed/user/<user_name>/username/?count=6` to get the posts/reels and a
-    next_max_id for loading other posts/reels. To load the other posts/reels,
-    move the mouse to the bottom of the page, it will trigger another request sent to
-    `/api/v1/feed/user/<user_id>/?count=12&max_id=<next_max_id>`
-    to have more posts/reels.
+    """Collect n reels of the given user. If n is set to 0, collect all reels.
 
     Args:
-        driver (:obj:`selenium.webdriver.remote.webdriver.WebDriver`): selenium
+        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
          driver for controlling the browser to perform certain actions.
         username (str): name of the user.
         n (int): maximum number of reels, which should be collected. By default,
@@ -234,10 +213,12 @@ def collect_reels_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
     Examples:
         >>> from crawlinsta import webdriver
-        >>> driver = webdriver.Chrome('path_to_chromedriver')
-        >>> from crawlinsta.login import login
-        >>> login(driver, "your_username", "your_password")
+        >>> from crawlinsta.login import login, login_with_cookies
         >>> from crawlinsta.collecting import collect_reels_of_user
+        >>> driver = webdriver.Chrome('path_to_chromedriver')
+        >>> # if you already used once the login function, you can use the
+        >>> # login_with_cookies function to login with the cookie file.
+        >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> collect_reels_of_user(driver, "instagram_username", 100)
     """
     def check_request_data(request, user_id, after=""):
@@ -303,20 +284,15 @@ def collect_reels_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     return Posts(posts=posts, count=len(posts)).model_dump(mode="json")
 
 
+@driver_implicit_wait(10)
 def collect_tagged_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                                  username: str,
                                  n: int = 100) -> Json:
-    """Collect n posts in which user was tagged.
-
-    Strategy: click the username, get to the main page of the user, a few posts
-    are displayed in the user's main page. Click the button tagged to see all the
-    posts in which the user was tagged.The request was sent to the path
-    `/<user_name>/tagged/` to get the tagged posts/reels and a next_max_id for
-    loading other posts/reels. To load the other posts/reels, move the mouse to
-    the bottom of the page, it will trigger another request sent to the path
-    /graphql/query/?doc_id=<tagged_user_id>&variables=<next_max_id>
+    """Collect n posts in which user was tagged. If n is set to 0, collect all tagged posts.
 
     Args:
+        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
+         driver for controlling the browser to perform certain actions.
         username (str): name of the user.
         n (int): maximum number of tagged posts, which should be collected. By
          default, it's 100. If it's set to 0, collect all posts.
@@ -326,10 +302,12 @@ def collect_tagged_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Re
 
     Examples:
         >>> from crawlinsta import webdriver
-        >>> driver = webdriver.Chrome('path_to_chromedriver')
-        >>> from crawlinsta.login import login
-        >>> login(driver, "your_username", "your_password")
+        >>> from crawlinsta.login import login, login_with_cookies
         >>> from crawlinsta.collecting import collect_tagged_posts_of_user
+        >>> driver = webdriver.Chrome('path_to_chromedriver')
+        >>> # if you already used once the login function, you can use the
+        >>> # login_with_cookies function to login with the cookie file.
+        >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> collect_tagged_posts_of_user(driver, "instagram_username", 100)
     """
     def check_request_data(request, user_id, after=""):
@@ -395,20 +373,31 @@ def collect_tagged_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Re
     return Posts(posts=posts, count=len(posts)).model_dump(mode="json")
 
 
+@driver_implicit_wait(10)
 def get_friendship_status(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                           username1: str,
                           username2: str) -> Json:
-    """Get the relationship between any two users.
-
-    Strategy: the only way to do it is to check if user_A is contained in
-    user_B's followings or followers.
+    """Get the relationship between the user with `username1` and the user with `username2`, i.e. finding out who is
+    following whom.
 
     Args:
+        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
+         driver for controlling the browser to perform certain actions.
         username1 (str): username of the person A.
         username2 (str): username of the person B.
 
     Returns:
-        Json: friendship indication between person A and person B.
+        Json: friendship indication between person A with `username1` and person B with `username2`.
+
+    Examples:
+        >>> from crawlinsta import webdriver
+        >>> from crawlinsta.login import login, login_with_cookies
+        >>> from crawlinsta.collecting import get_friendship_status
+        >>> driver = webdriver.Chrome('path_to_chromedriver')
+        >>> # if you already used once the login function, you can use the
+        >>> # login_with_cookies function to login with the cookie file.
+        >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
+        >>> get_friendship_status(driver, "instagram_username1", "instagram_username1")
     """
     following, followed_by = False, False
     for username in [username1, username2]:
@@ -460,16 +449,12 @@ def get_friendship_status(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 def collect_followers_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                               username: str,
                               n: int = 100) -> Json:
-    """Collect n followers of the given user. Anyone besides the account owner
-    can get maximal 50 followers.
-
-    Strategy: click the username, get to the main page of the user, then click
-    followers, a list of followers of the user shows in a popup. A request
-    triggered by the clicking was sent to the path
-    `/api/v1/friendships/<user_id>/followers/?count=12&search_surface=follow_list_page`.
+    """Collect n followers of the given user. This action depends on the account privacy.
+    if the account user limites the visibility of the followers, only the account owner can
+    view all followers and anyone besides the account owner can get maximal 50 followers.
 
     Args:
-        driver (:obj:`selenium.webdriver.remote.webdriver.WebDriver`): selenium
+        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
          driver for controlling the browser to perform certain actions.
         username (str): name of the user.
         n (int): maximum number of followers, which should be collected. By default,
@@ -480,10 +465,12 @@ def collect_followers_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remot
 
     Examples:
         >>> from crawlinsta import webdriver
-        >>> driver = webdriver.Chrome('path_to_chromedriver')
-        >>> from crawlinsta.login import login
-        >>> login(driver, "your_username", "your_password")
+        >>> from crawlinsta.login import login, login_with_cookies
         >>> from crawlinsta.collecting import collect_followers_of_user
+        >>> driver = webdriver.Chrome('path_to_chromedriver')
+        >>> # if you already used once the login function, you can use the
+        >>> # login_with_cookies function to login with the cookie file.
+        >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> collect_followers_of_user(driver, "instagram_username", 100)
     """
     if n <= 0:
@@ -555,12 +542,8 @@ def collect_followings_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remo
                                n: int = 100) -> Json:
     """Collect n followings of the given user.
 
-    Strategy: click the username, get to the main page of the user, then click following, a list of
-    following of the user shows in a popup. A request triggered by the clicking was sent to the path
-    `/api/v1/friendships/373735170/following/?count=12`.
-
     Args:
-        driver (:obj:`selenium.webdriver.remote.webdriver.WebDriver`): selenium
+        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
          driver for controlling the browser to perform certain actions.
         username (str): name of the user.
         n (int): maximum number of followings, which should be collected. By default,
@@ -571,10 +554,12 @@ def collect_followings_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remo
 
     Examples:
         >>> from crawlinsta import webdriver
-        >>> driver = webdriver.Chrome('path_to_chromedriver')
-        >>> from crawlinsta.login import login
-        >>> login(driver, "your_username", "your_password")
+        >>> from crawlinsta.login import login, login_with_cookies
         >>> from crawlinsta.collecting import collect_followings_of_user
+        >>> driver = webdriver.Chrome('path_to_chromedriver')
+        >>> # if you already used once the login function, you can use the
+        >>> # login_with_cookies function to login with the cookie file.
+        >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> collect_followings_of_user(driver, "instagram_username", 100)
     """
     if n <= 0:
@@ -646,13 +631,8 @@ def collect_following_hashtags_of_user(driver: Union[Chrome, Edge, Firefox, Safa
                                        n: int = 100) -> Json:
     """Collect n followings hashtags of the given user.
 
-    Strategy: click the username, get to the main page of the user, then click
-    following and click hashtags, a list of following hashtags of the user shows
-    in a popup. A request triggered by the clicking was sent to the path
-    `/api/v1/friendships/373735170/following/?count=12`.
-
     Args:
-        driver (:obj:`selenium.webdriver.remote.webdriver.WebDriver`): selenium
+        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
          driver for controlling the browser to perform certain actions.
         username (str): name of the user.
         n (int): maximum number of followings, which should be collected.
@@ -664,10 +644,12 @@ def collect_following_hashtags_of_user(driver: Union[Chrome, Edge, Firefox, Safa
 
     Examples:
         >>> from crawlinsta import webdriver
-        >>> driver = webdriver.Chrome('path_to_chromedriver')
-        >>> from crawlinsta.login import login
-        >>> login(driver, "your_username", "your_password")
+        >>> from crawlinsta.login import login, login_with_cookies
         >>> from crawlinsta.collecting import collect_following_hashtags_of_user
+        >>> driver = webdriver.Chrome('path_to_chromedriver')
+        >>> # if you already used once the login function, you can use the
+        >>> # login_with_cookies function to login with the cookie file.
+        >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> collect_following_hashtags_of_user(driver, "instagram_username", 100)
     """
     if n <= 0:
@@ -708,21 +690,6 @@ def collect_following_hashtags_of_user(driver: Union[Chrome, Edge, Firefox, Safa
     results.append(json_data)
     remaining -= len(json_data["data"]['user']['edge_following_hashtag']['edges'])
 
-    # TODO: finish fetching more hashtags
-    # while remaining > 0 and not results[-1]['extensions']['is_final']:
-    #     following_bottom = driver.find_element(By.XPATH, "//div[@class='_aabq']")
-    #     driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", following_bottom)
-    #
-    #     time.sleep(random.randint(4, 6))
-    #     target_url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}/?doc_id={FOLLOWING_DOC_ID}&variables=%7B%22id%22%3A%22{user_id}%22%7D"
-    #     request = filter_request(driver.requests, target_url)
-    #     if not request:
-    #         raise ValueError(f"No json response to the url '{target_url}' found.")
-    #     json_data = get_json_data(request.response)
-    #     results.append(json_data)
-    #     remaining -= 12
-    #     del driver.requests
-
     hashtags = []
     for json_data in results:
         for item in json_data["data"]['user']['edge_following_hashtag']['edges']:
@@ -741,11 +708,9 @@ def collect_likers_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                            n: int = 100) -> Json:
     """Collect the users, who likes a given post.
 
-    Strategy: click the likes (a button with link `/p/<post_code>/liked_by/`), a
-    list of likers shows in a popup.
-    A request triggered by the clicking was sent to the path `/api/v1/media/<post_id>/likers/`
-
     Args:
+        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
+         driver for controlling the browser to perform certain actions.
         post_code (str): post code, used for generating post directly accessible url.
         n (int): maximum number of likers, which should be collected. By default,
          it's 100. If it's set to 0, collect all likers.
@@ -755,10 +720,12 @@ def collect_likers_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
     Examples:
         >>> from crawlinsta import webdriver
-        >>> driver = webdriver.Chrome('path_to_chromedriver')
-        >>> from crawlinsta.login import login
-        >>> login(driver, "your_username", "your_password")
+        >>> from crawlinsta.login import login, login_with_cookies
         >>> from crawlinsta.collecting import collect_likers_of_post
+        >>> driver = webdriver.Chrome('path_to_chromedriver')
+        >>> # if you already used once the login function, you can use the
+        >>> # login_with_cookies function to login with the cookie file.
+        >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> collect_likers_of_post(driver, "WGDBS3D", 100)
     """
     if n <= 0:
@@ -823,18 +790,15 @@ def collect_likers_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     return Likers(likers=likers, count=len(likers)).model_dump(mode="json")
 
 
+@driver_implicit_wait(10)
 def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                              post_code: str,
                              n: int = 100) -> Json:
     """Collect n comments of a given post.
 
-    Strategy: click the post (a button with link `/p/<post_code>/`), a list of
-    comments shows in a popup. A request triggered by the clicking was sent to the path
-    `/api/v1/post/<post_id>/comments/?can_support_threading=true&permalink_enabled=false`
-    The comments are paginated, to load more comments, have to use the mouse to click
-    a button to load more comments.
-
     Args:
+        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
+         driver for controlling the browser to perform certain actions.
         post_code (str): code of the post, whose comments will be collected.
         n (int): maximum number of comments, which should be collected. By default,
          it's 100. If it's set to 0, collect all comments.
@@ -844,10 +808,12 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
 
     Examples:
         >>> from crawlinsta import webdriver
-        >>> driver = webdriver.Chrome('path_to_chromedriver')
-        >>> from crawlinsta.login import login
-        >>> login(driver, "your_username", "your_password")
+        >>> from crawlinsta.login import login, login_with_cookies
         >>> from crawlinsta.collecting import collect_comments_of_post
+        >>> driver = webdriver.Chrome('path_to_chromedriver')
+        >>> # if you already used once the login function, you can use the
+        >>> # login_with_cookies function to login with the cookie file.
+        >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> collect_comments_of_post(driver, "WGDBS3D", 100)
     """
     def check_request_data(request, post_id):
@@ -951,12 +917,15 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
     return Comments(comments=comments, count=len(comments)).model_dump(mode="json")
 
 
+@driver_implicit_wait(10)
 def search_with_keyword(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                         keyword: str,
                         pers: bool) -> Json:
     """Search hashtags or users with given keyword.
 
     Args:
+        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
+         driver for controlling the browser to perform certain actions.
         keyword (str): keyword for searching.
         pers (bool): indicating whether results should be personalized or not.
 
@@ -965,10 +934,12 @@ def search_with_keyword(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
     Examples:
         >>> from crawlinsta import webdriver
-        >>> driver = webdriver.Chrome('path_to_chromedriver')
-        >>> from crawlinsta.login import login
-        >>> login(driver, "your_username", "your_password")
+        >>> from crawlinsta.login import login, login_with_cookies
         >>> from crawlinsta.collecting import search_with_keyword
+        >>> driver = webdriver.Chrome('path_to_chromedriver')
+        >>> # if you already used once the login function, you can use the
+        >>> # login_with_cookies function to login with the cookie file.
+        >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> search_with_keyword(driver, "asian games", True)
     """
 
@@ -1056,16 +1027,14 @@ def search_with_keyword(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     return searching_result.model_dump(mode="json")
 
 
+@driver_implicit_wait(10)
 def collect_top_posts_of_hashtag(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                                  hashtag: str) -> Json:
     """Collect top posts of a given hashtag.
 
-    Strategy: click the search button from the left navigation bar, and input the hashtag in
-    the searchbar, and select the desired hashtag from searching results. This action will
-    trigger a request sent to the path `/api/v1/tags/web_info/?tag_name=<tag name>`, as result
-    the top posts are showed.
-
     Args:
+        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
+         driver for controlling the browser to perform certain actions.
         hashtag (str): hashtag.
 
     Returns:
@@ -1073,10 +1042,12 @@ def collect_top_posts_of_hashtag(driver: Union[Chrome, Edge, Firefox, Safari, Re
 
     Examples:
         >>> from crawlinsta import webdriver
-        >>> driver = webdriver.Chrome('path_to_chromedriver')
-        >>> from crawlinsta.login import login
-        >>> login(driver, "your_username", "your_password")
+        >>> from crawlinsta.login import login, login_with_cookies
         >>> from crawlinsta.collecting import collect_top_posts_of_hashtag
+        >>> driver = webdriver.Chrome('path_to_chromedriver')
+        >>> # if you already used once the login function, you can use the
+        >>> # login_with_cookies function to login with the cookie file.
+        >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> collect_top_posts_of_hashtag(driver, "asiangames", True)
     """
     driver.get(f'{INSTAGRAM_DOMAIN}/explore/tags/{hashtag}')
@@ -1113,29 +1084,30 @@ def collect_top_posts_of_hashtag(driver: Union[Chrome, Edge, Firefox, Safari, Re
     return tag.model_dump(mode="json")
 
 
+@driver_implicit_wait(10)
 def collect_posts_by_music_id(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                               music_id: str,
                               n: int = 100) -> Json:
-    """Search for all posts containing the given music_id.
-
-    Strategy: the only way to collect the posts using the same music, is to first find
-    a post with this music, then click the link "original audio" to get all the posts
-    using this music.
-
-    The request was sent to the path /reels/audio/<music_id>/.
+    """Collect n posts containing the given music_id. If n is set to 0, collect all posts.
 
     Args:
+        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
+         driver for controlling the browser to perform certain actions.
         music_id (str): id of the music.
+        n (int): maximum number of posts, which should be collected. By default, it's 100.
+         If it's set to 0, collect all posts.
 
     Returns:
         Json: a list of posts containing the music.
 
     Examples:
         >>> from crawlinsta import webdriver
-        >>> driver = webdriver.Chrome('path_to_chromedriver')
-        >>> from crawlinsta.login import login
-        >>> login(driver, "your_username", "your_password")
+        >>> from crawlinsta.login import login, login_with_cookies
         >>> from crawlinsta.collecting import collect_posts_by_music_id
+        >>> driver = webdriver.Chrome('path_to_chromedriver')
+        >>> # if you already used once the login function, you can use the
+        >>> # login_with_cookies function to login with the cookie file.
+        >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> collect_posts_by_music_id(driver, "664212705901923", 100)
     """
     def check_request_data(request, music_id, max_id=""):
@@ -1200,6 +1172,7 @@ def collect_posts_by_music_id(driver: Union[Chrome, Edge, Firefox, Safari, Remot
     return MusicPosts(posts=posts, music=music, count=len(posts)).model_dump(mode="json")
 
 
+@driver_implicit_wait(10)
 def download_media(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                    media_url: str,
                    file_name: str) -> None:
@@ -1209,15 +1182,19 @@ def download_media(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     Normally, the media_url is valid for 1 week (max. 3 weeks).
 
     Args:
+        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
+         driver for controlling the browser to perform certain actions.
         media_url (str): url of the media for downloading.
-        file_name (str): path for storing the downloaded media..
+        file_name (str): path for storing the downloaded media.
 
     Examples:
         >>> from crawlinsta import webdriver
-        >>> driver = webdriver.Chrome('path_to_chromedriver')
-        >>> from crawlinsta.login import login
-        >>> login(driver, "your_username", "your_password")
+        >>> from crawlinsta.login import login, login_with_cookies
         >>> from crawlinsta.collecting import download_media
+        >>> driver = webdriver.Chrome('path_to_chromedriver')
+        >>> # if you already used once the login function, you can use the
+        >>> # login_with_cookies function to login with the cookie file.
+        >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> download_media(driver, "https://scontent-muc2-1.xx.fbcdn.net/v/t39.12897-6/419784899_922911948795613_3855576336552877996_n.m4a", "tmp")
     """
     driver.get(media_url)

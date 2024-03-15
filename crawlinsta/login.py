@@ -22,7 +22,7 @@ def login(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     else False.
 
     Args:
-        driver (:obj:`selenium.webdriver.remote.webdriver.WebDriver`): selenium
+        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
          driver for controlling the browser to perform certain actions.
         username (str): username for login.
         password (str): corresponding password for login.
@@ -80,7 +80,7 @@ def login_with_cookies(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     """Log into Instagram using stored cookies.
 
     Args:
-        driver (:obj:`selenium.webdriver.remote.webdriver.WebDriver`): selenium
+        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
          driver for controlling the browser to perform certain actions.
         cookies_path (str): The path to the file containing cookies.
             Default is "instagram_cookies.pkl".

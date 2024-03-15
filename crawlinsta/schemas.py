@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, ConfigDict
-from typing import List, ForwardRef, Optional, Union
+from typing import List, Optional, Union
 import typing_extensions
 
 
@@ -594,7 +594,7 @@ class SearchingResultPlace(SearchingResultBasicInfo):
 
 
 class SearchingResult(PreferDefaultsModel):
-    """Searching result contains found hashtags and/or users."""
+    """Searching result contains found hashtags, users and places."""
     hashtags: List[SearchingResultHashtag] = Field([],
                                                    description="Found hashtags matched to the keywords.",
                                                    examples=[[SearchingResultHashtag(position=0,

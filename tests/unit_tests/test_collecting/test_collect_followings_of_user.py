@@ -3,16 +3,14 @@ import pytest
 from unittest import mock
 from urllib.parse import urlencode, quote
 from crawlinsta.collecting import INSTAGRAM_DOMAIN, API_VERSION, collect_followings_of_user
+from .base_mocked_driver import BaseMockedDriver
 
 
-class MockedDriver:
+class MockedDriver(BaseMockedDriver):
     def __init__(self):
-        self.requests = []
         self.user_id = None
         self.call_find_element_number = 0
-
-    def implicitly_wait(self, seconds):
-        pass
+        super().__init__()
 
     def get(self, url):
         self.user_id = "1798450984"
@@ -45,9 +43,6 @@ class MockedDriver:
         self.requests = [request]
         self.call_find_element_number += 1
         return mock.Mock()
-
-    def execute(self, *args, **kwargs):
-        pass
 
 
 @mock.patch("crawlinsta.collecting.time.sleep", return_value=None)

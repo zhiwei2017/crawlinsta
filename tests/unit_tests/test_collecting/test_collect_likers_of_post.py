@@ -2,21 +2,16 @@ import json
 import pytest
 from unittest import mock
 from crawlinsta.collecting import INSTAGRAM_DOMAIN, API_VERSION, collect_likers_of_post
+from .base_mocked_driver import BaseMockedDriver
 
 
-class MockedDriver:
+class MockedDriver(BaseMockedDriver):
     def __init__(self, post_id="3283079976352304185",
                  data_file="tests/resources/likers/likers.json"):
-        self.requests = []
         self.call_find_element_number = 0
         self.post_id = post_id
         self.data_file = data_file
-
-    def implicitly_wait(self, seconds):
-        pass
-
-    def get(self, url):
-        pass
+        super().__init__()
 
     def find_element(self, by, value):
         mocked_element = mock.Mock()
@@ -34,9 +29,6 @@ class MockedDriver:
         self.call_find_element_number += 1
         return mocked_element
 
-    def execute(self, *args, **kwargs):
-        pass
-
 
 @mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
 def test_collect_likers_of_post_success(mocked_sleep):
@@ -46,22 +38,10 @@ def test_collect_likers_of_post_success(mocked_sleep):
     assert result == expected
 
 
-class MockedDriverFail:
-    def __init__(self):
-        self.requests = []
-
-    def implicitly_wait(self, seconds):
-        pass
-
-    def get(self, url):
-        pass
-
+class MockedDriverFail(BaseMockedDriver):
     def find_element(self, by, value):
         mocked_element = mock.Mock(get_attribute=mock.Mock(return_value=""))
         return mocked_element
-
-    def execute(self, *args, **kwargs):
-        pass
 
 
 @mock.patch("crawlinsta.collecting.time.sleep", return_value=None)

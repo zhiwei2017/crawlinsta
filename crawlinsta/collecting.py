@@ -5,7 +5,6 @@ import re
 import time
 from urllib.parse import quote, urlencode, parse_qs
 from pydantic import Json
-from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union
@@ -186,7 +185,7 @@ def collect_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
     while results[-1]['page_info']["has_next_page"] and remaining > 0:
         footer = driver.find_element(By.XPATH, "//footer")
-        ActionChains(driver).scroll_to_element(footer).perform()
+        driver.execute_script("return arguments[0].scrollIntoView(true);", footer)
 
         time.sleep(random.randint(4, 6))
         json_requests += filter_requests(driver.requests, JsonResponseContentType.text_javascript)
@@ -282,7 +281,7 @@ def collect_reels_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
     while results[-1]['page_info']["has_next_page"] and remaining > 0:
         footer = driver.find_element(By.XPATH, "//footer")
-        ActionChains(driver).scroll_to_element(footer).perform()
+        driver.execute_script("return arguments[0].scrollIntoView(true);", footer)
 
         time.sleep(random.randint(4, 6))
         json_requests += filter_requests(driver.requests, JsonResponseContentType.text_javascript)
@@ -374,7 +373,7 @@ def collect_tagged_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Re
 
     while results[-1]['page_info']["has_next_page"] and remaining > 0:
         footer = driver.find_element(By.XPATH, "//footer")
-        ActionChains(driver).scroll_to_element(footer).perform()
+        driver.execute_script("return arguments[0].scrollIntoView(true);", footer)
 
         time.sleep(random.randint(4, 6))
         json_requests += filter_requests(driver.requests, JsonResponseContentType.text_javascript)
@@ -411,9 +410,6 @@ def get_friendship_status(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     Returns:
         Json: friendship indication between person A and person B.
     """
-    # TODO: the logic of getting following or follower should check followers
-    #  and followings and taken into account of is_private account
-    results = []
     following, followed_by = False, False
     for username in [username1, username2]:
         driver.get(f'{INSTAGRAM_DOMAIN}/{username}/')
@@ -429,12 +425,20 @@ def get_friendship_status(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         following_btn = driver.find_element(By.XPATH, f"//a[@href='/{username}/following/'][@role='link']")
         following_btn.click()
         time.sleep(random.randint(4, 6))
+        del driver.requests
 
-        json_requests += filter_requests(driver.requests)
+        searching_username = username2 if username == username1 else username1
+
+        search_input_box = driver.find_element(By.XPATH,
+                                               '//input[@aria-label="Search input"][@placeholder="Search"][@type="text"]')
+        search_input_box.send_keys(searching_username)
+        time.sleep(random.randint(6, 8))
+
+        json_requests = filter_requests(driver.requests)
         del driver.requests
 
         # get first 12 followings
-        query_dict = dict(count=12)
+        query_dict = dict(query=searching_username)
         target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/following/?{urlencode(query_dict, quote_via=quote)}"
         idx = search_request(json_requests, target_url)
         request = json_requests.pop(idx)
@@ -448,33 +452,6 @@ def get_friendship_status(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
             else:
                 followed_by = True
             break
-
-        stop = False
-        while 'next_max_id' in json_data and not stop:
-
-            following_bottom = driver.find_element(By.XPATH, "//div[@class='_aano']//div[@role='progressbar']")
-            ActionChains(driver).scroll_to_element(following_bottom).perform()
-
-            time.sleep(random.randint(4, 6))
-
-            json_requests += filter_requests(driver.requests)
-            del driver.requests
-
-            query_dict = dict(count=12, max_id=results[-1]['next_max_id'])
-            target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/following/?{urlencode(query_dict, quote_via=quote)}"
-            idx = search_request(json_requests, target_url)
-            request = json_requests.pop(idx)
-            json_data = get_json_data(request.response)
-
-            for user_info in json_data["users"]:
-                if user_info["username"] not in {username1, username2}:
-                    continue
-                elif user_info["username"] == username1:
-                    following = True
-                else:
-                    followed_by = True
-                stop = True
-                break
 
     return FriendshipStatus(following=following, followed_by=followed_by).model_dump(mode="json")
 
@@ -543,7 +520,7 @@ def collect_followers_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remot
 
     while 'next_max_id' in results[-1] and remaining > 0:
         followers_bottom = driver.find_element(By.XPATH, "//div[@class='_aano']//div[@role='progressbar']")
-        ActionChains(driver).scroll_to_element(followers_bottom).perform()
+        driver.execute_script("return arguments[0].scrollIntoView(true);", followers_bottom)
 
         time.sleep(random.randint(4, 6))
 
@@ -634,7 +611,7 @@ def collect_followings_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remo
 
     while 'next_max_id' in results[-1] and remaining > 0:
         following_bottom = driver.find_element(By.XPATH, "//div[@class='_aano']//div[@role='progressbar']")
-        ActionChains(driver).scroll_to_element(following_bottom).perform()
+        driver.execute_script("return arguments[0].scrollIntoView(true);", following_bottom)
 
         time.sleep(random.randint(4, 6))
 
@@ -938,8 +915,9 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
         remaining -= len(json_data["edges"])
 
     while results[-1]["page_info"]['has_next_page'] and remaining > 0:
-        comment_lists = driver.find_elements(By.XPATH, '//div[@class="x78zum5 xdt5ytf x1iyjqo2"]/div[@class="x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh x1uhb9sk x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh x1nhvcw1 x17adc0v"]')
-        ActionChains(driver).scroll_to_element(comment_lists[-1]).perform()
+        comment_lists = driver.find_elements(By.XPATH, '//div[@class="x78zum5 xdt5ytf x1iyjqo2"]/div[@class="x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh x1uhb9sk x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh x1nhvcw1"]')
+        driver.execute_script("return arguments[0].scrollIntoView(true);", comment_lists[-1])
+
         time.sleep(random.randint(4, 6))
         json_requests += filter_requests(driver.requests, JsonResponseContentType.text_javascript)
         del driver.requests
@@ -994,7 +972,7 @@ def search_with_keyword(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> search_with_keyword(driver, "asian games", True)
     """
 
-    def check_request_data(request, keyword):
+    def check_request_data(request, keyword, pers):
         request_data = parse_qs(request.body.decode())
         variables = json.loads(request_data.get("variables", ["{}"])[0])
         if not variables:
@@ -1029,7 +1007,7 @@ def search_with_keyword(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
     target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
     idx = search_request(json_requests, target_url, JsonResponseContentType.text_javascript,
-                         check_request_data, keyword)
+                         check_request_data, keyword, pers)
     request = json_requests.pop(idx)
     json_data = get_json_data(request.response)
     data_key = "xdt_api__v1__fbsearch__topsearch_connection" if pers else "xdt_api__v1__fbsearch__non_profiled_serp"
@@ -1190,7 +1168,7 @@ def collect_posts_by_music_id(driver: Union[Chrome, Edge, Firefox, Safari, Remot
 
     while results[-1]["paging_info"]['more_available'] and remaining > 0:
         footer = driver.find_element(By.XPATH, "//footer")
-        ActionChains(driver).scroll_to_element(footer).perform()
+        driver.execute_script("return arguments[0].scrollIntoView(true);", footer)
 
         time.sleep(random.randint(4, 6))
         json_requests += filter_requests(driver.requests)

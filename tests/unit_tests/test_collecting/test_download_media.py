@@ -3,15 +3,10 @@ import shutil
 import tempfile
 from unittest import mock
 from crawlinsta.collecting import download_media
+from .base_mocked_driver import BaseMockedDriver
 
 
-class MockedDriver:
-    def __init__(self):
-        self.requests = []
-
-    def implicitly_wait(self, seconds):
-        pass
-
+class MockedDriver(BaseMockedDriver):
     def get(self, url):
         request = mock.Mock(url=url)
         with open("tests/resources/download_media/image.jpg", "rb") as file:

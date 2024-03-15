@@ -1,5 +1,9 @@
 import os
 import pytest
+import random
+import shutil
+import tempfile
+import time
 from crawlinsta import webdriver
 from crawlinsta.login import login, login_with_cookies
 from crawlinsta.collecting import (
@@ -20,7 +24,7 @@ from crawlinsta.collecting import (
 )
 from crawlinsta.schemas import (
     UserInfo, Posts, Users, HashtagBasicInfos, Comments, SearchingResult,
-    Hashtag, Likers, MusicPosts
+    Hashtag, Likers, MusicPosts, FriendshipStatus
 )
 
 
@@ -35,11 +39,13 @@ def chrome_driver():
         login(driver, username, password)
     else:
         raise ValueError("Please provide username and password in environment variables.")
+    del driver.requests
     yield driver
     driver.quit()
 
 
 def generic_test(driver, func_to_test, result_model, key_with_list=None, *args, **kwargs):
+    time.sleep(random.randint(4, 6))
     result = func_to_test(driver, *args, **kwargs)
     assert result is not None
     assert isinstance(result, dict)
@@ -48,6 +54,7 @@ def generic_test(driver, func_to_test, result_model, key_with_list=None, *args, 
     assert validated_instance.model_dump(mode="json") == result
     if key_with_list:
         assert result["count"] == len(result[key_with_list])
+    del driver.requests
 
 
 @pytest.mark.parametrize("username", ["angibieneck"])
@@ -68,6 +75,11 @@ def test_collect_reels_of_user(chrome_driver, username, number_of_posts):
 @pytest.mark.parametrize("username, number_of_posts", [("onesmileymonkey", 20)])
 def test_collect_tagged_posts_of_user(chrome_driver, username, number_of_posts):
     generic_test(chrome_driver, collect_tagged_posts_of_user, Posts, "posts", username, number_of_posts)
+
+
+@pytest.mark.parametrize("username1, username2", [("nasa", "astro_frankrubio")])
+def test_get_friendship_status(chrome_driver, username1, username2):
+    generic_test(chrome_driver, get_friendship_status, FriendshipStatus, None, username1, username2)
 
 
 @pytest.mark.parametrize("username, number_of_users", [("onesmileymonkey", 20)])
@@ -113,4 +125,9 @@ def test_collect_posts_by_music_id(chrome_driver, music_id, number_of_posts):
 
 @pytest.mark.parametrize("music_id, number_of_posts", [("997508674672914", 20)])
 def test_download_media(chrome_driver, music_id, number_of_posts):
-    pass
+    user_info = collect_user_info(chrome_driver, "angibieneck")
+    tmp_dir = tempfile.mkdtemp()
+    tmp_filename = os.path.join(tmp_dir, "image")
+    download_media(chrome_driver, user_info["profile_pic_url"], tmp_filename)
+    assert len(os.listdir(tmp_dir)) > 0
+    shutil.rmtree(tmp_dir)

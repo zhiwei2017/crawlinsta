@@ -1,15 +1,10 @@
 import json
 from unittest import mock
 from crawlinsta.collecting import INSTAGRAM_DOMAIN, API_VERSION, collect_user_info
+from .base_mocked_driver import BaseMockedDriver
 
 
-class MockedDriver:
-    def __init__(self):
-        self.requests = []
-
-    def implicitly_wait(self, seconds):
-        pass
-
+class MockedDriver(BaseMockedDriver):
     def get(self, url):
         username = url.split("/")[-2]
         url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username={username}"

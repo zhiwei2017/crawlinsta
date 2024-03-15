@@ -48,4 +48,4 @@ ignore_missing_imports = true
 [tool.pytest.ini_options]
 minversion = "6.0"
 testpaths = ["tests"]
-addopts = "--verbose --disable-warnings --doctest-modules --cov-report term-missing --cov=./crawlinsta"
+addopts = "-x --verbose --disable-warnings --doctest-modules --cov-report term-missing --cov=./crawlinsta"

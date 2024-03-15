@@ -1,17 +1,15 @@
 import json
 from unittest import mock
 from crawlinsta.collecting import INSTAGRAM_DOMAIN, API_VERSION, collect_top_posts_of_hashtag
+from .base_mocked_driver import BaseMockedDriver
 
 
-class MockedDriver:
+class MockedDriver(BaseMockedDriver):
     def __init__(self, response_content_type="application/json; charset=utf-8",
                  data_file="tests/resources/top_posts_of_hashtag/top_posts_of_hashtag.json"):
-        self.requests = []
         self.response_content_type = response_content_type
         self.data_file = data_file
-
-    def implicitly_wait(self, seconds):
-        pass
+        super().__init__()
 
     def get(self, url):
         hashtag = url.split("/")[-1]

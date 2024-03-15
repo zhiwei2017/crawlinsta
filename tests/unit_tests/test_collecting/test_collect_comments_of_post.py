@@ -4,19 +4,15 @@ from lxml import html
 from unittest import mock
 from urllib.parse import urlencode, quote
 from crawlinsta.collecting import INSTAGRAM_DOMAIN, JsonResponseContentType, collect_comments_of_post
+from .base_mocked_driver import BaseMockedDriver
 
 
-class MockedDriverCached:
+class MockedDriverCached(BaseMockedDriver):
     def __init__(self, post_id="3275298868401088037"):
         self.requests = []
         self.call_find_element_number = 0
         self.post_id = post_id
-
-    def implicitly_wait(self, seconds):
-        pass
-
-    def get(self, url):
-        pass
+        super().__init__()
 
     def find_elements(self, by, value):
         if not self.call_find_element_number:
@@ -49,27 +45,20 @@ class MockedDriverCached:
         mocked_element.get_attribute = mock.Mock(return_value=self.post_id)
         return mocked_element
 
-    def execute(self, *args, **kwargs):
-        pass
-
 
 @mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.ActionChains", return_value=mock.MagicMock())
-def test_collect_comments_of_post_success_cached(mocked_action_chains, mocked_sleep):
+def test_collect_comments_of_post_success_cached(mocked_sleep):
     result = collect_comments_of_post(MockedDriverCached(), "C10MvewSSYl", 100)
     with open("tests/resources/comments/result_cached.json", "r") as file:
         expected = json.load(file)
     assert result == expected
 
 
-class MockedDriver:
+class MockedDriverLoaded(BaseMockedDriver):
     def __init__(self, post_id="3275298868401088037"):
-        self.requests = []
         self.call_find_element_number = 0
         self.post_id = post_id
-
-    def implicitly_wait(self, seconds):
-        pass
+        super().__init__()
 
     def get(self, url):
         url = f"{INSTAGRAM_DOMAIN}/api/graphql"
@@ -95,12 +84,29 @@ class MockedDriver:
         response = mock.Mock(headers={"Content-Type": JsonResponseContentType.text_javascript,
                                       'Content-Encoding': 'identity'},
                              body=json.dumps(data).encode())
+
+        request1 = mock.Mock(url=url, response=response)
+        request1.body = urlencode(dict(av="17841461911", doc_id="6974885689225067",
+                                       variables=json.dumps({"media_id": self.post_id},
+                                                            separators=(',', ':'))),
+                                  quote_via=quote).encode()
+
+        request2 = mock.Mock(url=url, response=response)
+        request2.body = urlencode(dict(av="17841461911219001", doc_id="6974885689225067"),
+                                  quote_via=quote).encode()
+
+        request3 = mock.Mock(url=url, response=response)
+        request3.body = urlencode(dict(av="17841461911219001", doc_id="6974885689225067",
+                                       variables=json.dumps({"media_id": "dummy"},
+                                                            separators=(',', ':'))),
+                                  quote_via=quote).encode()
+
         request = mock.Mock(url=url, response=response)
         request.body = urlencode(dict(av="17841461911219001", doc_id="6974885689225067",
                                       variables=json.dumps({"media_id": self.post_id},
                                                            separators=(',', ':'))),
                                  quote_via=quote).encode()
-        self.requests = [request]
+        self.requests = [request1, request2, request3, request]
         self.call_find_element_number += 1
         return [mock.Mock()]
 
@@ -109,14 +115,10 @@ class MockedDriver:
         mocked_element.get_attribute = mock.Mock(return_value=self.post_id)
         return mocked_element
 
-    def execute(self, *args, **kwargs):
-        pass
-
 
 @mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.ActionChains", return_value=mock.MagicMock())
-def test_collect_comments_of_post_success_load(mocked_action_chains, mocked_sleep):
-    result = collect_comments_of_post(MockedDriver(), "C10MvewSSYl", 100)
+def test_collect_comments_of_post_success_load(mocked_sleep):
+    result = collect_comments_of_post(MockedDriverLoaded(), "C10MvewSSYl", 100)
     with open("tests/resources/comments/result_loaded.json", "r") as file:
         expected = json.load(file)
     assert result == expected
@@ -125,11 +127,11 @@ def test_collect_comments_of_post_success_load(mocked_action_chains, mocked_slee
 @pytest.mark.parametrize("n", [0, -1])
 def test_collect_comments_of_post_fail_on_wrong_n(n):
     with pytest.raises(ValueError) as exc:
-        collect_comments_of_post(MockedDriver(), "C10MvewSSYl", n)
+        collect_comments_of_post(MockedDriverLoaded(), "C10MvewSSYl", n)
     assert str(exc.value) == "The number of comments to collect must be a positive integer."
 
 
 @mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
 def test_collect_comments_of_post_on_no_post_id_found(mocked_sleep):
-    result = collect_comments_of_post(MockedDriver(""), "C10MvewSSYl", 10)
+    result = collect_comments_of_post(MockedDriverLoaded(""), "C10MvewSSYl", 10)
     assert result == {'comments': [], 'count': 0}

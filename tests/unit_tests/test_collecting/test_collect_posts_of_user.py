@@ -3,16 +3,14 @@ import pytest
 from unittest import mock
 from urllib.parse import urlencode, quote
 from crawlinsta.collecting import INSTAGRAM_DOMAIN, collect_posts_of_user
+from .base_mocked_driver import BaseMockedDriver
 
 
-class MockedDriver:
+class MockedDriver(BaseMockedDriver):
     def __init__(self):
-        self.requests = []
         self.username = None
         self.call_find_element_number = 0
-
-    def implicitly_wait(self, seconds):
-        pass
+        super().__init__()
 
     def get(self, url):
         self.username = url.split("/")[-2]
@@ -30,29 +28,49 @@ class MockedDriver:
 
     def find_element(self, by, value):
         url = f"{INSTAGRAM_DOMAIN}/api/graphql"
-        request = mock.Mock()
-        request.url = url
         if not self.call_find_element_number:
             data_file = "tests/resources/posts/graphql2.json"
             after = "3305036909188660917_50269116275"
         else:
             data_file = "tests/resources/posts/graphql3.json"
             after = "3294160102348327242_50269116275"
-        request.body = urlencode(dict(av="17841461911219001", doc_id="7784658434954494",
-                                      variables=json.dumps({"username": self.username, "after": after}, separators=(',', ':'))),
-                                 quote_via=quote).encode()
-
         with open(data_file, "r") as file:
             data = json.load(file)
-        request.response = mock.Mock(headers={"Content-Type": "text/javascript; charset=utf-8",
-                                              'Content-Encoding': 'identity'},
-                                     body=json.dumps(data).encode())
-        self.requests = [request]
+
+        response = mock.Mock(headers={"Content-Type": "text/javascript; charset=utf-8",
+                                      'Content-Encoding': 'identity'},
+                             body=json.dumps(data).encode())
+
+        request1 = mock.Mock(url=url, response=response)
+        request1.body = urlencode(dict(av="17841461911219001", doc_id="7784658434954494",
+                                       variables=json.dumps({"username": self.username, "after": after}, separators=(',', ':'))),
+                                       quote_via=quote).encode()
+
+        request2 = mock.Mock(url=url, response=response)
+        request2.body = urlencode(dict(av="178414619", doc_id="7784658434954494",
+                                       variables=json.dumps({"username": self.username, "after": after},
+                                                            separators=(',', ':'))),
+                                  quote_via=quote).encode()
+
+        request3 = mock.Mock(url=url, response=response)
+        request3.body = urlencode(dict(av="17841461911219001", doc_id="7784658434954494"),
+                                  quote_via=quote).encode()
+
+        request4 = mock.Mock(url=url, response=response)
+        request4.body = urlencode(dict(av="17841461911219001", doc_id="7784658434954494",
+                                       variables=json.dumps({"username": "dummy", "after": after},
+                                                            separators=(',', ':'))),
+                                  quote_via=quote).encode()
+
+        request5 = mock.Mock(url=url, response=response)
+        request5.body = urlencode(dict(av="17841461911219001", doc_id="7784658434954494",
+                                       variables=json.dumps({"username": self.username, "after": "dummy"},
+                                                            separators=(',', ':'))),
+                                  quote_via=quote).encode()
+
+        self.requests = [request2, request3, request4, request5, request1]
         self.call_find_element_number += 1
         return mock.Mock()
-
-    def execute(self, *args, **kwargs):
-        pass
 
 
 @mock.patch("crawlinsta.collecting.time.sleep", return_value=None)

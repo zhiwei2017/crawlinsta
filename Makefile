@@ -13,6 +13,7 @@ help:
 	@echo "mypy                   : Run mypy type checking.";
 	@echo "flake8                 : Run flake8 linting.";
 	@echo "test                   : Run tests and generate coverage report.";
+	@echo "unit_test              : Run unit tests and generate coverage report.";
 	@echo "build                  : Build a python wheel package.";
 	@echo "publish                : Publish a python wheel package to package index.";
 
@@ -45,6 +46,10 @@ flake8:
 
 # Install requirements for testing and run tests
 test:
+	poetry run pytest
+
+# Install requirements for testing and run unit tests
+unit_test:
 	poetry run pytest tests/unit_tests
 
 # build wheel package

@@ -187,7 +187,7 @@ def find_brackets(text: str) -> List[tuple]:
         >>> from crawlinsta.utils import find_brackets
         >>> brackets = find_brackets("{{hello}}")
         >>> print(brackets)
-        ... [(0, 7)]
+        [(0, 7)]
     """
     stack = []
     brackets = []

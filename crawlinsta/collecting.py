@@ -65,7 +65,21 @@ def collect_user_info(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> # if you already used once the login function, you can use the
         >>> # login_with_cookies function to login with the cookie file.
         >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
-        >>> collect_user_info(driver, "instagram_username")
+        >>> collect_user_info(driver, "nasa")
+        {
+          "id": "528817151",
+          "username": "nasa",
+          "fullname": "NASA",
+          "biography": "Exploring the universe and our home planet.",
+          "follower_count": 97956738,
+          "following_count": 77,
+          "following_tag_count": 10,
+          "is_private": false,
+          "is_verified": true,
+          "profile_pic_url": "https://dummy.pic.com",
+          "post_count": 4116,
+          "usertags_count": 0
+        }
     """
     driver.get(f'{INSTAGRAM_DOMAIN}/{username}/')
     time.sleep(random.randint(4, 6))
@@ -135,7 +149,58 @@ def collect_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> # if you already used once the login function, you can use the
         >>> # login_with_cookies function to login with the cookie file.
         >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
-        >>> collect_posts_of_user(driver, "instagram_username", 100)
+        >>> collect_posts_of_user(driver, "dummy_instagram_username", 100)
+        {
+          "posts": [
+            {
+              "like_count": 817982,
+              "comment_count": 3000,
+              "id": "3215769692664507668",
+              "code": "CygtX9ivC0U",
+              "user": {
+                "id": "50269116275",
+                "username": "dummy_instagram_username",
+                "fullname": "",
+                "profile_pic_url": "https://scontent.cdninstagram.com/v",
+                "is_private": false,
+                "is_verified": false
+              },
+              "taken_at": 1697569769,
+              "media_type": "Photo",
+              "caption": {
+                "id": "17985380039262083",
+                "text": "I know what she’s gonna say before she even has the chance 😂",
+                "created_at_utc": null
+              },
+              "accessibility_caption": "",
+              "original_width": 1080,
+              "original_height": 1920,
+              "urls": [
+                "https://scontent.cdninstagram.com/o1"
+              ],
+              "has_shared_to_fb": false,
+              "usertags": [],
+              "location": null,
+              "music": {
+                "id": "2614441095386924",
+                "is_trending_in_clips": false,
+                "artist": {
+                  "id": "50269116275",
+                  "username": "dummy_instagram_username",
+                  "fullname": "",
+                  "profile_pic_url": "",
+                  "is_private": null,
+                  "is_verified": null
+                },
+                "title": "Original audio",
+                "duration_in_ms": null,
+                "url": null
+              }
+            },
+            ...
+            ],
+          "count": 100
+        }
     """
     def check_request_data(request, username, after=""):
         request_data = parse_qs(request.body.decode())
@@ -219,7 +284,58 @@ def collect_reels_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> # if you already used once the login function, you can use the
         >>> # login_with_cookies function to login with the cookie file.
         >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
-        >>> collect_reels_of_user(driver, "instagram_username", 100)
+        >>> collect_reels_of_user(driver, "dummy_instagram_username", 100)
+        {
+          "reels": [
+            {
+              "like_count": 817982,
+              "comment_count": 3000,
+              "id": "3215769692664507668",
+              "code": "CygtX9ivC0U",
+              "user": {
+                "id": "50269116275",
+                "username": "dummy_instagram_username",
+                "fullname": "",
+                "profile_pic_url": "https://scontent.cdninstagram.com/v",
+                "is_private": false,
+                "is_verified": false
+              },
+              "taken_at": 1697569769,
+              "media_type": "Reel",
+              "caption": {
+                "id": "17985380039262083",
+                "text": "I know what she’s gonna say before she even has the chance 😂",
+                "created_at_utc": null
+              },
+              "accessibility_caption": "",
+              "original_width": 1080,
+              "original_height": 1920,
+              "urls": [
+                "https://scontent.cdninstagram.com/o1"
+              ],
+              "has_shared_to_fb": false,
+              "usertags": [],
+              "location": null,
+              "music": {
+                "id": "2614441095386924",
+                "is_trending_in_clips": false,
+                "artist": {
+                  "id": "50269116275",
+                  "username": "dummy_instagram_username",
+                  "fullname": "",
+                  "profile_pic_url": "",
+                  "is_private": null,
+                  "is_verified": null
+                },
+                "title": "Original audio",
+                "duration_in_ms": null,
+                "url": null
+              }
+            },
+            ...
+            ],
+          "count": 100
+        }
     """
     def check_request_data(request, user_id, after=""):
         request_data = parse_qs(request.body.decode())
@@ -308,7 +424,58 @@ def collect_tagged_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Re
         >>> # if you already used once the login function, you can use the
         >>> # login_with_cookies function to login with the cookie file.
         >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
-        >>> collect_tagged_posts_of_user(driver, "instagram_username", 100)
+        >>> collect_tagged_posts_of_user(driver, "dummy_instagram_username", 100)
+        {
+          "tagged_posts": [
+            {
+              "like_count": 817982,
+              "comment_count": 3000,
+              "id": "3215769692664507668",
+              "code": "CygtX9ivC0U",
+              "user": {
+                "id": "50269116275",
+                "username": "dummy_instagram_username",
+                "fullname": "",
+                "profile_pic_url": "https://scontent.cdninstagram.com/v",
+                "is_private": false,
+                "is_verified": false
+              },
+              "taken_at": 1697569769,
+              "media_type": "Reel",
+              "caption": {
+                "id": "17985380039262083",
+                "text": "I know what she’s gonna say before she even has the chance 😂",
+                "created_at_utc": null
+              },
+              "accessibility_caption": "",
+              "original_width": 1080,
+              "original_height": 1920,
+              "urls": [
+                "https://scontent.cdninstagram.com/o1"
+              ],
+              "has_shared_to_fb": false,
+              "usertags": [],
+              "location": null,
+              "music": {
+                "id": "2614441095386924",
+                "is_trending_in_clips": false,
+                "artist": {
+                  "id": "50269116275",
+                  "username": "dummy_instagram_username",
+                  "fullname": "",
+                  "profile_pic_url": "",
+                  "is_private": null,
+                  "is_verified": null
+                },
+                "title": "Original audio",
+                "duration_in_ms": null,
+                "url": null
+              }
+            },
+            ...
+            ],
+          "count": 100
+        }
     """
     def check_request_data(request, user_id, after=""):
         request_data = parse_qs(request.body.decode())
@@ -398,6 +565,22 @@ def get_friendship_status(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> # login_with_cookies function to login with the cookie file.
         >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> get_friendship_status(driver, "instagram_username1", "instagram_username1")
+        {
+          "following": false,
+          "followed_by": true,
+          "blocking": null,
+          "muting": null,
+          "is_private": false,
+          "incoming_request": null,
+          "outgoing_request": null,
+          "is_blocking_reel": null,
+          "is_muting_reel": null,
+          "is_bestie": null,
+          "is_restricted": null,
+          "is_feed_favorite": null,
+          "subscribed": null,
+          "is_eligible_to_subscribe": null
+        }
     """
     following, followed_by = False, False
     for username in [username1, username2]:
@@ -472,6 +655,20 @@ def collect_followers_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remot
         >>> # login_with_cookies function to login with the cookie file.
         >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> collect_followers_of_user(driver, "instagram_username", 100)
+        {
+          "users": [
+            {
+              "id": "528817151",
+              "username": "nasa",
+              "fullname": "NASA",
+              "is_private": false,
+              "is_verified": true,
+              "profile_pic_url": "https://dummy.pic.com",
+            },
+            ...
+            ],
+          "count": 100
+        }
     """
     if n <= 0:
         raise ValueError("The number of followers to collect must be a positive integer.")
@@ -561,6 +758,20 @@ def collect_followings_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remo
         >>> # login_with_cookies function to login with the cookie file.
         >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> collect_followings_of_user(driver, "instagram_username", 100)
+        {
+          "users": [
+            {
+              "id": "528817151",
+              "username": "nasa",
+              "fullname": "NASA",
+              "is_private": false,
+              "is_verified": true,
+              "profile_pic_url": "https://dummy.pic.com",
+            },
+            ...
+            ],
+          "count": 100
+        }
     """
     if n <= 0:
         raise ValueError("The number of following users to collect must be a positive integer.")
@@ -651,6 +862,18 @@ def collect_following_hashtags_of_user(driver: Union[Chrome, Edge, Firefox, Safa
         >>> # login_with_cookies function to login with the cookie file.
         >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> collect_following_hashtags_of_user(driver, "instagram_username", 100)
+        {
+          "hashtags": [
+            {
+              "id": "528817151",
+              "name": "asiangames",
+              "post_count": 1000000,
+              "profile_pic_url": "https://dummy.pic.com",
+            },
+            ...
+            ],
+          "count": 100
+        }
     """
     if n <= 0:
         raise ValueError("The number of following hashtags to collect must be a positive integer.")
@@ -727,6 +950,36 @@ def collect_likers_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> # login_with_cookies function to login with the cookie file.
         >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> collect_likers_of_post(driver, "WGDBS3D", 100)
+        {
+          "likers": [
+            {
+              "id": "528817151",
+              "username": "nasa",
+              "fullname": "NASA",
+              "is_private": false,
+              "is_verified": true,
+              "profile_pic_url": "https://dummy.pic.com",
+              "friendship_status": {
+                "following": false,
+                "followed_by": true,
+                "blocking": null,
+                "muting": null,
+                "is_private": false,
+                "incoming_request": null,
+                "outgoing_request": null,
+                "is_blocking_reel": null,
+                "is_muting_reel": null,
+                "is_bestie": null,
+                "is_restricted": null,
+                "is_feed_favorite": null,
+                "subscribed": null,
+                "is_eligible_to_subscribe": null
+              }
+            },
+            ...
+            ],
+          "count": 100
+        }
     """
     if n <= 0:
         raise ValueError("The number of likers to collect must be a positive integer.")
@@ -815,6 +1068,28 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
         >>> # login_with_cookies function to login with the cookie file.
         >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> collect_comments_of_post(driver, "WGDBS3D", 100)
+        {
+          "comments": [
+            {
+              "id": "18278957755095859",
+              "user": {
+                "id": "6293392719",
+                "username": "dummy_user"
+              },
+              "post_id": "3275298868401088037",
+              "created_at_utc": 1704669275,
+              "status": null,
+              "share_enabled": null,
+              "is_ranked_comment": null,
+              "text": "Fantastic Job",
+              "has_translation": false,
+              "is_liked_by_post_owner": null,
+              "comment_like_count": 0
+            },
+            ...
+            ],
+          "count": 100
+        }
     """
     def check_request_data(request, post_id):
         request_data = parse_qs(request.body.decode())
@@ -940,7 +1215,47 @@ def search_with_keyword(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> # if you already used once the login function, you can use the
         >>> # login_with_cookies function to login with the cookie file.
         >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
-        >>> search_with_keyword(driver, "asian games", True)
+        >>> search_with_keyword(driver, "shanghai", True)
+        {
+          "hashtags": [
+            {
+              "position": 1,
+              "hashtag": {
+                "id": "17841563224118980",
+                "name": "shanghai",
+                "post_count": 11302316,
+                "profile_pic_url": ""
+              }
+            }
+          ],
+          "users": [
+            {
+              "position": 0,
+              "user": {
+                "id": "7594441262",
+                "username": "shanghai.explore",
+                "fullname": "Shanghai 🇨🇳 Travel | Hotels | Food | Tips",
+                "profile_pic_url": "https://scontent.cdninstagram.com/v/t51.2885-19/409741157_243678455262812_2168807265478461941_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=108&_nc_ohc=S3SAe59tdbUAX9SLkyd&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfALvv52ytTyye_PDEjKCmWAUetHX8BXCGsS7rnFThzNTQ&oe=65ECAABE&_nc_sid=10d13b",
+                "is_private": null,
+                "is_verified": true
+              }
+            }
+          ],
+          "places": [
+            {
+              "position": 2,
+              "place": {
+                "location": {
+                  "id": "106324046073002",
+                  "name": "Shanghai, China"
+                },
+                "subtitle": "",
+                "title": "Shanghai, China"
+              }
+            }
+          ],
+          "personalised": true
+        }
     """
 
     def check_request_data(request, keyword, pers):
@@ -1048,7 +1363,58 @@ def collect_top_posts_of_hashtag(driver: Union[Chrome, Edge, Firefox, Safari, Re
         >>> # if you already used once the login function, you can use the
         >>> # login_with_cookies function to login with the cookie file.
         >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
-        >>> collect_top_posts_of_hashtag(driver, "asiangames", True)
+        >>> collect_top_posts_of_hashtag(driver, "shanghai", True)
+        {
+          "top_posts": [
+            {
+              "like_count": 817982,
+              "comment_count": 3000,
+              "id": "3215769692664507668",
+              "code": "CygtX9ivC0U",
+              "user": {
+                "id": "50269116275",
+                "username": "dummy_instagram_username",
+                "fullname": "",
+                "profile_pic_url": "https://scontent.cdninstagram.com/v",
+                "is_private": false,
+                "is_verified": false
+              },
+              "taken_at": 1697569769,
+              "media_type": "Reel",
+              "caption": {
+                "id": "17985380039262083",
+                "text": "I know what she’s gonna say before she even has the chance 😂#shanghai",
+                "created_at_utc": null
+              },
+              "accessibility_caption": "",
+              "original_width": 1080,
+              "original_height": 1920,
+              "urls": [
+                "https://scontent.cdninstagram.com/o1"
+              ],
+              "has_shared_to_fb": false,
+              "usertags": [],
+              "location": null,
+              "music": {
+                "id": "2614441095386924",
+                "is_trending_in_clips": false,
+                "artist": {
+                  "id": "50269116275",
+                  "username": "dummy_instagram_username",
+                  "fullname": "",
+                  "profile_pic_url": "",
+                  "is_private": null,
+                  "is_verified": null
+                },
+                "title": "Original audio",
+                "duration_in_ms": null,
+                "url": null
+              }
+            },
+            ...
+            ],
+          "count": 100
+        }
     """
     driver.get(f'{INSTAGRAM_DOMAIN}/explore/tags/{hashtag}')
     time.sleep(random.randint(4, 6))
@@ -1108,7 +1474,58 @@ def collect_posts_by_music_id(driver: Union[Chrome, Edge, Firefox, Safari, Remot
         >>> # if you already used once the login function, you can use the
         >>> # login_with_cookies function to login with the cookie file.
         >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
-        >>> collect_posts_by_music_id(driver, "664212705901923", 100)
+        >>> collect_posts_by_music_id(driver, "2614441095386924", 100)
+        {
+          "posts": [
+            {
+              "like_count": 817982,
+              "comment_count": 3000,
+              "id": "3215769692664507668",
+              "code": "CygtX9ivC0U",
+              "user": {
+                "id": "50269116275",
+                "username": "dummy_instagram_username",
+                "fullname": "",
+                "profile_pic_url": "https://scontent.cdninstagram.com/v",
+                "is_private": false,
+                "is_verified": false
+              },
+              "taken_at": 1697569769,
+              "media_type": "Reel",
+              "caption": {
+                "id": "17985380039262083",
+                "text": "I know what she’s gonna say before she even has the chance 😂",
+                "created_at_utc": null
+              },
+              "accessibility_caption": "",
+              "original_width": 1080,
+              "original_height": 1920,
+              "urls": [
+                "https://scontent.cdninstagram.com/o1"
+              ],
+              "has_shared_to_fb": false,
+              "usertags": [],
+              "location": null,
+              "music": {
+                "id": "2614441095386924",
+                "is_trending_in_clips": false,
+                "artist": {
+                  "id": "50269116275",
+                  "username": "dummy_instagram_username",
+                  "fullname": "",
+                  "profile_pic_url": "",
+                  "is_private": null,
+                  "is_verified": null
+                },
+                "title": "Original audio",
+                "duration_in_ms": null,
+                "url": null
+              }
+            },
+            ...
+            ],
+          "count": 100
+        }
     """
     def check_request_data(request, music_id, max_id=""):
         request_data = parse_qs(request.body.decode())

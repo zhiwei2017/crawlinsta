@@ -1,7 +1,6 @@
 from typing import Dict, Any, List, Union
 from .schemas import (
-    UserProfile,
-    Usertag, Location, Caption, Post, MusicBasicInfo
+    UserProfile, Usertag, Location, Caption, Post, MusicBasicInfo
 )
 from .utils import get_media_type
 

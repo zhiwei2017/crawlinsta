@@ -47,7 +47,7 @@ class MockedDriverFail(BaseMockedDriver):
 @mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
 def test_collect_likers_of_post_fail(mocked_sleep):
     result = collect_likers_of_post(MockedDriverFail(), "C2P19gPrUw5", 100)
-    assert result == {"likers": [], "count": 0}
+    assert result == {"users": [], "count": 0}
 
 
 @pytest.mark.parametrize("n", [0, -1])

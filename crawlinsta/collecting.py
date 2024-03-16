@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union
 from .schemas import (
-    UserBasicInfo, UserProfile, UserInfo, Users, Liker, Likers, Comment,
+    UserBasicInfo, UserProfile, UserInfo, Users, Comment,
     Comments, Posts, MusicPosts, HashtagBasicInfo,
     HashtagBasicInfos, Hashtag, SearchingResultHashtag, SearchingResultUser,
     LocationBasicInfo, Place, SearchingResultPlace, SearchingResult,
@@ -567,19 +567,7 @@ def get_friendship_status(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> get_friendship_status(driver, "instagram_username1", "instagram_username1")
         {
           "following": false,
-          "followed_by": true,
-          "blocking": null,
-          "muting": null,
-          "is_private": false,
-          "incoming_request": null,
-          "outgoing_request": null,
-          "is_blocking_reel": null,
-          "is_muting_reel": null,
-          "is_bestie": null,
-          "is_restricted": null,
-          "is_feed_favorite": null,
-          "subscribed": null,
-          "is_eligible_to_subscribe": null
+          "followed_by": true
         }
     """
     following, followed_by = False, False
@@ -951,7 +939,7 @@ def collect_likers_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
         >>> collect_likers_of_post(driver, "WGDBS3D", 100)
         {
-          "likers": [
+          "users": [
             {
               "id": "528817151",
               "username": "nasa",
@@ -959,22 +947,6 @@ def collect_likers_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
               "is_private": false,
               "is_verified": true,
               "profile_pic_url": "https://dummy.pic.com",
-              "friendship_status": {
-                "following": false,
-                "followed_by": true,
-                "blocking": null,
-                "muting": null,
-                "is_private": false,
-                "incoming_request": null,
-                "outgoing_request": null,
-                "is_blocking_reel": null,
-                "is_muting_reel": null,
-                "is_bestie": null,
-                "is_restricted": null,
-                "is_feed_favorite": null,
-                "subscribed": null,
-                "is_eligible_to_subscribe": null
-              }
             },
             ...
             ],
@@ -995,7 +967,7 @@ def collect_likers_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     meta_tag = driver.find_element(By.XPATH, meta_tag_xpath)
     post_id = re.findall("\d+", meta_tag.get_attribute("content"))
     if not post_id:
-        return Likers(likers=[], count=0).model_dump(mode="json")
+        return Users(users=[], count=0).model_dump(mode="json")
     post_id = post_id[0]
 
     likes_btn_xpath = f"//a[@href='/p/{post_code}/liked_by/'][@role='link']"
@@ -1016,31 +988,15 @@ def collect_likers_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     likers = []
     for json_data in results:
         for liker_info in json_data["users"]:
-            friendship_status = FriendshipStatus(following=liker_info["friendship_status"]["following"],
-                                                 followed_by=liker_info["friendship_status"]["followed_by"],
-                                                 blocking=liker_info["friendship_status"]["blocking"],
-                                                 muting=liker_info["friendship_status"]["muting"],
-                                                 is_private=liker_info["friendship_status"]["is_private"],
-                                                 incoming_request=liker_info["friendship_status"]["incoming_request"],
-                                                 outgoing_request=liker_info["friendship_status"]["outgoing_request"],
-                                                 is_blocking_reel=liker_info["friendship_status"]["is_blocking_reel"],
-                                                 is_muting_reel=liker_info["friendship_status"]["is_muting_reel"],
-                                                 is_bestie=liker_info["friendship_status"]["is_bestie"],
-                                                 is_restricted=liker_info["friendship_status"]["is_restricted"],
-                                                 is_feed_favorite=liker_info["friendship_status"]["is_feed_favorite"],
-                                                 subscribed=liker_info["friendship_status"]["subscribed"],
-                                                 is_eligible_to_subscribe=liker_info["friendship_status"][
-                                                     "is_eligible_to_subscribe"])
-            liker = Liker(id=liker_info["pk"],
-                          username=liker_info["username"],
-                          fullname=liker_info["full_name"],
-                          profile_pic_url=liker_info["profile_pic_url"],
-                          is_private=liker_info["is_private"],
-                          is_verified=liker_info["is_verified"],
-                          friendship_status=friendship_status)
+            liker = UserProfile(id=liker_info["pk"],
+                                username=liker_info["username"],
+                                fullname=liker_info["full_name"],
+                                profile_pic_url=liker_info["profile_pic_url"],
+                                is_private=liker_info["is_private"],
+                                is_verified=liker_info["is_verified"])
             likers.append(liker)
     likers = likers[:n]
-    return Likers(likers=likers, count=len(likers)).model_dump(mode="json")
+    return Users(users=likers, count=len(likers)).model_dump(mode="json")
 
 
 @driver_implicit_wait(10)

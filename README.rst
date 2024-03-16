@@ -309,19 +309,7 @@ Get the relationship between the user with `username1` and the user with `userna
         >>> get_friendship_status(driver, "dummy_instagram_username1", "dummy_instagram_username2")
         {
           "following": false,
-          "followed_by": true,
-          "blocking": null,
-          "muting": null,
-          "is_private": false,
-          "incoming_request": null,
-          "outgoing_request": null,
-          "is_blocking_reel": null,
-          "is_muting_reel": null,
-          "is_bestie": null,
-          "is_restricted": null,
-          "is_feed_favorite": null,
-          "subscribed": null,
-          "is_eligible_to_subscribe": null
+          "followed_by": true
         }
 
 `crawlinsta.collecting.collect_followers_of_user`
@@ -436,22 +424,6 @@ Collect the users, who likes a given post.
               "is_private": false,
               "is_verified": true,
               "profile_pic_url": "https://dummy.pic.com",
-              "friendship_status": {
-                "following": false,
-                "followed_by": true,
-                "blocking": null,
-                "muting": null,
-                "is_private": false,
-                "incoming_request": null,
-                "outgoing_request": null,
-                "is_blocking_reel": null,
-                "is_muting_reel": null,
-                "is_bestie": null,
-                "is_restricted": null,
-                "is_feed_favorite": null,
-                "subscribed": null,
-                "is_eligible_to_subscribe": null
-              }
             },
             ...
             ],

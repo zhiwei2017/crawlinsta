@@ -24,7 +24,7 @@ from crawlinsta.collecting import (
 )
 from crawlinsta.schemas import (
     UserInfo, Posts, Users, HashtagBasicInfos, Comments, SearchingResult,
-    Hashtag, Likers, MusicPosts, FriendshipStatus
+    Hashtag, MusicPosts, FriendshipStatus
 )
 
 
@@ -100,7 +100,7 @@ def test_collect_following_hashtags_of_user(chrome_driver, username, number_of_h
 
 @pytest.mark.parametrize("post_code, number_of_users", [("C2P19gPrUw5", 100)])
 def test_collect_likers_of_post(chrome_driver, post_code, number_of_users):
-    generic_test(chrome_driver, collect_likers_of_post, Likers, "likers", post_code, number_of_users)
+    generic_test(chrome_driver, collect_likers_of_post, Users, "users", post_code, number_of_users)
 
 
 @pytest.mark.parametrize("post_code, number_of_comments", [("C10MvewSSYl", 100)])

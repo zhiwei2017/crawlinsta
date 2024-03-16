@@ -17,7 +17,9 @@ from .schemas import (
 )
 from .utils import search_request, get_json_data, filter_requests, get_user_data, find_brackets
 from .decorators import driver_implicit_wait
-from .data_extraction import extract_post, extract_id, extract_music_info, extract_sound_info
+from .data_extraction import (
+    extract_post, extract_id, extract_music_info, extract_sound_info, create_users_list
+)
 from .constants import (
     INSTAGRAM_DOMAIN, GRAPHQL_QUERY_PATH, API_VERSION, FOLLOWING_DOC_ID,
     JsonResponseContentType
@@ -707,17 +709,7 @@ def collect_followers_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remot
         results.append(json_data)
         remaining -= len(json_data["users"])
 
-    users = []
-    for json_data in results:
-        for user_info in json_data["users"]:
-            user = UserProfile(id=user_info["pk"],
-                               username=user_info["username"],
-                               fullname=user_info["full_name"],
-                               profile_pic_url=user_info["profile_pic_url"],
-                               is_private=user_info["is_private"],
-                               is_verified=user_info["is_verified"])
-            users.append(user)
-    users = users[:n]
+    users = create_users_list(results, "users")[:n]
     return Users(users=users, count=len(users)).model_dump(mode="json")
 
 
@@ -810,17 +802,7 @@ def collect_followings_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remo
         results.append(json_data)
         remaining -= len(json_data["users"])
 
-    users = []
-    for json_data in results:
-        for user_info in json_data["users"]:
-            user = UserProfile(id=user_info["pk"],
-                               username=user_info["username"],
-                               fullname=user_info["full_name"],
-                               profile_pic_url=user_info["profile_pic_url"],
-                               is_private=user_info["is_private"],
-                               is_verified=user_info["is_verified"])
-            users.append(user)
-    users = users[:n]
+    users = create_users_list(results, "users")[:n]
     return Users(users=users, count=len(users)).model_dump(mode="json")
 
 
@@ -985,17 +967,7 @@ def collect_likers_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     json_data = get_json_data(request.response)
     results.append(json_data)
 
-    likers = []
-    for json_data in results:
-        for liker_info in json_data["users"]:
-            liker = UserProfile(id=liker_info["pk"],
-                                username=liker_info["username"],
-                                fullname=liker_info["full_name"],
-                                profile_pic_url=liker_info["profile_pic_url"],
-                                is_private=liker_info["is_private"],
-                                is_verified=liker_info["is_verified"])
-            likers.append(liker)
-    likers = likers[:n]
+    likers = create_users_list(results, "users")[:n]
     return Users(users=likers, count=len(likers)).model_dump(mode="json")
 
 
@@ -1268,7 +1240,7 @@ def search_with_keyword(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         for place_info in json_data.get("places", []):
             place = SearchingResultPlace(position=place_info["position"],
                                          place=Place(
-                                             location=LocationBasicInfo(id=place_info["place"]["location"]["pk"],
+                                             location=LocationBasicInfo(id=extract_id(place_info["place"]["location"]),
                                                                         name=place_info["place"]["location"]["name"]),
                                              subtitle=place_info["place"]["subtitle"],
                                              title=place_info["place"]["title"]))

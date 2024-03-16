@@ -216,3 +216,30 @@ def extract_post(post_info_dict: Dict[str, Any]) -> Post:
                 comment_count=post_info_dict.get('comment_count'),
                 music=music)
     return post
+
+
+def create_users_list(json_data_list: List[Dict[str, Any]], key: str = "users"):
+    """Create a list of users from the given json data list.
+
+    Args:
+        json_data_list (List[Dict[str, Any]]): The list of json data.
+        key (str): The key to extract from the json data. Default is "users".
+
+    Returns:
+        List[UserProfile]: The list of users.
+
+    Examples:
+        >>> create_users_list([{"user": {"pk": 123, "username": "username", "full_name": "fullname", "profile_pic_url": "https://example.com", "is_private": False, "is_verified": True}}], "user")
+        [UserProfile(id=123, username="username", fullname="fullname", profile_pic_url="https://example.com", is_private=False, is_verified=True)]
+    """
+    users = []
+    for json_data in json_data_list:
+        for user_info in json_data[key]:
+            user = UserProfile(id=extract_id(user_info),
+                               username=user_info.get("username", ""),
+                               fullname=user_info.get("full_name", ""),
+                               profile_pic_url=user_info.get("profile_pic_url", ""),
+                               is_private=user_info.get("is_private"),
+                               is_verified=user_info.get("is_verified"))
+            users.append(user)
+    return users

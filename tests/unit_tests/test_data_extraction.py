@@ -1,6 +1,6 @@
-import pytest
 from crawlinsta.data_extraction import (
-    extract_id, extract_post_urls, extract_music_info, UserProfile, MusicBasicInfo, extract_sound_info, extract_music, extract_post
+    extract_id, extract_post_urls, extract_music_info, extract_sound_info,
+    extract_music, extract_post, create_users_list
 )
 
 
@@ -412,3 +412,41 @@ def test_extract_post():
     assert post.usertags[0].position == [0.0, 0.0]
     assert post.usertags[0].start_time_in_video_in_sec == 0.0
     assert post.usertags[0].duration_in_video_in_sec == 0.0
+
+
+def test_create_users_list():
+    user_info_list = [
+        {"users": []},
+        {"users": [
+            {
+                "id": "1234567890",
+                "username": "username",
+                "full_name": "fullname",
+                "profile_pic_url": "https://www.instagram.com/p/1234567890",
+                "is_verified": True,
+                "is_private": False
+            },
+            {
+                "pk": "1234567891",
+                "username": "username1",
+                "full_name": "fullname1",
+                "profile_pic_url": "https://www.instagram.com/p/1234567891",
+                "is_verified": False,
+                "is_private": True
+            }
+        ]}
+    ]
+    users = create_users_list(user_info_list)
+    assert len(users) == 2
+    assert users[0].id == "1234567890"
+    assert users[0].username == "username"
+    assert users[0].fullname == "fullname"
+    assert users[0].profile_pic_url == "https://www.instagram.com/p/1234567890"
+    assert users[0].is_verified is True
+    assert users[0].is_private is False
+    assert users[1].id == "1234567891"
+    assert users[1].username == "username1"
+    assert users[1].fullname == "fullname1"
+    assert users[1].profile_pic_url == "https://www.instagram.com/p/1234567891"
+    assert users[1].is_verified is False
+    assert users[1].is_private is True

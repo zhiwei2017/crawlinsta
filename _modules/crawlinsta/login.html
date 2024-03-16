@@ -75,7 +75,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for crawlinsta.login</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">pickle</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">selenium.common.exceptions</span> <span class="kn">import</span> <span class="n">NoSuchElementException</span>
 <span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="kn">import</span> <span class="n">By</span>
@@ -87,6 +88,8 @@
     <span class="s2">&quot;login_with_cookies&quot;</span>
 <span class="p">]</span>
 
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;crawlinsta&quot;</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="login"><a class="viewcode-back" href="../../02_source.html#crawlinsta.login.login">[docs]</a><span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">driver</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span><span class="p">],</span>
           <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -96,7 +99,7 @@
 <span class="sd">    else False.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        driver (:obj:`selenium.webdriver.remote.webdriver.WebDriver`): selenium</span>
+<span class="sd">        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium</span>
 <span class="sd">         driver for controlling the browser to perform certain actions.</span>
 <span class="sd">        username (str): username for login.</span>
 <span class="sd">        password (str): corresponding password for login.</span>
@@ -123,7 +126,7 @@
         <span class="n">decline_optional_cookies_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s1">&#39;//button[@tabindex=&quot;0&quot;][text()=&quot;Decline optional cookies&quot;]&#39;</span><span class="p">)</span>
         <span class="n">decline_optional_cookies_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
     <span class="k">except</span> <span class="n">NoSuchElementException</span><span class="p">:</span>
-        <span class="k">pass</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Optional cookies popup not found&quot;</span><span class="p">)</span>
 
     <span class="n">username_field</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">NAME</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">)</span>
     <span class="n">password_field</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">NAME</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">)</span>
@@ -145,7 +148,7 @@
         <span class="n">not_turn_on_notifications_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s1">&#39;//button[@tabindex=&quot;0&quot;][text()=&quot;Not Now&quot;]&#39;</span><span class="p">)</span>
         <span class="n">not_turn_on_notifications_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
     <span class="k">except</span> <span class="n">NoSuchElementException</span><span class="p">:</span>
-        <span class="k">pass</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Notifications popup not found&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
@@ -154,7 +157,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Log into Instagram using stored cookies.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        driver (:obj:`selenium.webdriver.remote.webdriver.WebDriver`): selenium</span>
+<span class="sd">        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium</span>
 <span class="sd">         driver for controlling the browser to perform certain actions.</span>
 <span class="sd">        cookies_path (str): The path to the file containing cookies.</span>
 <span class="sd">            Default is &quot;instagram_cookies.pkl&quot;.</span>
@@ -173,7 +176,7 @@
         <span class="n">decline_optional_cookies_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s1">&#39;//button[@tabindex=&quot;0&quot;][text()=&quot;Decline optional cookies&quot;]&#39;</span><span class="p">)</span>
         <span class="n">decline_optional_cookies_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
     <span class="k">except</span> <span class="n">NoSuchElementException</span><span class="p">:</span>
-        <span class="k">pass</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Optional cookies popup not found&quot;</span><span class="p">)</span>
 
     <span class="n">cookies</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">cookies_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">cookie</span> <span class="ow">in</span> <span class="n">cookies</span><span class="p">:</span>
@@ -185,7 +188,7 @@
         <span class="n">not_turn_on_notifications_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s1">&#39;//button[@tabindex=&quot;0&quot;][text()=&quot;Not Now&quot;]&#39;</span><span class="p">)</span>
         <span class="n">not_turn_on_notifications_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
     <span class="k">except</span> <span class="n">NoSuchElementException</span><span class="p">:</span>
-        <span class="k">pass</span></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Notifications popup not found&quot;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

@@ -76,7 +76,7 @@
              
   <h1>Source code for crawlinsta.schemas</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">ConfigDict</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">ForwardRef</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">typing_extensions</span>
 
 
@@ -387,7 +387,7 @@
                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kedrodasos Beach&quot;</span><span class="p">])</span>
 
 
-<div class="viewcode-block" id="Location"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Location">[docs]</a><span class="k">class</span> <span class="nc">Location</span><span class="p">(</span><span class="n">LocationBasicInfo</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Location</span><span class="p">(</span><span class="n">LocationBasicInfo</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Location information, contains location name, city, longitude, latitude and</span>
 <span class="sd">     address etc. The location information is provided by the post owner, while</span>
 <span class="sd">     creating/editing the post.&quot;&quot;&quot;</span>
@@ -405,10 +405,10 @@
                                  <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mf">35.26861</span><span class="p">])</span>
     <span class="n">address</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
                          <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Address of the location. Typically is empty.&quot;</span><span class="p">,</span>
-                         <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">])</span></div>
+                         <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
 
 
-<div class="viewcode-block" id="Caption"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Caption">[docs]</a><span class="k">class</span> <span class="nc">Caption</span><span class="p">(</span><span class="n">PreferDefaultsModel</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Caption</span><span class="p">(</span><span class="n">PreferDefaultsModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Caption of the post.&quot;&quot;&quot;</span>
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">coerce_numbers_to_str</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -422,7 +422,7 @@
                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Life&#39;s a beach, and I&#39;m just playing in the sand.&quot;</span><span class="p">])</span>
     <span class="n">created_at_utc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
                                           <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Timestamp when the caption was created. In unix epoch time.&quot;</span><span class="p">,</span>
-                                          <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">1693213015</span><span class="p">])</span></div>
+                                          <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">1693213015</span><span class="p">])</span>
 
 
 <span class="k">class</span> <span class="nc">PostEngagementInfo</span><span class="p">(</span><span class="n">PreferDefaultsModel</span><span class="p">):</span>
@@ -671,7 +671,7 @@
 
 
 <div class="viewcode-block" id="SearchingResult"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.SearchingResult">[docs]</a><span class="k">class</span> <span class="nc">SearchingResult</span><span class="p">(</span><span class="n">PreferDefaultsModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Searching result contains found hashtags and/or users.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Searching result contains found hashtags, users and places.&quot;&quot;&quot;</span>
     <span class="n">hashtags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SearchingResultHashtag</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">([],</span>
                                                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Found hashtags matched to the keywords.&quot;</span><span class="p">,</span>
                                                    <span class="n">examples</span><span class="o">=</span><span class="p">[[</span><span class="n">SearchingResultHashtag</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>

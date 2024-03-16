@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crawlinsta.utils &mdash; Instagram Crawler 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/autodoc_pydantic.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=2389946f"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Instagram Crawler
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../01_about.html">Crawlinsta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../02_source.html">Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../03_authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../04_contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Instagram Crawler</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">crawlinsta.utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for crawlinsta.utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Json</span>
+<span class="kn">from</span> <span class="nn">seleniumwire.utils</span> <span class="kn">import</span> <span class="n">decode</span>
+<span class="kn">from</span> <span class="nn">seleniumwire.request</span> <span class="kn">import</span> <span class="n">Request</span><span class="p">,</span> <span class="n">Response</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="n">INSTAGRAM_DOMAIN</span><span class="p">,</span> <span class="n">API_VERSION</span><span class="p">,</span> <span class="n">JsonResponseContentType</span>
+
+
+<div class="viewcode-block" id="filter_requests"><a class="viewcode-back" href="../../02_source.html#crawlinsta.utils.filter_requests">[docs]</a><span class="k">def</span> <span class="nf">filter_requests</span><span class="p">(</span><span class="n">requests</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Request</span><span class="p">],</span>
+                    <span class="n">response_content_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">application_json</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Request</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Filter requests based on the response content type.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        requests (:obj:`list` of :obj:`seleniumwire.request.Request`): The list of requests.</span>
+<span class="sd">        response_content_type (str): The content type of the response.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        seleniumwire.request.Request: The filtered list of requests.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If there are no requests to filter.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta import webdriver</span>
+<span class="sd">        &gt;&gt;&gt; driver = webdriver.Chrome()</span>
+<span class="sd">        &gt;&gt;&gt; driver.get(&quot;https://www.instagram.com&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta.utils import filter_requests</span>
+<span class="sd">        &gt;&gt;&gt; json_requests = filter_requests(driver.requests)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">requests</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No requests to filter.&quot;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="n">requests</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">elif</span> <span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">response_content_type</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="search_request"><a class="viewcode-back" href="../../02_source.html#crawlinsta.utils.search_request">[docs]</a><span class="k">def</span> <span class="nf">search_request</span><span class="p">(</span><span class="n">requests</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Request</span><span class="p">],</span>
+                   <span class="n">request_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                   <span class="n">response_content_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">application_json</span><span class="p">,</span>
+                   <span class="n">additional_search_func</span><span class="p">:</span> <span class="nb">callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                   <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Search for a request in the list of requests.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        requests (:obj:`list` of :obj:`seleniumwire.request.Request`): The list of requests.</span>
+<span class="sd">        request_url (str): The url to search for.</span>
+<span class="sd">        response_content_type (Optional[str]): The content type of the response.</span>
+<span class="sd">        additional_search_func (callable): Additional search function to apply.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: The index of the request in the list of requests. If the request is not found, returns None.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If there are no requests to search.</span>
+<span class="sd">        ValueError: If no response with the specified content type to the url is found.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta import webdriver</span>
+<span class="sd">        &gt;&gt;&gt; driver = webdriver.Chrome()</span>
+<span class="sd">        &gt;&gt;&gt; driver.get(&quot;https://www.instagram.com&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta.utils import search_request</span>
+<span class="sd">        &gt;&gt;&gt; idx = search_request(driver.requests, &quot;https://www.instagram.com&quot;, &quot;application/json; charset=utf-8&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">requests</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No requests to search.&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">request</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">requests</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">url</span> <span class="o">!=</span> <span class="n">request_url</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">elif</span> <span class="s1">&#39;Content-Type&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">elif</span> <span class="n">response_content_type</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">response_content_type</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">elif</span> <span class="n">additional_search_func</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">additional_search_func</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">return</span> <span class="n">i</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No response with content-type [</span><span class="si">{</span><span class="n">response_content_type</span><span class="si">}</span><span class="s2">] to the url &#39;</span><span class="si">{</span><span class="n">request_url</span><span class="si">}</span><span class="s2">&#39; found.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_json_data"><a class="viewcode-back" href="../../02_source.html#crawlinsta.utils.get_json_data">[docs]</a><span class="k">def</span> <span class="nf">get_json_data</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="n">Response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the json data from the response.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        response (:obj:`list` of :obj:`seleniumwire.request.Response`): The response object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Json: The json data from the response.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta import webdriver</span>
+<span class="sd">        &gt;&gt;&gt; driver = webdriver.Chrome()</span>
+<span class="sd">        &gt;&gt;&gt; driver.get(&quot;https://www.instagram.com&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta.utils import get_json_data</span>
+<span class="sd">        &gt;&gt;&gt; json_data = get_json_data(driver.requests[0].response)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">decode</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">body</span><span class="p">,</span>
+                  <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Content-Encoding&#39;</span><span class="p">,</span> <span class="s1">&#39;identity&#39;</span><span class="p">))</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="get_media_type"><a class="viewcode-back" href="../../02_source.html#crawlinsta.utils.get_media_type">[docs]</a><span class="k">def</span> <span class="nf">get_media_type</span><span class="p">(</span><span class="n">media_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">product_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine the media type based on the provided media type and product type.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        media_type (int): The numeric identifier representing the media type.</span>
+<span class="sd">        product_type (str): The type of product (e.g., &#39;feed&#39;, &#39;igtv&#39;, &#39;clips&#39;)</span>
+<span class="sd">         associated with the media.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: A string indicating the determined media type.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the provided media_type or product_type does not match</span>
+<span class="sd">        expected values.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; # Determine media type for media_type = 1 and product_type = &#39;feed&#39;</span>
+<span class="sd">        &gt;&gt;&gt; media = get_media_type(1, &#39;feed&#39;)  # Returns: &quot;Photo&quot;</span>
+<span class="sd">        &gt;&gt;&gt; # Determine media type for media_type = 2 and product_type = &#39;igtv&#39;</span>
+<span class="sd">        &gt;&gt;&gt; media = get_media_type(2, &#39;igtv&#39;)  # Returns: &quot;IGTV&quot;</span>
+<span class="sd">        &gt;&gt;&gt; # Determine media type for media_type = 8</span>
+<span class="sd">        &gt;&gt;&gt; media = get_media_type(8, &#39;any&#39;)  # Returns: &quot;Album&quot;</span>
+<span class="sd">        &gt;&gt;&gt; # Raises a ValueError for invalid media_type or product_type</span>
+<span class="sd">        &gt;&gt;&gt; get_media_type(3, &#39;unknown&#39;)  # Raises ValueError</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">match</span> <span class="n">media_type</span><span class="p">:</span>
+        <span class="k">case</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Photo&quot;</span>
+        <span class="k">case</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">match</span> <span class="n">product_type</span><span class="p">:</span>
+                <span class="k">case</span> <span class="s1">&#39;feed&#39;</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="s2">&quot;Video&quot;</span>
+                <span class="k">case</span> <span class="s1">&#39;igtv&#39;</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="s2">&quot;IGTV&quot;</span>
+                <span class="k">case</span> <span class="s1">&#39;clips&#39;</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="s2">&quot;Reel&quot;</span>
+                <span class="k">case</span> <span class="n">other</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid product_type&quot;</span><span class="p">)</span>
+        <span class="k">case</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Album&quot;</span>
+        <span class="k">case</span> <span class="n">other</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid media_type&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_user_data"><a class="viewcode-back" href="../../02_source.html#crawlinsta.utils.get_user_data">[docs]</a><span class="k">def</span> <span class="nf">get_user_data</span><span class="p">(</span><span class="n">requests</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Request</span><span class="p">],</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the user data from the requests.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        requests (:obj:`list` of :obj:`seleniumwire.request.Request`): The list of requests.</span>
+<span class="sd">        username (str): The username of the user.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The user data from the requests. If the user is not found, returns None.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta import webdriver</span>
+<span class="sd">        &gt;&gt;&gt; driver = webdriver.Chrome()</span>
+<span class="sd">        &gt;&gt;&gt; driver.get(&quot;https://www.instagram.com&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta.utils import get_user_data</span>
+<span class="sd">        &gt;&gt;&gt; user_data = get_user_data(driver.requests, &quot;instagram&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">json_requests</span> <span class="o">=</span> <span class="n">filter_requests</span><span class="p">(</span><span class="n">requests</span><span class="p">)</span>
+    <span class="n">target_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">API_VERSION</span><span class="si">}</span><span class="s2">/users/web_profile_info/?username=</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">)</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+    <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s1">&#39;user&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="find_brackets"><a class="viewcode-back" href="../../02_source.html#crawlinsta.utils.find_brackets">[docs]</a><span class="k">def</span> <span class="nf">find_brackets</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find the brackets in the text.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text (str): The text to search for brackets.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List[tuple]: The list of tuples containing the start and end indices of the brackets.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta.utils import find_brackets</span>
+<span class="sd">        &gt;&gt;&gt; brackets = find_brackets(&quot;{{hello}}&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; print(brackets)</span>
+<span class="sd">        [(0, 7)]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">brackets</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">char</span> <span class="o">==</span> <span class="s2">&quot;{&quot;</span><span class="p">:</span>
+            <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">char</span> <span class="o">==</span> <span class="s2">&quot;}&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">stack</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="n">brackets</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">(),</span> <span class="n">i</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">brackets</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Zhiwei Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,8 +1,5 @@
 Source
 ======
-..
-    List here all modules.
-
 
 crawlinsta.login
 ----------------
@@ -18,8 +15,22 @@ crawlinsta.collecting
     :members:
     :noindex:
 
-crawlinsta.schemas
+crawlinsta.data_extraction
+--------------------------
+
+.. automodule:: crawlinsta.data_extraction
+    :members:
+    :noindex:
+
+crawlinsta.decorators
 ---------------------
+
+.. automodule:: crawlinsta.decorators
+    :members:
+    :noindex:
+
+crawlinsta.schemas
+------------------
 
 .. autopydantic_model:: crawlinsta.schemas.UserInfo
     :inherited-members: BaseModel
@@ -40,10 +51,6 @@ crawlinsta.schemas
 .. autopydantic_model:: crawlinsta.schemas.Usertag
     :inherited-members: BaseModel
 
-.. autopydantic_model:: crawlinsta.schemas.Location
-
-.. autopydantic_model:: crawlinsta.schemas.Caption
-
 .. autopydantic_model:: crawlinsta.schemas.Post
     :inherited-members: BaseModel
 
@@ -59,3 +66,9 @@ crawlinsta.schemas
 
 .. autopydantic_model:: crawlinsta.schemas.SearchingResult
     :inherited-members: BaseModel
+
+crawlinsta.utils
+----------------
+.. automodule:: crawlinsta.utils
+    :members:
+    :noindex:

@@ -76,7 +76,7 @@
              
   <h1>Source code for crawlinsta.login</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">joblib</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">selenium.common.exceptions</span> <span class="kn">import</span> <span class="n">NoSuchElementException</span>
 <span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="kn">import</span> <span class="n">By</span>
@@ -94,7 +94,7 @@
 <div class="viewcode-block" id="login"><a class="viewcode-back" href="../../02_source.html#crawlinsta.login.login">[docs]</a><span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">driver</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span><span class="p">],</span>
           <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
           <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-          <span class="n">cookies_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;instagram_cookies.pkl&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+          <span class="n">cookies_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;instagram_cookies.joblib&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Login to instagram with given credential, and return True if success,</span>
 <span class="sd">    else False.</span>
 
@@ -123,8 +123,10 @@
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">decline_optional_cookies_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s1">&#39;//button[@tabindex=&quot;0&quot;][text()=&quot;Decline optional cookies&quot;]&#39;</span><span class="p">)</span>
+        <span class="n">decline_optional_cookies_btn_xpath</span> <span class="o">=</span> <span class="s1">&#39;//button[@tabindex=&quot;0&quot;][text()=&quot;Decline optional cookies&quot;]&#39;</span>
+        <span class="n">decline_optional_cookies_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="n">decline_optional_cookies_btn_xpath</span><span class="p">)</span>
         <span class="n">decline_optional_cookies_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">NoSuchElementException</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Optional cookies popup not found&quot;</span><span class="p">)</span>
 
@@ -142,10 +144,11 @@
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 
     <span class="c1"># Store cookies in a file</span>
-    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">driver</span><span class="o">.</span><span class="n">get_cookies</span><span class="p">(),</span> <span class="nb">open</span><span class="p">(</span><span class="n">cookies_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+    <span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">driver</span><span class="o">.</span><span class="n">get_cookies</span><span class="p">(),</span> <span class="n">cookies_path</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">not_turn_on_notifications_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s1">&#39;//button[@tabindex=&quot;0&quot;][text()=&quot;Not Now&quot;]&#39;</span><span class="p">)</span>
+        <span class="n">not_turn_on_notifications_btn_xpath</span> <span class="o">=</span> <span class="s1">&#39;//button[@tabindex=&quot;0&quot;][text()=&quot;Not Now&quot;]&#39;</span>
+        <span class="n">not_turn_on_notifications_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="n">not_turn_on_notifications_btn_xpath</span><span class="p">)</span>
         <span class="n">not_turn_on_notifications_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
     <span class="k">except</span> <span class="n">NoSuchElementException</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Notifications popup not found&quot;</span><span class="p">)</span>
@@ -160,32 +163,34 @@
 <span class="sd">        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium</span>
 <span class="sd">         driver for controlling the browser to perform certain actions.</span>
 <span class="sd">        cookies_path (str): The path to the file containing cookies.</span>
-<span class="sd">            Default is &quot;instagram_cookies.pkl&quot;.</span>
+<span class="sd">            Default is &quot;instagram_cookies.joblib&quot;.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; from crawlinsta import webdriver</span>
 <span class="sd">        &gt;&gt;&gt; driver = webdriver.Chrome(&#39;path_to_chromedriver&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; from crawlinsta.login import login_with_cookies</span>
-<span class="sd">        &gt;&gt;&gt; login_with_cookies(driver, &#39;path_to_cookies_file.pkl&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; login_with_cookies(driver, &#39;path_to_cookies_file.joblib&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; time.sleep(5)</span>
 <span class="sd">        &gt;&gt;&gt; driver.quit()</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://www.instagram.com/&#39;</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">decline_optional_cookies_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s1">&#39;//button[@tabindex=&quot;0&quot;][text()=&quot;Decline optional cookies&quot;]&#39;</span><span class="p">)</span>
+        <span class="n">decline_optional_cookies_btn_xpath</span> <span class="o">=</span> <span class="s1">&#39;//button[@tabindex=&quot;0&quot;][text()=&quot;Decline optional cookies&quot;]&#39;</span>
+        <span class="n">decline_optional_cookies_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="n">decline_optional_cookies_btn_xpath</span><span class="p">)</span>
         <span class="n">decline_optional_cookies_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
     <span class="k">except</span> <span class="n">NoSuchElementException</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Optional cookies popup not found&quot;</span><span class="p">)</span>
 
-    <span class="n">cookies</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">cookies_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+    <span class="n">cookies</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">cookies_path</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">cookie</span> <span class="ow">in</span> <span class="n">cookies</span><span class="p">:</span>
         <span class="n">driver</span><span class="o">.</span><span class="n">add_cookie</span><span class="p">(</span><span class="n">cookie</span><span class="p">)</span>
     <span class="n">driver</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># Example: Wait for the page to load after setting cookies</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">not_turn_on_notifications_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s1">&#39;//button[@tabindex=&quot;0&quot;][text()=&quot;Not Now&quot;]&#39;</span><span class="p">)</span>
+        <span class="n">not_turn_on_notifications_btn_xpath</span> <span class="o">=</span> <span class="s1">&#39;//button[@tabindex=&quot;0&quot;][text()=&quot;Not Now&quot;]&#39;</span>
+        <span class="n">not_turn_on_notifications_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="n">not_turn_on_notifications_btn_xpath</span><span class="p">)</span>
         <span class="n">not_turn_on_notifications_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
     <span class="k">except</span> <span class="n">NoSuchElementException</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Notifications popup not found&quot;</span><span class="p">)</span></div>

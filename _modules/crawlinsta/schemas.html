@@ -104,8 +104,7 @@
 <span class="sd">        The results are then passed to the super class&#39;s init method.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data_without_null_fields</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="p">(</span>
-                <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field_allows_none</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+            <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field_allows_none</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
         <span class="p">)}</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">data_without_null_fields</span><span class="p">)</span>
 
@@ -141,15 +140,15 @@
                                                    <span class="s2">&quot;for detailed information.&quot;</span><span class="p">,</span>
                                        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">is_verified</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
-                                        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Indicates whether the user account is verified as business/official &quot;</span>
-                                                    <span class="s2">&quot;account or not.&quot;</span><span class="p">,</span>
+                                        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Indicates whether the user account is verified as &quot;</span>
+                                                    <span class="s2">&quot;business/official account or not.&quot;</span><span class="p">,</span>
                                         <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
 
 
 <span class="k">class</span> <span class="nc">UserEngagementInfo</span><span class="p">(</span><span class="n">PreferDefaultsModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;User engagement information, contains mainly about the interactions between the given user with</span>
 <span class="sd">    other users or posts. It contains fields like `follower_count`, `following_count`, `following_tag_count`,</span>
-<span class="sd">    `post_count`, `usertags_count`.&quot;&quot;&quot;</span>
+<span class="sd">    `post_count`.&quot;&quot;&quot;</span>
     <span class="n">follower_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span>
                                 <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of the followers.&quot;</span><span class="p">,</span>
                                 <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">])</span>
@@ -162,9 +161,6 @@
     <span class="n">post_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span>
                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of the posts of the user.&quot;</span><span class="p">,</span>
                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">])</span>
-    <span class="n">usertags_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span>
-                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of the times, that the user was tagged in posts.&quot;</span><span class="p">,</span>
-                                <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">])</span>
 
 
 <div class="viewcode-block" id="UserInfo"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.UserInfo">[docs]</a><span class="k">class</span> <span class="nc">UserInfo</span><span class="p">(</span><span class="n">UserProfile</span><span class="p">,</span> <span class="n">UserEngagementInfo</span><span class="p">):</span>
@@ -197,71 +193,7 @@
                                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
     <span class="n">followed_by</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span>
                                         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Does the post owner follow the liker?&quot;</span><span class="p">,</span>
-                                        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">blocking</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
-                                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker blocked by the post owner? &quot;</span>
-                                                 <span class="s2">&quot;Blocked users&#39; likes are not showed.&quot;</span><span class="p">,</span>
-                                     <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">muting</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
-                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the post owner muted by the liker?&quot;</span><span class="p">,</span>
-                                   <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">is_private</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span>
-                                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker&#39;s account private? For a private account, &quot;</span>
-                                                   <span class="s2">&quot;it&#39;s not displayed in likes.&quot;</span><span class="p">,</span>
-                                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">incoming_request</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
-                                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Has the post owner sent a follower request to the liker?&quot;</span><span class="p">,</span>
-                                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">outgoing_request</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
-                                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Has the liker sent a follower request to the post owner?&quot;</span><span class="p">,</span>
-                                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">is_blocking_reel</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
-                                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker blocking reel to show in his personal feed?&quot;</span><span class="p">,</span>
-                                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">is_muting_reel</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
-                                           <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker muting reel in his personal feed?&quot;</span><span class="p">,</span>
-                                           <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">is_bestie</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
-                                      <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker bestie of the post owner? Only the uer can &quot;</span>
-                                                  <span class="s2">&quot;see his/her besties list. Please check &quot;</span>
-                                                  <span class="s2">&quot;https://help.instagram.com/476003390920140/?cms_platform=android-app&amp;helpref=platform_switcher&quot;</span>
-                                                  <span class="s2">&quot;for more detailed information.&quot;</span><span class="p">,</span>
-                                      <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">is_restricted</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
-                                          <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker&#39;s account restricted?&quot;</span><span class="p">,</span>
-                                          <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">is_feed_favorite</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
-                                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the feed of the post owner favorite of the liker?&quot;</span><span class="p">,</span>
-                                             <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">subscribed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
-                                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Has the liker subscribed the post owner?&quot;</span><span class="p">,</span>
-                                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span>
-    <span class="n">is_eligible_to_subscribe</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
-                                                     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the liker eligible to subscribe the post owner?&quot;</span>
-                                                                 <span class="s2">&quot;Please check https://help.instagram.com/478012211024479# for &quot;</span>
-                                                                 <span class="s2">&quot;more details about criteria eligibility to subscriptions.&quot;</span><span class="p">,</span>
-                                                     <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span></div>
-
-
-<div class="viewcode-block" id="Liker"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Liker">[docs]</a><span class="k">class</span> <span class="nc">Liker</span><span class="p">(</span><span class="n">UserProfile</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Liker, who likes a post. It contains the basic user information of `id`,</span>
-<span class="sd">    `username`, `full name` etc, and additionally a `friendship_status` field to</span>
-<span class="sd">    describe the relationship between the liker and the post owner.&quot;&quot;&quot;</span>
-    <span class="n">friendship_status</span><span class="p">:</span> <span class="n">FriendshipStatus</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Indicates the friendship between the &quot;</span>
-                                                            <span class="s2">&quot;liker and post owner.&quot;</span><span class="p">,</span>
-                                                <span class="n">examples</span><span class="o">=</span><span class="p">[])</span></div>
-
-
-<div class="viewcode-block" id="Likers"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Likers">[docs]</a><span class="k">class</span> <span class="nc">Likers</span><span class="p">(</span><span class="n">PreferDefaultsModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;An aggregation class to have the field `likers` for storing a list of</span>
-<span class="sd">    instances of `Liker`.&quot;&quot;&quot;</span>
-    <span class="n">likers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Liker</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">([],</span>
-                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A list of likers.&quot;</span><span class="p">,</span>
-                                <span class="n">examples</span><span class="o">=</span><span class="p">[[]])</span>
-    <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span>
-                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of likers contained.&quot;</span><span class="p">,</span>
-                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">])</span></div>
+                                        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="Comment"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Comment">[docs]</a><span class="k">class</span> <span class="nc">Comment</span><span class="p">(</span><span class="n">PreferDefaultsModel</span><span class="p">):</span>
@@ -269,9 +201,9 @@
 <span class="sd">    `type` etc.&quot;&quot;&quot;</span>
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">coerce_numbers_to_str</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unique identifier of the comment. It consists of 17 digits.&quot;</span><span class="p">,</span>
-                    <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;18016617763686865&quot;</span><span class="p">])</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unique identifier of the comment. It consists of 17 digits.&quot;</span><span class="p">,</span>
+                              <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;18016617763686865&quot;</span><span class="p">])</span>
     <span class="n">user</span><span class="p">:</span> <span class="n">UserBasicInfo</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                                 <span class="n">description</span><span class="o">=</span><span class="s2">&quot;User, who made the comment.&quot;</span><span class="p">,</span>
                                 <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="n">UserBasicInfo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;387381865&quot;</span><span class="p">,</span>
@@ -289,15 +221,16 @@
                                               <span class="s2">&quot;manually controlled by the post owner.&quot;</span><span class="p">,</span>
                                   <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Active&quot;</span><span class="p">])</span>
     <span class="n">share_enabled</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
-                                          <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the comment enabled for sharing? Generally all the visible commends&quot;</span>
-                                            <span class="s2">&quot;are legit for sharing, only the hidden commends are not enabled for &quot;</span>
-                                            <span class="s2">&quot;sharing. This is a duplicated feature of status.&quot;</span><span class="p">,</span>
+                                          <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the comment enabled for sharing? Generally all the visible &quot;</span>
+                                                      <span class="s2">&quot;commends are legit for sharing, only the hidden commends are &quot;</span>
+                                                      <span class="s2">&quot;not enabled for sharing. This is a duplicated feature &quot;</span>
+                                                      <span class="s2">&quot;of status.&quot;</span><span class="p">,</span>
                                           <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">])</span>
     <span class="n">is_ranked_comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
                                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is the comment a ranked one? The Instagram comments feature &quot;</span>
-                                                <span class="s2">&quot;is set up in such a way that it shows first the comments of &quot;</span>
-                                                <span class="s2">&quot;people you follow. Or, sometimes, a comment by a verified &quot;</span>
-                                                <span class="s2">&quot;account or a comment that is most liked shows up first.&quot;</span><span class="p">,</span>
+                                                          <span class="s2">&quot;is set up in such a way that it shows first the comments of &quot;</span>
+                                                          <span class="s2">&quot;people you follow. Or, sometimes, a comment by a verified &quot;</span>
+                                                          <span class="s2">&quot;account or a comment that is most liked shows up first.&quot;</span><span class="p">,</span>
                                               <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">])</span>
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Comment content in free text format. The Instagram comment character &quot;</span>
@@ -330,18 +263,14 @@
                                                        <span class="n">user</span><span class="o">=</span><span class="n">UserBasicInfo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;387381865&quot;</span><span class="p">,</span>
                                                                           <span class="n">username</span><span class="o">=</span><span class="s2">&quot;dummy_user&quot;</span><span class="p">),</span>
                                                        <span class="n">post_id</span><span class="o">=</span><span class="s2">&quot;3194677555662724330&quot;</span><span class="p">,</span>
-                                                       <span class="nb">type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                                                        <span class="n">created_at_utc</span><span class="o">=</span><span class="mi">1695060863</span><span class="p">,</span>
-                                                       <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;comment&quot;</span><span class="p">,</span>
                                                        <span class="n">status</span><span class="o">=</span><span class="s2">&quot;Active&quot;</span><span class="p">,</span>
                                                        <span class="n">share_enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                                        <span class="n">is_ranked_comment</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                                        <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Cool Stuff!&quot;</span><span class="p">,</span>
                                                        <span class="n">has_translation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                                        <span class="n">is_liked_by_post_owner</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                                       <span class="n">has_liked_comment</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                                       <span class="n">comment_like_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                                                       <span class="n">child_comments</span><span class="o">=</span><span class="p">[])]])</span>
+                                                       <span class="n">comment_like_count</span><span class="o">=</span><span class="mi">1</span><span class="p">)]])</span>
     <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span>
                        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of comments contained.&quot;</span><span class="p">,</span>
                        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">])</span></div>
@@ -379,9 +308,9 @@
 <span class="sd">     creating/editing the post.&quot;&quot;&quot;</span>
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">coerce_numbers_to_str</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unique identifier of the location.&quot;</span><span class="p">,</span>
-                    <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;1107837019238536&quot;</span><span class="p">])</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unique identifier of the location.&quot;</span><span class="p">,</span>
+                              <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;1107837019238536&quot;</span><span class="p">])</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Full name of the location.&quot;</span><span class="p">,</span>
                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kedrodasos Beach&quot;</span><span class="p">])</span>
@@ -440,9 +369,9 @@
 <span class="sd">    etc.&quot;&quot;&quot;</span>
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">coerce_numbers_to_str</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unique identifier of the post.&quot;</span><span class="p">,</span>
-                    <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;3179223655971394742&quot;</span><span class="p">])</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unique identifier of the post.&quot;</span><span class="p">,</span>
+                              <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;3179223655971394742&quot;</span><span class="p">])</span>
     <span class="n">code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Short code of the post url. Can be used in &quot;</span>
                                   <span class="s2">&quot;form of www.instagram.com/&lt;code&gt; to access the post.&quot;</span><span class="p">,</span>
@@ -477,7 +406,7 @@
     <span class="c1"># the url signature has a time limitation.</span>
     <span class="n">urls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">([],</span>
                             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Download URL of the media, which is only accessible in a few hours.&quot;</span><span class="p">,</span>
-                            <span class="n">examples</span><span class="o">=</span><span class="p">[[</span><span class="s2">&quot;https://scontent-muc2-1.cdninstagram.com/v/t39.30808-6/369866539_18384091342039171_8947783907607888457_n.jpg&quot;</span><span class="p">]])</span>
+                            <span class="n">examples</span><span class="o">=</span><span class="p">[[</span><span class="s2">&quot;https://scontent-muc2-1.cdninstagram.com/v/t39.30808-6/369866.jpg&quot;</span><span class="p">]])</span>
 
 
 <span class="k">class</span> <span class="nc">MusicBasicInfo</span><span class="p">(</span><span class="n">PreferDefaultsModel</span><span class="p">):</span>
@@ -485,9 +414,9 @@
 <span class="sd">    post it comes, artist etc.&quot;&quot;&quot;</span>
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">coerce_numbers_to_str</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;id of this audio asset.&quot;</span><span class="p">,</span>
-                    <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;664212705901923&quot;</span><span class="p">])</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;id of this audio asset.&quot;</span><span class="p">,</span>
+                              <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;664212705901923&quot;</span><span class="p">])</span>
     <span class="n">is_trending_in_clips</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span>
                                        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Is this music trending in clips?&quot;</span><span class="p">,</span>
                                        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
@@ -505,7 +434,7 @@
     <span class="n">duration_in_ms</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Music duration&quot;</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="mi">6617</span><span class="p">])</span>
     <span class="n">url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;the download url of the music&quot;</span><span class="p">,</span>
-                               <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;https://scontent-muc2-1.xx.fbcdn.net/v/t39.12897-6/419784899_922911948795613_3855576336552877996_n.m4a&quot;</span><span class="p">])</span>
+                               <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;https://scontent-muc2-1.xx.fbcdn.net/v/t39.12897-6/4.m4a&quot;</span><span class="p">])</span>
 
 
 <span class="k">class</span> <span class="nc">Music</span><span class="p">(</span><span class="n">MusicBasicInfo</span><span class="p">):</span>
@@ -539,17 +468,20 @@
     <span class="n">location</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Location</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
                                          <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Location of the post, most of the time it&#39;s not given.&quot;</span><span class="p">,</span>
                                          <span class="n">examples</span><span class="o">=</span><span class="p">[])</span>
-    <span class="n">music</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MusicBasicInfo</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
-                                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;music used in this post.&quot;</span><span class="p">,</span>
-                                            <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="n">MusicBasicInfo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;664212705901923&quot;</span><span class="p">,</span>
-                                                                     <span class="n">is_trending_in_clips</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                                                                     <span class="n">ig_artist</span><span class="o">=</span><span class="n">UserProfile</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;387381865&quot;</span><span class="p">,</span>
-                                                                                           <span class="n">username</span><span class="o">=</span><span class="s2">&quot;dummy_user&quot;</span><span class="p">,</span>
-                                                                                           <span class="n">fullname</span><span class="o">=</span><span class="s2">&quot;Dummy User&quot;</span><span class="p">,</span>
-                                                                                           <span class="n">profile_pic_url</span><span class="o">=</span><span class="s2">&quot;https://dummy-pic.com&quot;</span><span class="p">,</span>
-                                                                                           <span class="n">is_verified</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                                                                                           <span class="n">is_private</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
-                                                                     <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Original audio&quot;</span><span class="p">)])</span></div>
+    <span class="n">music</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MusicBasicInfo</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;music used in this post.&quot;</span><span class="p">,</span>
+        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="n">MusicBasicInfo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;664212705901923&quot;</span><span class="p">,</span>
+                                 <span class="n">is_trending_in_clips</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                 <span class="n">duration_in_ms</span><span class="o">=</span><span class="mi">6617</span><span class="p">,</span>
+                                 <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://scontent-muc2-1.xx.fbcdn.net/v.m4a&quot;</span><span class="p">,</span>
+                                 <span class="n">artist</span><span class="o">=</span><span class="n">UserProfile</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;387381865&quot;</span><span class="p">,</span>
+                                                    <span class="n">username</span><span class="o">=</span><span class="s2">&quot;dummy_user&quot;</span><span class="p">,</span>
+                                                    <span class="n">fullname</span><span class="o">=</span><span class="s2">&quot;Dummy User&quot;</span><span class="p">,</span>
+                                                    <span class="n">profile_pic_url</span><span class="o">=</span><span class="s2">&quot;https://dummy-pic.com&quot;</span><span class="p">,</span>
+                                                    <span class="n">is_verified</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                    <span class="n">is_private</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                                 <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Original audio&quot;</span><span class="p">)])</span></div>
 
 
 <div class="viewcode-block" id="Posts"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.Posts">[docs]</a><span class="k">class</span> <span class="nc">Posts</span><span class="p">(</span><span class="n">PreferDefaultsModel</span><span class="p">):</span>
@@ -573,9 +505,9 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Hashtag basic information&quot;&quot;&quot;</span>
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">coerce_numbers_to_str</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
-                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unique identifier of the hashtag.&quot;</span><span class="p">,</span>
-                    <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;17843820562040860&quot;</span><span class="p">])</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unique identifier of the hashtag.&quot;</span><span class="p">,</span>
+                              <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;17843820562040860&quot;</span><span class="p">])</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;name of the hashtag.&quot;</span><span class="p">,</span>
                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;asiangames&quot;</span><span class="p">])</span>
@@ -585,7 +517,7 @@
     <span class="n">profile_pic_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
                                  <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Hashtag profile picture url. It&#39;s created by instagram using one of the &quot;</span>
                                              <span class="s2">&quot;popular pictures from posts with the hashtag.&quot;</span><span class="p">,</span>
-                                 <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;https://scontent-muc2-1.cdninstagram.com/v/t51.2885-15/384945060_3382351958743676_8236780213784037973_n.heic?stp=dst-jpg_e35&amp;_nc_ht=scontent-muc2-1.cdninstagram.com&amp;_nc_cat=108&amp;_nc_ohc=z0_PSswODrcAX-UzX_h&amp;edm=AGyKU4gBAAAA&amp;ccb=7-5&amp;ig_cache_key=MzIwNDA1MjAyOTI2NTQ2Nzc0OA%3D%3D.2-ccb7-5&amp;oh=00_AfDfikF5zUMBZVxEx7KCDJDMEa7xnrtU3FQAKRMl8DgUVw&amp;oe=651FC6D7&amp;_nc_sid=2011ad&quot;</span><span class="p">])</span>
+                                 <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;https://scontent-muc2-1.cdninstagram.com/vad&quot;</span><span class="p">])</span>
 
 
 <div class="viewcode-block" id="HashtagBasicInfos"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.HashtagBasicInfos">[docs]</a><span class="k">class</span> <span class="nc">HashtagBasicInfos</span><span class="p">(</span><span class="n">PreferDefaultsModel</span><span class="p">):</span>
@@ -595,6 +527,7 @@
                                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Found hashtags matched to the keywords.&quot;</span><span class="p">,</span>
                                              <span class="n">examples</span><span class="o">=</span><span class="p">[[</span><span class="n">HashtagBasicInfo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;17843654935044234&quot;</span><span class="p">,</span>
                                                                          <span class="n">name</span><span class="o">=</span><span class="s2">&quot;primeleague&quot;</span><span class="p">,</span>
+                                                                         <span class="n">profile_pic_url</span><span class="o">=</span><span class="s2">&quot;https://cdninstagram.com/vad&quot;</span><span class="p">,</span>
                                                                          <span class="n">post_count</span><span class="o">=</span><span class="mi">16</span><span class="p">)]])</span>
     <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span>
                        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of hashtags contained.&quot;</span><span class="p">,</span>
@@ -632,6 +565,7 @@
                                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Hashtag shows in the search result at the associated position.&quot;</span><span class="p">,</span>
                                       <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="n">HashtagBasicInfo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;17843654935044234&quot;</span><span class="p">,</span>
                                                                  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;primeleague&quot;</span><span class="p">,</span>
+                                                                 <span class="n">profile_pic_url</span><span class="o">=</span><span class="s2">&quot;https://sconte.cdninstagram.com/vad&quot;</span><span class="p">,</span>
                                                                  <span class="n">post_count</span><span class="o">=</span><span class="mi">16</span><span class="p">)])</span>
 
 
@@ -672,28 +606,31 @@
 
 <div class="viewcode-block" id="SearchingResult"><a class="viewcode-back" href="../../02_source.html#crawlinsta.schemas.SearchingResult">[docs]</a><span class="k">class</span> <span class="nc">SearchingResult</span><span class="p">(</span><span class="n">PreferDefaultsModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Searching result contains found hashtags, users and places.&quot;&quot;&quot;</span>
-    <span class="n">hashtags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SearchingResultHashtag</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">([],</span>
-                                                   <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Found hashtags matched to the keywords.&quot;</span><span class="p">,</span>
-                                                   <span class="n">examples</span><span class="o">=</span><span class="p">[[</span><span class="n">SearchingResultHashtag</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                                                                                     <span class="n">hashtag</span><span class="o">=</span><span class="n">HashtagBasicInfo</span><span class="p">(</span>
-                                                                                         <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;17843654935044234&quot;</span><span class="p">,</span>
-                                                                                         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;primeleague&quot;</span><span class="p">,</span>
-                                                                                         <span class="n">post_count</span><span class="o">=</span><span class="mi">16</span><span class="p">))]])</span>
+    <span class="n">hashtags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SearchingResultHashtag</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="p">[],</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Found hashtags matched to the keywords.&quot;</span><span class="p">,</span>
+        <span class="n">examples</span><span class="o">=</span><span class="p">[[</span><span class="n">SearchingResultHashtag</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                          <span class="n">hashtag</span><span class="o">=</span><span class="n">HashtagBasicInfo</span><span class="p">(</span>
+                                              <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;17843654935044234&quot;</span><span class="p">,</span>
+                                              <span class="n">name</span><span class="o">=</span><span class="s2">&quot;primeleague&quot;</span><span class="p">,</span>
+                                              <span class="n">profile_pic_url</span><span class="o">=</span><span class="s2">&quot;https://scontent-muc2-1.cdninstagram.com/vad&quot;</span><span class="p">,</span>
+                                              <span class="n">post_count</span><span class="o">=</span><span class="mi">16</span><span class="p">))]])</span>
     <span class="n">users</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SearchingResultUser</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">([],</span>
                                              <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Found users matched to the keywords.&quot;</span><span class="p">,</span>
-                                             <span class="n">examples</span><span class="o">=</span><span class="p">[[</span><span class="n">SearchingResultUser</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                                                                            <span class="n">user</span><span class="o">=</span><span class="n">UserProfile</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;387381865&quot;</span><span class="p">,</span>
-                                                                                             <span class="n">username</span><span class="o">=</span><span class="s2">&quot;dummy_user&quot;</span><span class="p">,</span>
-                                                                                             <span class="n">fullname</span><span class="o">=</span><span class="s2">&quot;Dummy User&quot;</span><span class="p">,</span>
-                                                                                             <span class="n">profile_pic_url</span><span class="o">=</span><span class="s2">&quot;https://dummy-pic.com&quot;</span><span class="p">,</span>
-                                                                                             <span class="n">is_verified</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                                                                                             <span class="n">is_private</span><span class="o">=</span><span class="kc">None</span><span class="p">))]])</span>
+                                             <span class="n">examples</span><span class="o">=</span><span class="p">[[</span><span class="n">SearchingResultUser</span><span class="p">(</span>
+                                                 <span class="n">position</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                                 <span class="n">user</span><span class="o">=</span><span class="n">UserProfile</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;387381865&quot;</span><span class="p">,</span>
+                                                                  <span class="n">username</span><span class="o">=</span><span class="s2">&quot;dummy_user&quot;</span><span class="p">,</span>
+                                                                  <span class="n">fullname</span><span class="o">=</span><span class="s2">&quot;Dummy User&quot;</span><span class="p">,</span>
+                                                                  <span class="n">profile_pic_url</span><span class="o">=</span><span class="s2">&quot;https://dummy-pic.com&quot;</span><span class="p">,</span>
+                                                                  <span class="n">is_verified</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                                  <span class="n">is_private</span><span class="o">=</span><span class="kc">None</span><span class="p">))]])</span>
     <span class="n">places</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SearchingResultPlace</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">([],</span>
                                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Found places matched to the keywords.&quot;</span><span class="p">,</span>
                                                <span class="n">examples</span><span class="o">=</span><span class="p">[[</span><span class="n">SearchingResultPlace</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                                                                                <span class="n">place</span><span class="o">=</span><span class="n">Place</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">LocationBasicInfo</span><span class="p">(</span>
-                                                                                   <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;213502500&quot;</span><span class="p">,</span>
-                                                                                   <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Beijing, China&quot;</span><span class="p">),</span>
+                                                                                           <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;213502500&quot;</span><span class="p">,</span>
+                                                                                           <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Beijing, China&quot;</span><span class="p">),</span>
                                                                                            <span class="n">subtitle</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
                                                                                            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Beijing, China&quot;</span><span class="p">))]])</span>
     <span class="n">personalised</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>

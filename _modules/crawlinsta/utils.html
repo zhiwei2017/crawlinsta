@@ -79,7 +79,7 @@
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Json</span>
 <span class="kn">from</span> <span class="nn">seleniumwire.utils</span> <span class="kn">import</span> <span class="n">decode</span>
 <span class="kn">from</span> <span class="nn">seleniumwire.request</span> <span class="kn">import</span> <span class="n">Request</span><span class="p">,</span> <span class="n">Response</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="n">INSTAGRAM_DOMAIN</span><span class="p">,</span> <span class="n">API_VERSION</span><span class="p">,</span> <span class="n">JsonResponseContentType</span>
 
 
@@ -119,8 +119,8 @@
 <div class="viewcode-block" id="search_request"><a class="viewcode-back" href="../../02_source.html#crawlinsta.utils.search_request">[docs]</a><span class="k">def</span> <span class="nf">search_request</span><span class="p">(</span><span class="n">requests</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Request</span><span class="p">],</span>
                    <span class="n">request_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                    <span class="n">response_content_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">application_json</span><span class="p">,</span>
-                   <span class="n">additional_search_func</span><span class="p">:</span> <span class="nb">callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                   <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+                   <span class="n">additional_search_func</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                   <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Search for a request in the list of requests.</span>
 
 <span class="sd">    Args:</span>
@@ -218,15 +218,15 @@
                     <span class="k">return</span> <span class="s2">&quot;IGTV&quot;</span>
                 <span class="k">case</span> <span class="s1">&#39;clips&#39;</span><span class="p">:</span>
                     <span class="k">return</span> <span class="s2">&quot;Reel&quot;</span>
-                <span class="k">case</span> <span class="n">other</span><span class="p">:</span>
+                <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid product_type&quot;</span><span class="p">)</span>
         <span class="k">case</span> <span class="mi">8</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;Album&quot;</span>
-        <span class="k">case</span> <span class="n">other</span><span class="p">:</span>
+        <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid media_type&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_user_data"><a class="viewcode-back" href="../../02_source.html#crawlinsta.utils.get_user_data">[docs]</a><span class="k">def</span> <span class="nf">get_user_data</span><span class="p">(</span><span class="n">requests</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Request</span><span class="p">],</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<div class="viewcode-block" id="get_user_data"><a class="viewcode-back" href="../../02_source.html#crawlinsta.utils.get_user_data">[docs]</a><span class="k">def</span> <span class="nf">get_user_data</span><span class="p">(</span><span class="n">requests</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Request</span><span class="p">],</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the user data from the requests.</span>
 
 <span class="sd">    Args:</span>
@@ -251,7 +251,7 @@
     <span class="k">return</span> <span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s1">&#39;user&#39;</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="find_brackets"><a class="viewcode-back" href="../../02_source.html#crawlinsta.utils.find_brackets">[docs]</a><span class="k">def</span> <span class="nf">find_brackets</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]:</span>
+<div class="viewcode-block" id="find_brackets"><a class="viewcode-back" href="../../02_source.html#crawlinsta.utils.find_brackets">[docs]</a><span class="k">def</span> <span class="nf">find_brackets</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find the brackets in the text.</span>
 
 <span class="sd">    Args:</span>

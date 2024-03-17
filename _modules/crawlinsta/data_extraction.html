@@ -77,13 +77,12 @@
   <h1>Source code for crawlinsta.data_extraction</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">.schemas</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">UserProfile</span><span class="p">,</span>
-    <span class="n">Usertag</span><span class="p">,</span> <span class="n">Location</span><span class="p">,</span> <span class="n">Caption</span><span class="p">,</span> <span class="n">Post</span><span class="p">,</span> <span class="n">MusicBasicInfo</span>
+    <span class="n">UserProfile</span><span class="p">,</span> <span class="n">Usertag</span><span class="p">,</span> <span class="n">Location</span><span class="p">,</span> <span class="n">Caption</span><span class="p">,</span> <span class="n">Post</span><span class="p">,</span> <span class="n">MusicBasicInfo</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">get_media_type</span>
 
 
-<div class="viewcode-block" id="extract_id"><a class="viewcode-back" href="../../02_source.html#crawlinsta.data_extraction.extract_id">[docs]</a><span class="k">def</span> <span class="nf">extract_id</span><span class="p">(</span><span class="n">info_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<div class="viewcode-block" id="extract_id"><a class="viewcode-back" href="../../02_source.html#crawlinsta.data_extraction.extract_id">[docs]</a><span class="k">def</span> <span class="nf">extract_id</span><span class="p">(</span><span class="n">info_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts the id from the given dictionary.</span>
 
 <span class="sd">    Args:</span>
@@ -100,7 +99,8 @@
 <span class="sd">        &gt;&gt;&gt; extract_id({})</span>
 <span class="sd">        None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pk&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span></div>
+    <span class="n">id_value</span> <span class="o">=</span> <span class="n">info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pk&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">id_value</span> <span class="k">if</span> <span class="n">id_value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">id_value</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="extract_post_urls"><a class="viewcode-back" href="../../02_source.html#crawlinsta.data_extraction.extract_post_urls">[docs]</a><span class="k">def</span> <span class="nf">extract_post_urls</span><span class="p">(</span><span class="n">post_info_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
@@ -117,7 +117,8 @@
 <span class="sd">        [&quot;https://example.com&quot;]</span>
 <span class="sd">        &gt;&gt;&gt; extract_post_urls({&quot;media_type&quot;: 2, &quot;video_versions&quot;: [{&quot;url&quot;: &quot;https://example.com&quot;}]})</span>
 <span class="sd">        [&quot;https://example.com&quot;]</span>
-<span class="sd">        &gt;&gt;&gt; extract_post_urls({&quot;media_type&quot;: 8, &quot;carousel_media&quot;: [{&quot;image_versions2&quot;: {&quot;candidates&quot;: [{&quot;url&quot;: &quot;https://example.com&quot;}]}}]})</span>
+<span class="sd">        &gt;&gt;&gt; extract_post_urls({&quot;media_type&quot;: 8, &quot;carousel_media&quot;: [{&quot;image_versions2&quot;:</span>
+<span class="sd">        ... {&quot;candidates&quot;: [{&quot;url&quot;: &quot;https://example.com&quot;}]}}]})</span>
 <span class="sd">        [&quot;https://example.com&quot;]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">post_urls</span> <span class="o">=</span> <span class="p">[]</span>
@@ -131,22 +132,30 @@
     <span class="k">return</span> <span class="n">post_urls</span></div>
 
 
-<div class="viewcode-block" id="extract_music_info"><a class="viewcode-back" href="../../02_source.html#crawlinsta.data_extraction.extract_music_info">[docs]</a><span class="k">def</span> <span class="nf">extract_music_info</span><span class="p">(</span><span class="n">music_info_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">MusicBasicInfo</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<div class="viewcode-block" id="extract_music_info"><a class="viewcode-back" href="../../02_source.html#crawlinsta.data_extraction.extract_music_info">[docs]</a><span class="k">def</span> <span class="nf">extract_music_info</span><span class="p">(</span><span class="n">music_info_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">MusicBasicInfo</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts the music information from the given dictionary.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        music_info_dict (Dict[str, Any]): Dictionary containing the music information.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Union[MusicBasicInfo, None]: The extracted music information.</span>
+<span class="sd">        MusicBasicInfo: The extracted music information.</span>
 
 <span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; extract_music_info({&quot;music_asset_info&quot;: {&quot;audio_cluster_id&quot;: 123, &quot;display_artist&quot;: &quot;artist&quot;, &quot;title&quot;: &quot;title&quot;, &quot;duration_in_ms&quot;: 1000, &quot;progressive_download_url&quot;: &quot;https://example.com&quot;}, &quot;music_consumption_info&quot;: {&quot;is_trending_in_clips&quot;: True}})</span>
-<span class="sd">        MusicBasicInfo(id=123, is_trending_in_clips=True, artist=UserProfile(fullname=&quot;artist&quot;), title=&quot;title&quot;, duration_in_ms=1000, url=&quot;https://example.com&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; extract_music_info({&quot;music_asset_info&quot;: {&quot;audio_cluster_id&quot;: 123, &quot;display_artist&quot;: &quot;artist&quot;,</span>
+<span class="sd">        ... &quot;title&quot;: &quot;title&quot;, &quot;duration_in_ms&quot;: 1000, &quot;progressive_download_url&quot;: &quot;https://example.com&quot;},</span>
+<span class="sd">        ... &quot;music_consumption_info&quot;: {&quot;is_trending_in_clips&quot;: True}})</span>
+<span class="sd">        MusicBasicInfo(id=123, is_trending_in_clips=True, artist=UserProfile(fullname=&quot;artist&quot;), title=&quot;title&quot;,</span>
+<span class="sd">        duration_in_ms=1000, url=&quot;https://example.com&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">artist</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">music_info_dict</span><span class="p">[</span><span class="s2">&quot;music_asset_info&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;display_artist&quot;</span><span class="p">):</span>
-        <span class="n">artist</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="p">(</span><span class="n">fullname</span><span class="o">=</span><span class="n">music_info_dict</span><span class="p">[</span><span class="s2">&quot;music_asset_info&quot;</span><span class="p">][</span><span class="s2">&quot;display_artist&quot;</span><span class="p">])</span>
+        <span class="n">artist</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">username</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                             <span class="n">fullname</span><span class="o">=</span><span class="n">music_info_dict</span><span class="p">[</span><span class="s2">&quot;music_asset_info&quot;</span><span class="p">][</span><span class="s2">&quot;display_artist&quot;</span><span class="p">],</span>
+                             <span class="n">profile_pic_url</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                             <span class="n">is_private</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">is_verified</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="n">music</span> <span class="o">=</span> <span class="n">MusicBasicInfo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">music_info_dict</span><span class="p">[</span><span class="s2">&quot;music_asset_info&quot;</span><span class="p">][</span><span class="s2">&quot;audio_cluster_id&quot;</span><span class="p">],</span>
                            <span class="n">is_trending_in_clips</span><span class="o">=</span><span class="n">music_info_dict</span><span class="p">[</span><span class="s2">&quot;music_consumption_info&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_trending_in_clips&quot;</span><span class="p">),</span>
                            <span class="n">artist</span><span class="o">=</span><span class="n">artist</span><span class="p">,</span>
@@ -156,18 +165,23 @@
     <span class="k">return</span> <span class="n">music</span></div>
 
 
-<div class="viewcode-block" id="extract_sound_info"><a class="viewcode-back" href="../../02_source.html#crawlinsta.data_extraction.extract_sound_info">[docs]</a><span class="k">def</span> <span class="nf">extract_sound_info</span><span class="p">(</span><span class="n">sound_info_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">MusicBasicInfo</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<div class="viewcode-block" id="extract_sound_info"><a class="viewcode-back" href="../../02_source.html#crawlinsta.data_extraction.extract_sound_info">[docs]</a><span class="k">def</span> <span class="nf">extract_sound_info</span><span class="p">(</span><span class="n">sound_info_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">MusicBasicInfo</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts the sound information from the given dictionary.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        sound_info_dict (Dict[str, Any]): Dictionary containing the sound information.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Union[MusicBasicInfo, None]: The extracted sound information.</span>
+<span class="sd">        MusicBasicInfo: The extracted sound information.</span>
 
 <span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; extract_sound_info({&quot;audio_asset_id&quot;: 123, &quot;consumption_info&quot;: {&quot;is_trending_in_clips&quot;: True}, &quot;ig_artist&quot;: {&quot;pk&quot;: 123, &quot;username&quot;: &quot;username&quot;, &quot;fullname&quot;: &quot;fullname&quot;, &quot;profile_pic_url&quot;: &quot;https://example.com&quot;, &quot;is_verified&quot;: True, &quot;is_private&quot;: False}, &quot;original_audio_title&quot;: &quot;title&quot;, &quot;duration_in_ms&quot;: 1000, &quot;progressive_download_url&quot;: &quot;https://example.com&quot;})</span>
-<span class="sd">        MusicBasicInfo(id=123, is_trending_in_clips=True, artist=UserProfile(id=123, username=&quot;username&quot;, fullname=&quot;fullname&quot;, profile_pic_url=&quot;https://example.com&quot;, is_verified=True, is_private=False), title=&quot;title&quot;, duration_in_ms=1000, url=&quot;https://example.com&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; extract_sound_info({&quot;audio_asset_id&quot;: 123, &quot;consumption_info&quot;: {&quot;is_trending_in_clips&quot;: True},</span>
+<span class="sd">        ... &quot;ig_artist&quot;: {&quot;pk&quot;: 123, &quot;username&quot;: &quot;username&quot;, &quot;fullname&quot;: &quot;fullname&quot;,</span>
+<span class="sd">        ... &quot;profile_pic_url&quot;: &quot;https://example.com&quot;, &quot;is_verified&quot;: True, &quot;is_private&quot;: False},</span>
+<span class="sd">        ... &quot;original_audio_title&quot;: &quot;title&quot;, &quot;duration_in_ms&quot;: 1000, &quot;progressive_download_url&quot;: &quot;https://example.com&quot;})</span>
+<span class="sd">        MusicBasicInfo(id=123, is_trending_in_clips=True, artist=UserProfile(id=123, username=&quot;username&quot;,</span>
+<span class="sd">        fullname=&quot;fullname&quot;, profile_pic_url=&quot;https://example.com&quot;, is_verified=True, is_private=False),</span>
+<span class="sd">        title=&quot;title&quot;, duration_in_ms=1000, url=&quot;https://example.com&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ig_artist</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">sound_info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ig_artist&quot;</span><span class="p">):</span>
@@ -180,7 +194,7 @@
     <span class="n">music</span> <span class="o">=</span> <span class="n">MusicBasicInfo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">sound_info_dict</span><span class="p">[</span><span class="s2">&quot;audio_asset_id&quot;</span><span class="p">],</span>
                            <span class="n">is_trending_in_clips</span><span class="o">=</span><span class="n">sound_info_dict</span><span class="p">[</span><span class="s2">&quot;consumption_info&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_trending_in_clips&quot;</span><span class="p">),</span>
                            <span class="n">artist</span><span class="o">=</span><span class="n">ig_artist</span><span class="p">,</span>
-                           <span class="n">title</span><span class="o">=</span><span class="n">sound_info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;original_audio_title&quot;</span><span class="p">),</span>
+                           <span class="n">title</span><span class="o">=</span><span class="n">sound_info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;original_audio_title&quot;</span><span class="p">,</span> <span class="s2">&quot;Original audio&quot;</span><span class="p">),</span>
                            <span class="n">duration_in_ms</span><span class="o">=</span><span class="n">sound_info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;duration_in_ms&quot;</span><span class="p">),</span>
                            <span class="n">url</span><span class="o">=</span><span class="n">sound_info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;progressive_download_url&quot;</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">music</span></div>
@@ -196,10 +210,21 @@
 <span class="sd">        Union[MusicBasicInfo, None]: The extracted music.</span>
 
 <span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; extract_music({&quot;clips_metadata&quot;: {&quot;audio_type&quot;: &quot;licensed_music&quot;, &quot;music_info&quot;: {&quot;music_asset_info&quot;: {&quot;audio_cluster_id&quot;: 123, &quot;display_artist&quot;: &quot;artist&quot;, &quot;title&quot;: &quot;title&quot;, &quot;duration_in_ms&quot;: 1000, &quot;progressive_download_url&quot;: &quot;https://example.com&quot;}, &quot;music_consumption_info&quot;: {&quot;is_trending_in_clips&quot;: True}}}})</span>
-<span class="sd">        MusicBasicInfo(id=123, is_trending_in_clips=True, artist=UserProfile(fullname=&quot;artist&quot;), title=&quot;title&quot;, duration_in_ms=1000, url=&quot;https://example.com&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; extract_music({&quot;clips_metadata&quot;: {&quot;audio_type&quot;: &quot;original_sounds&quot;, &quot;original_sound_info&quot;: {&quot;audio_asset_id&quot;: 123, &quot;consumption_info&quot;: {&quot;is_trending_in_clips&quot;: True}, &quot;ig_artist&quot;: {&quot;pk&quot;: 123, &quot;username&quot;: &quot;username&quot;, &quot;fullname&quot;: &quot;fullname&quot;, &quot;profile_pic_url&quot;: &quot;https://example.com&quot;, &quot;is_verified&quot;: True, &quot;is_private&quot;: False}, &quot;original_audio_title&quot;: &quot;title&quot;, &quot;duration_in_ms&quot;: 1000, &quot;progressive_download_url&quot;: &quot;https://example.com&quot;}}})</span>
-<span class="sd">        MusicBasicInfo(id=123, is_trending_in_clips=True, artist=UserProfile(id=123, username=&quot;username&quot;, fullname=&quot;fullname&quot;, profile_pic_url=&quot;https://example.com&quot;, is_verified=True, is_private=False), title=&quot;title&quot;, duration_in_ms=1000, url=&quot;https://example.com&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; extract_music({&quot;clips_metadata&quot;: {&quot;audio_type&quot;: &quot;licensed_music&quot;, &quot;music_info&quot;: {&quot;music_asset_info&quot;:</span>
+<span class="sd">        ... {&quot;audio_cluster_id&quot;: 123, &quot;display_artist&quot;: &quot;artist&quot;, &quot;title&quot;: &quot;title&quot;, &quot;duration_in_ms&quot;: 1000,</span>
+<span class="sd">        ... &quot;progressive_download_url&quot;: &quot;https://example.com&quot;},</span>
+<span class="sd">        ... &quot;music_consumption_info&quot;: {&quot;is_trending_in_clips&quot;: True}}}})</span>
+<span class="sd">        MusicBasicInfo(id=123, is_trending_in_clips=True, artist=UserProfile(fullname=&quot;artist&quot;), title=&quot;title&quot;,</span>
+<span class="sd">        duration_in_ms=1000, url=&quot;https://example.com&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; extract_music({&quot;clips_metadata&quot;: {&quot;audio_type&quot;: &quot;original_sounds&quot;,</span>
+<span class="sd">        ... &quot;original_sound_info&quot;: {&quot;audio_asset_id&quot;: 123, &quot;consumption_info&quot;: {&quot;is_trending_in_clips&quot;: True},</span>
+<span class="sd">        ... &quot;ig_artist&quot;: {&quot;pk&quot;: 123, &quot;username&quot;: &quot;username&quot;, &quot;fullname&quot;: &quot;fullname&quot;,</span>
+<span class="sd">        ... &quot;profile_pic_url&quot;: &quot;https://example.com&quot;, &quot;is_verified&quot;: True, &quot;is_private&quot;: False},</span>
+<span class="sd">        ... &quot;original_audio_title&quot;: &quot;title&quot;, &quot;duration_in_ms&quot;: 1000,</span>
+<span class="sd">        ... &quot;progressive_download_url&quot;: &quot;https://example.com&quot;}}})</span>
+<span class="sd">        MusicBasicInfo(id=123, is_trending_in_clips=True, artist=UserProfile(id=123, username=&quot;username&quot;,</span>
+<span class="sd">        fullname=&quot;fullname&quot;, profile_pic_url=&quot;https://example.com&quot;, is_verified=True, is_private=False),</span>
+<span class="sd">        title=&quot;title&quot;, duration_in_ms=1000, url=&quot;https://example.com&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">metadata</span> <span class="o">=</span> <span class="n">post_info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;clips_metadata&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">metadata</span><span class="p">:</span>
@@ -211,7 +236,7 @@
             <span class="n">music</span> <span class="o">=</span> <span class="n">extract_music_info</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;music_info&quot;</span><span class="p">])</span>
         <span class="k">case</span> <span class="s2">&quot;original_sounds&quot;</span><span class="p">:</span>
             <span class="n">music</span> <span class="o">=</span> <span class="n">extract_sound_info</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;original_sound_info&quot;</span><span class="p">])</span>
-        <span class="k">case</span> <span class="n">other</span><span class="p">:</span>
+        <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;music_info&quot;</span><span class="p">):</span>
                 <span class="n">music</span> <span class="o">=</span> <span class="n">extract_music_info</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;music_info&quot;</span><span class="p">])</span>
             <span class="k">elif</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;original_sound_info&quot;</span><span class="p">):</span>
@@ -229,8 +254,24 @@
 <span class="sd">        Post: The extracted post.</span>
 
 <span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; extract_post({&quot;usertags&quot;: {&quot;in&quot;: [{&quot;user&quot;: {&quot;pk&quot;: 123, &quot;username&quot;: &quot;username&quot;, &quot;full_name&quot;: &quot;fullname&quot;, &quot;profile_pic_url&quot;: &quot;https://example.com&quot;, &quot;is_private&quot;: False, &quot;is_verified&quot;: True}, &quot;position&quot;: [0.5, 0.5], &quot;start_time_in_video_in_sec&quot;: 0, &quot;duration_in_video_in_sec&quot;: 10}]}, &quot;location&quot;: {&quot;pk&quot;: 123, &quot;short_name&quot;: &quot;short_name&quot;, &quot;name&quot;: &quot;name&quot;, &quot;city&quot;: &quot;city&quot;, &quot;lng&quot;: 123, &quot;lat&quot;: 123, &quot;address&quot;: &quot;address&quot;}, &quot;caption&quot;: {&quot;pk&quot;: 123, &quot;text&quot;: &quot;text&quot;, &quot;created_at_utc&quot;: 123}, &quot;user&quot;: {&quot;pk&quot;: 123, &quot;username&quot;: &quot;username&quot;, &quot;full_name&quot;: &quot;fullname&quot;, &quot;profile_pic_url&quot;: &quot;https://example.com&quot;, &quot;is_private&quot;: False, &quot;is_verified&quot;: True}, &quot;media_type&quot;: 1, &quot;product_type&quot;: &quot;feed&quot;, &quot;taken_at&quot;: 123, &quot;has_shared_to_fb&quot;: 1, &quot;original_width&quot;: 123, &quot;original_height&quot;: 123, &quot;image_versions2&quot;: {&quot;candidates&quot;: [{&quot;url&quot;: &quot;https://example.com&quot;}]}, &quot;like_count&quot;: 123, &quot;comment_count&quot;: 123})</span>
-<span class="sd">        Post(id=123, code=&quot;123&quot;, user=UserProfile(id=123, username=&quot;username&quot;, fullname=&quot;fullname&quot;, profile_pic_url=&quot;https://example.com&quot;, is_private=False, is_verified=True), taken_at=123, has_shared_to_fb=True, usertags=[Usertag(user=UserProfile(id=123, username=&quot;username&quot;, fullname=&quot;fullname&quot;, profile_pic_url=&quot;https://example.com&quot;, is_private=False, is_verified=True), position=[0.5, 0.5], start_time_in_video_in_sec=0, duration_in_video_in_sec=10)], media_type=&quot;photo&quot;, caption=Caption(id=123, text=&quot;text&quot;, created_at_utc=123), accessibility_caption=&quot;text&quot;, location=Location(id=123, short_name=&quot;short_name&quot;, name=&quot;name&quot;, city=&quot;city&quot;, lng=123, lat=123, address=&quot;address&quot;), original_width=123, original_height=123, urls=[&quot;https://example.com&quot;], like_count=123, comment_count=123, music=None)</span>
+<span class="sd">        &gt;&gt;&gt; extract_post({&quot;usertags&quot;: {&quot;in&quot;: [{&quot;user&quot;: {&quot;pk&quot;: 123, &quot;username&quot;: &quot;username&quot;, &quot;full_name&quot;: &quot;fullname&quot;,</span>
+<span class="sd">        ... &quot;profile_pic_url&quot;: &quot;https://example.com&quot;, &quot;is_private&quot;: False, &quot;is_verified&quot;: True},</span>
+<span class="sd">        ... &quot;position&quot;: [0.5, 0.5], &quot;start_time_in_video_in_sec&quot;: 0, &quot;duration_in_video_in_sec&quot;: 10}]},</span>
+<span class="sd">        ... &quot;location&quot;: {&quot;pk&quot;: 123, &quot;short_name&quot;: &quot;short_name&quot;, &quot;name&quot;: &quot;name&quot;, &quot;city&quot;: &quot;city&quot;, &quot;lng&quot;: 123,</span>
+<span class="sd">        ... &quot;lat&quot;: 123, &quot;address&quot;: &quot;address&quot;}, &quot;caption&quot;: {&quot;pk&quot;: 123, &quot;text&quot;: &quot;text&quot;, &quot;created_at_utc&quot;: 123},</span>
+<span class="sd">        ... &quot;user&quot;: {&quot;pk&quot;: 123, &quot;username&quot;: &quot;username&quot;, &quot;full_name&quot;: &quot;fullname&quot;,</span>
+<span class="sd">        ... &quot;profile_pic_url&quot;: &quot;https://example.com&quot;, &quot;is_private&quot;: False, &quot;is_verified&quot;: True}, &quot;media_type&quot;: 1,</span>
+<span class="sd">        ... &quot;product_type&quot;: &quot;feed&quot;, &quot;taken_at&quot;: 123, &quot;has_shared_to_fb&quot;: 1, &quot;original_width&quot;: 123,</span>
+<span class="sd">        ... &quot;original_height&quot;: 123, &quot;image_versions2&quot;: {&quot;candidates&quot;: [{&quot;url&quot;: &quot;https://example.com&quot;}]},</span>
+<span class="sd">        ... &quot;like_count&quot;: 123, &quot;comment_count&quot;: 123})</span>
+<span class="sd">        Post(id=123, code=&quot;123&quot;, user=UserProfile(id=123, username=&quot;username&quot;, fullname=&quot;fullname&quot;,</span>
+<span class="sd">        profile_pic_url=&quot;https://example.com&quot;, is_private=False, is_verified=True), taken_at=123,</span>
+<span class="sd">        has_shared_to_fb=True, usertags=[Usertag(user=UserProfile(id=123, username=&quot;username&quot;, fullname=&quot;fullname&quot;,</span>
+<span class="sd">        profile_pic_url=&quot;https://example.com&quot;, is_private=False, is_verified=True), position=[0.5, 0.5],</span>
+<span class="sd">        start_time_in_video_in_sec=0, duration_in_video_in_sec=10)], media_type=&quot;photo&quot;, caption=Caption(id=123,</span>
+<span class="sd">        text=&quot;text&quot;, created_at_utc=123), accessibility_caption=&quot;text&quot;, location=Location(id=123,</span>
+<span class="sd">        short_name=&quot;short_name&quot;, name=&quot;name&quot;, city=&quot;city&quot;, lng=123, lat=123, address=&quot;address&quot;), original_width=123,</span>
+<span class="sd">        original_height=123, urls=[&quot;https://example.com&quot;], like_count=123, comment_count=123, music=None)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">usertags</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">usertags_dict</span> <span class="o">=</span> <span class="n">post_info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;usertags&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
@@ -290,10 +331,39 @@
                 <span class="n">original_width</span><span class="o">=</span><span class="n">post_info_dict</span><span class="p">[</span><span class="s1">&#39;original_width&#39;</span><span class="p">],</span>
                 <span class="n">original_height</span><span class="o">=</span><span class="n">post_info_dict</span><span class="p">[</span><span class="s1">&#39;original_height&#39;</span><span class="p">],</span>
                 <span class="n">urls</span><span class="o">=</span><span class="n">post_urls</span><span class="p">,</span>
-                <span class="n">like_count</span><span class="o">=</span><span class="n">post_info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;like_count&#39;</span><span class="p">),</span>
-                <span class="n">comment_count</span><span class="o">=</span><span class="n">post_info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;comment_count&#39;</span><span class="p">),</span>
+                <span class="n">like_count</span><span class="o">=</span><span class="n">post_info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;like_count&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="n">comment_count</span><span class="o">=</span><span class="n">post_info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;comment_count&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
                 <span class="n">music</span><span class="o">=</span><span class="n">music</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">post</span></div>
+
+
+<div class="viewcode-block" id="create_users_list"><a class="viewcode-back" href="../../02_source.html#crawlinsta.data_extraction.create_users_list">[docs]</a><span class="k">def</span> <span class="nf">create_users_list</span><span class="p">(</span><span class="n">json_data_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;users&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a list of users from the given json data list.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        json_data_list (List[Dict[str, Any]]): The list of json data.</span>
+<span class="sd">        key (str): The key to extract from the json data. Default is &quot;users&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List[UserProfile]: The list of users.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; create_users_list([{&quot;user&quot;: {&quot;pk&quot;: 123, &quot;username&quot;: &quot;username&quot;, &quot;full_name&quot;: &quot;fullname&quot;,</span>
+<span class="sd">        ... &quot;profile_pic_url&quot;: &quot;https://example.com&quot;, &quot;is_private&quot;: False, &quot;is_verified&quot;: True}}], &quot;user&quot;)</span>
+<span class="sd">        [UserProfile(id=123, username=&quot;username&quot;, fullname=&quot;fullname&quot;, profile_pic_url=&quot;https://example.com&quot;,</span>
+<span class="sd">        is_private=False, is_verified=True)]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">json_data</span> <span class="ow">in</span> <span class="n">json_data_list</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">user_info</span> <span class="ow">in</span> <span class="n">json_data</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">extract_id</span><span class="p">(</span><span class="n">user_info</span><span class="p">),</span>
+                               <span class="n">username</span><span class="o">=</span><span class="n">user_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                               <span class="n">fullname</span><span class="o">=</span><span class="n">user_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;full_name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                               <span class="n">profile_pic_url</span><span class="o">=</span><span class="n">user_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;profile_pic_url&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                               <span class="n">is_private</span><span class="o">=</span><span class="n">user_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_private&quot;</span><span class="p">),</span>
+                               <span class="n">is_verified</span><span class="o">=</span><span class="n">user_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_verified&quot;</span><span class="p">))</span>
+            <span class="n">users</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">users</span></div>
 </pre></div>
 
            </div>

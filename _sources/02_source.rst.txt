@@ -39,11 +39,6 @@ crawlinsta.schemas
 
 .. autopydantic_model:: crawlinsta.schemas.FriendshipStatus
 
-.. autopydantic_model:: crawlinsta.schemas.Liker
-    :inherited-members: BaseModel
-
-.. autopydantic_model:: crawlinsta.schemas.Likers
-
 .. autopydantic_model:: crawlinsta.schemas.Comment
 
 .. autopydantic_model:: crawlinsta.schemas.Comments

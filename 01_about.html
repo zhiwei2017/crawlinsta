@@ -151,15 +151,14 @@ from module <strong>crawlinsta.login</strong> to login with the cookie file, suc
 <section id="crawlinsta-collecting-collect-user-info">
 <h5><cite>crawlinsta.collecting.collect_user_info</cite><a class="headerlink" href="#crawlinsta-collecting-collect-user-info" title="Permalink to this heading"></a></h5>
 <p>Collects user information for the given <cite>username</cite>.</p>
-<blockquote>
-<div><dl class="simple">
+<dl class="simple">
 <dt>Input:</dt><dd><ul class="simple">
 <li><p>driver: browser driver instance</p></li>
-<li><p>username (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): username to crawl</p></li>
+<li><p>username (str): username to crawl</p></li>
 </ul>
 </dd>
 <dt>Output:</dt><dd><ul class="simple">
-<li><p>user_info (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code></a>): user information, including username, full name, biography, external url, number of posts, number of followers, number of followings, and number of reels.</p></li>
+<li><p>user_info (dict): user information, including username, full name, biography, external url, number of posts, number of followers, number of followings, and number of reels.</p></li>
 </ul>
 </dd>
 </dl>
@@ -181,21 +180,19 @@ from module <strong>crawlinsta.login</strong> to login with the cookie file, suc
 <span class="go">}</span>
 </pre></div>
 </div>
-</div></blockquote>
 </section>
 <section id="crawlinsta-collecting-collect-posts-of-user">
 <h5><cite>crawlinsta.collecting.collect_posts_of_user</cite><a class="headerlink" href="#crawlinsta-collecting-collect-posts-of-user" title="Permalink to this heading"></a></h5>
 <p>Collects n posts from the account with given <cite>username</cite></p>
-<blockquote>
-<div><dl class="simple">
+<dl class="simple">
 <dt>Input:</dt><dd><ul class="simple">
 <li><p>driver: browser driver instance</p></li>
-<li><p>username (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): username to crawl</p></li>
-<li><p>n (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>): maximum number of posts, which should be collected. By default, it’s 100. If it’s set to 0, collect all posts.</p></li>
+<li><p>username (str): username to crawl</p></li>
+<li><p>n (int): maximum number of posts, which should be collected. By default, it’s 100. If it’s set to 0, collect all posts.</p></li>
 </ul>
 </dd>
 <dt>Output:</dt><dd><ul class="simple">
-<li><p>posts (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>): list of posts, each post is a dictionary containing post information, including post code, post url, post type, post caption, post location, post time, number of likes, number of comments, and media url.</p></li>
+<li><p>posts (list): list of posts, each post is a dictionary containing post information, including post code, post url, post type, post caption, post location, post time, number of likes, number of comments, and media url.</p></li>
 </ul>
 </dd>
 </dl>
@@ -254,21 +251,19 @@ from module <strong>crawlinsta.login</strong> to login with the cookie file, suc
 <span class="go">}</span>
 </pre></div>
 </div>
-</div></blockquote>
 </section>
 <section id="crawlinsta-collecting-collect-reels-of-user">
 <h5><cite>crawlinsta.collecting.collect_reels_of_user</cite><a class="headerlink" href="#crawlinsta-collecting-collect-reels-of-user" title="Permalink to this heading"></a></h5>
 <p>Collects n reels from the account with given <cite>username</cite></p>
-<blockquote>
-<div><dl class="simple">
+<dl class="simple">
 <dt>Input:</dt><dd><ul class="simple">
 <li><p>driver: browser driver instance</p></li>
-<li><p>username (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): username to crawl</p></li>
-<li><p>n (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>): maximum number of reels, which should be collected. By default, it’s 100. If it’s set to 0, collect all reels.</p></li>
+<li><p>username (str): username to crawl</p></li>
+<li><p>n (int): maximum number of reels, which should be collected. By default, it’s 100. If it’s set to 0, collect all reels.</p></li>
 </ul>
 </dd>
 <dt>Output:</dt><dd><ul class="simple">
-<li><p>reels (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>): list of reels, each reel is a dictionary containing reel information, including reel code, reel url, reel caption, reel time, number of likes, number of comments, and media url.</p></li>
+<li><p>reels (list): list of reels, each reel is a dictionary containing reel information, including reel code, reel url, reel caption, reel time, number of likes, number of comments, and media url.</p></li>
 </ul>
 </dd>
 </dl>
@@ -327,21 +322,19 @@ from module <strong>crawlinsta.login</strong> to login with the cookie file, suc
 <span class="go">}</span>
 </pre></div>
 </div>
-</div></blockquote>
 </section>
 <section id="crawlinsta-collecting-collect-tagged-posts-of-user">
 <h5><cite>crawlinsta.collecting.collect_tagged_posts_of_user</cite><a class="headerlink" href="#crawlinsta-collecting-collect-tagged-posts-of-user" title="Permalink to this heading"></a></h5>
 <p>Collects n posts in which the user with given <cite>username</cite> is tagged</p>
-<blockquote>
-<div><dl class="simple">
+<dl class="simple">
 <dt>Input:</dt><dd><ul class="simple">
 <li><p>driver: browser driver instance</p></li>
-<li><p>username (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): username to crawl</p></li>
-<li><p>n (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>): maximum number of tagged posts, which should be collected. By default, it’s 100. If it’s set to 0, collect all tagged posts.</p></li>
+<li><p>username (str): username to crawl</p></li>
+<li><p>n (int): maximum number of tagged posts, which should be collected. By default, it’s 100. If it’s set to 0, collect all tagged posts.</p></li>
 </ul>
 </dd>
 <dt>Output:</dt><dd><ul class="simple">
-<li><p>tagged_posts (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>): list of tagged posts, each post is a dictionary containing post information, including post code, post url, post type, post caption, post location, post time, number of likes, number of comments, and media url.</p></li>
+<li><p>tagged_posts (list): list of tagged posts, each post is a dictionary containing post information, including post code, post url, post type, post caption, post location, post time, number of likes, number of comments, and media url.</p></li>
 </ul>
 </dd>
 </dl>
@@ -400,21 +393,19 @@ from module <strong>crawlinsta.login</strong> to login with the cookie file, suc
 <span class="go">}</span>
 </pre></div>
 </div>
-</div></blockquote>
 </section>
 <section id="crawlinsta-collecting-get-friendship-status">
 <h5><cite>crawlinsta.collecting.get_friendship_status</cite><a class="headerlink" href="#crawlinsta-collecting-get-friendship-status" title="Permalink to this heading"></a></h5>
 <p>Get the relationship between the user with <cite>username1</cite> and the user with <cite>username2</cite>, i.e. finding out who is following whom.</p>
-<blockquote>
-<div><dl class="simple">
+<dl class="simple">
 <dt>Input:</dt><dd><ul class="simple">
 <li><p>driver: browser driver instance</p></li>
-<li><p>username1 (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): username of the person A.</p></li>
-<li><p>username2 (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): username of the person B.</p></li>
+<li><p>username1 (str): username of the person A.</p></li>
+<li><p>username2 (str): username of the person B.</p></li>
 </ul>
 </dd>
 <dt>Output:</dt><dd><ul class="simple">
-<li><p>friendship_status (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code></a>): relationship between the two users, including whether person A is following person B and whether person B is following person A.</p></li>
+<li><p>friendship_status (dict): relationship between the two users, including whether person A is following person B and whether person B is following person A.</p></li>
 </ul>
 </dd>
 </dl>
@@ -426,21 +417,19 @@ from module <strong>crawlinsta.login</strong> to login with the cookie file, suc
 <span class="go">}</span>
 </pre></div>
 </div>
-</div></blockquote>
 </section>
 <section id="crawlinsta-collecting-collect-followers-of-user">
 <h5><cite>crawlinsta.collecting.collect_followers_of_user</cite><a class="headerlink" href="#crawlinsta-collecting-collect-followers-of-user" title="Permalink to this heading"></a></h5>
 <p>Collects n followers from the account with given <cite>username</cite></p>
-<blockquote>
-<div><dl class="simple">
+<dl class="simple">
 <dt>Input:</dt><dd><ul class="simple">
 <li><p>driver: browser driver instance</p></li>
-<li><p>username (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): username to crawl</p></li>
-<li><p>n (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>): maximum number of followers, which should be collected. By default, it’s 100. If it’s set to 0, collect all followers.</p></li>
+<li><p>username (str): username to crawl</p></li>
+<li><p>n (int): maximum number of followers, which should be collected. By default, it’s 100. If it’s set to 0, collect all followers.</p></li>
 </ul>
 </dd>
 <dt>Output:</dt><dd><ul class="simple">
-<li><p>followers (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>): list of followers, each follower is a dictionary containing follower information, including follower username, follower full name, follower profile picture url etc.</p></li>
+<li><p>followers (list): list of followers, each follower is a dictionary containing follower information, including follower username, follower full name, follower profile picture url etc.</p></li>
 </ul>
 </dd>
 </dl>
@@ -462,21 +451,19 @@ from module <strong>crawlinsta.login</strong> to login with the cookie file, suc
 <span class="go">}</span>
 </pre></div>
 </div>
-</div></blockquote>
 </section>
 <section id="crawlinsta-collecting-collect-followings-of-user">
 <h5><cite>crawlinsta.collecting.collect_followings_of_user</cite><a class="headerlink" href="#crawlinsta-collecting-collect-followings-of-user" title="Permalink to this heading"></a></h5>
 <p>Collects n following users from the account with given <cite>username</cite></p>
-<blockquote>
-<div><dl class="simple">
+<dl class="simple">
 <dt>Input:</dt><dd><ul class="simple">
 <li><p>driver: browser driver instance</p></li>
-<li><p>username (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): username to crawl</p></li>
-<li><p>n (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>): maximum number of following users, which should be collected. By default, it’s 100. If it’s set to 0, collect all following users.</p></li>
+<li><p>username (str): username to crawl</p></li>
+<li><p>n (int): maximum number of following users, which should be collected. By default, it’s 100. If it’s set to 0, collect all following users.</p></li>
 </ul>
 </dd>
 <dt>Output:</dt><dd><ul class="simple">
-<li><p>followings (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>): list of following users, each following user is a dictionary containing following user information, including following username, following full name, following profile picture url etc.</p></li>
+<li><p>followings (list): list of following users, each following user is a dictionary containing following user information, including following username, following full name, following profile picture url etc.</p></li>
 </ul>
 </dd>
 </dl>
@@ -498,21 +485,19 @@ from module <strong>crawlinsta.login</strong> to login with the cookie file, suc
 <span class="go">}</span>
 </pre></div>
 </div>
-</div></blockquote>
 </section>
 <section id="crawlinsta-collecting-collect-following-hashtags-of-user">
 <h5><cite>crawlinsta.collecting.collect_following_hashtags_of_user</cite><a class="headerlink" href="#crawlinsta-collecting-collect-following-hashtags-of-user" title="Permalink to this heading"></a></h5>
 <p>Collects n following hashtags from the account with given <cite>username</cite></p>
-<blockquote>
-<div><dl class="simple">
+<dl class="simple">
 <dt>Input:</dt><dd><ul class="simple">
 <li><p>driver: browser driver instance</p></li>
-<li><p>username (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): username to crawl</p></li>
-<li><p>n (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>): maximum number of following hashtags, which should be collected. By default, it’s 100. If it’s set to 0, collect all following hashtags.</p></li>
+<li><p>username (str): username to crawl</p></li>
+<li><p>n (int): maximum number of following hashtags, which should be collected. By default, it’s 100. If it’s set to 0, collect all following hashtags.</p></li>
 </ul>
 </dd>
 <dt>Output:</dt><dd><ul class="simple">
-<li><p>following_hashtags (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>): list of following hashtags, each following hashtag is a dictionary containing following hashtag information, including hashtag id, hashtag name, hashtag post count, hashtag profile picture url.</p></li>
+<li><p>following_hashtags (list): list of following hashtags, each following hashtag is a dictionary containing following hashtag information, including hashtag id, hashtag name, hashtag post count, hashtag profile picture url.</p></li>
 </ul>
 </dd>
 </dl>
@@ -532,21 +517,19 @@ from module <strong>crawlinsta.login</strong> to login with the cookie file, suc
 <span class="go">}</span>
 </pre></div>
 </div>
-</div></blockquote>
 </section>
 <section id="crawlinsta-collecting-collect-likers-of-post">
 <h5><cite>crawlinsta.collecting.collect_likers_of_post</cite><a class="headerlink" href="#crawlinsta-collecting-collect-likers-of-post" title="Permalink to this heading"></a></h5>
 <p>Collect the users, who likes a given post.</p>
-<blockquote>
-<div><dl class="simple">
+<dl class="simple">
 <dt>Input:</dt><dd><ul class="simple">
 <li><p>driver: browser driver instance</p></li>
-<li><p>post_code (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): post code, used for generating post directly accessible url.</p></li>
-<li><p>n (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>): maximum number of likers, which should be collected. By default, it’s 100. If it’s set to 0, collect all likers.</p></li>
+<li><p>post_code (str): post code, used for generating post directly accessible url.</p></li>
+<li><p>n (int): maximum number of likers, which should be collected. By default, it’s 100. If it’s set to 0, collect all likers.</p></li>
 </ul>
 </dd>
 <dt>Output:</dt><dd><ul class="simple">
-<li><p>likers (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>): list of likers, each liker is a dictionary containing liker information, including liker username, liker full name, liker profile picture url etc and friendship status between the post owner and the liker.</p></li>
+<li><p>likers (list): list of likers, each liker is a dictionary containing liker information, including liker username, liker full name, liker profile picture url etc and friendship status between the post owner and the liker.</p></li>
 </ul>
 </dd>
 </dl>
@@ -568,21 +551,19 @@ from module <strong>crawlinsta.login</strong> to login with the cookie file, suc
 <span class="go">}</span>
 </pre></div>
 </div>
-</div></blockquote>
 </section>
 <section id="crawlinsta-collecting-collect-comments-of-post">
 <h5><cite>crawlinsta.collecting.collect_comments_of_post</cite><a class="headerlink" href="#crawlinsta-collecting-collect-comments-of-post" title="Permalink to this heading"></a></h5>
 <p>Collect n comments of a given post.</p>
-<blockquote>
-<div><dl class="simple">
+<dl class="simple">
 <dt>Input:</dt><dd><ul class="simple">
 <li><p>driver: browser driver instance</p></li>
-<li><p>post_code (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): post code, used for generating post directly accessible url.</p></li>
-<li><p>n (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>): maximum number of comments, which should be collected. By default, it’s 100. If it’s set to 0, collect all comments.</p></li>
+<li><p>post_code (str): post code, used for generating post directly accessible url.</p></li>
+<li><p>n (int): maximum number of comments, which should be collected. By default, it’s 100. If it’s set to 0, collect all comments.</p></li>
 </ul>
 </dd>
 <dt>Output:</dt><dd><ul class="simple">
-<li><p>comments (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>): list of comments, each comment is a dictionary containing comment information, including comment id, comment text, comment time, comment likes count, comment owner username, comment owner full name, comment owner profile picture url etc.</p></li>
+<li><p>comments (list): list of comments, each comment is a dictionary containing comment information, including comment id, comment text, comment time, comment likes count, comment owner username, comment owner full name, comment owner profile picture url etc.</p></li>
 </ul>
 </dd>
 </dl>
@@ -612,21 +593,19 @@ from module <strong>crawlinsta.login</strong> to login with the cookie file, suc
 <span class="go">}</span>
 </pre></div>
 </div>
-</div></blockquote>
 </section>
 <section id="crawlinsta-collecting-search-with-keyword">
 <h5><cite>crawlinsta.collecting.search_with_keyword</cite><a class="headerlink" href="#crawlinsta-collecting-search-with-keyword" title="Permalink to this heading"></a></h5>
 <p>Search hashtags or users with given keyword.</p>
-<blockquote>
-<div><dl class="simple">
+<dl class="simple">
 <dt>Input:</dt><dd><ul class="simple">
 <li><p>driver: browser driver instance</p></li>
-<li><p>keyword (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): keyword for searching.</p></li>
-<li><p>pers (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code></a>): indicating whether results should be personalized or not.</p></li>
+<li><p>keyword (str): keyword for searching.</p></li>
+<li><p>pers (bool): indicating whether results should be personalized or not.</p></li>
 </ul>
 </dd>
 <dt>Output:</dt><dd><ul class="simple">
-<li><p>search_results (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code></a>): search results, including users, places and hashtags.</p></li>
+<li><p>search_results (dict): search results, including users, places and hashtags.</p></li>
 </ul>
 </dd>
 </dl>
@@ -674,20 +653,18 @@ from module <strong>crawlinsta.login</strong> to login with the cookie file, suc
 <span class="go">}</span>
 </pre></div>
 </div>
-</div></blockquote>
 </section>
 <section id="crawlinsta-collecting-collect-top-posts-of-hashtag">
 <h5><cite>crawlinsta.collecting.collect_top_posts_of_hashtag</cite><a class="headerlink" href="#crawlinsta-collecting-collect-top-posts-of-hashtag" title="Permalink to this heading"></a></h5>
 <p>Collect top posts of a given hashtag.</p>
-<blockquote>
-<div><dl class="simple">
+<dl class="simple">
 <dt>Input:</dt><dd><ul class="simple">
 <li><p>driver: browser driver instance</p></li>
-<li><p>hashtag (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): hashtag</p></li>
+<li><p>hashtag (str): hashtag</p></li>
 </ul>
 </dd>
 <dt>Output:</dt><dd><ul class="simple">
-<li><p>top_posts (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>): list of top posts, each post is a dictionary containing post information, including post code, post url, post type, post caption, post location, post time, number of likes, number of comments, and media url.</p></li>
+<li><p>top_posts (list): list of top posts, each post is a dictionary containing post information, including post code, post url, post type, post caption, post location, post time, number of likes, number of comments, and media url.</p></li>
 </ul>
 </dd>
 </dl>
@@ -746,21 +723,19 @@ from module <strong>crawlinsta.login</strong> to login with the cookie file, suc
 <span class="go">}</span>
 </pre></div>
 </div>
-</div></blockquote>
 </section>
 <section id="crawlinsta-collecting-collect-posts-by-music-id">
 <h5><cite>crawlinsta.collecting.collect_posts_by_music_id</cite><a class="headerlink" href="#crawlinsta-collecting-collect-posts-by-music-id" title="Permalink to this heading"></a></h5>
 <p>Collect n posts containing the given music_id. If n is set to 0, collect all posts.</p>
-<blockquote>
-<div><dl class="simple">
+<dl class="simple">
 <dt>Input:</dt><dd><ul class="simple">
 <li><p>driver: browser driver instance.</p></li>
-<li><p>music_id (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): id of the music.</p></li>
-<li><p>n (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>): maximum number of posts, which should be collected. By default, it’s 100. If it’s set to 0, collect all posts.</p></li>
+<li><p>music_id (str): id of the music.</p></li>
+<li><p>n (int): maximum number of posts, which should be collected. By default, it’s 100. If it’s set to 0, collect all posts.</p></li>
 </ul>
 </dd>
 <dt>Output:</dt><dd><ul class="simple">
-<li><p>posts (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>): list of posts, each post is a dictionary containing post information, including post code, post url, post type, post caption, post location, post time, number of likes, number of comments, and media url.</p></li>
+<li><p>posts (list): list of posts, each post is a dictionary containing post information, including post code, post url, post type, post caption, post location, post time, number of likes, number of comments, and media url.</p></li>
 </ul>
 </dd>
 </dl>
@@ -819,17 +794,15 @@ from module <strong>crawlinsta.login</strong> to login with the cookie file, suc
 <span class="go">}</span>
 </pre></div>
 </div>
-</div></blockquote>
 </section>
 <section id="crawlinsta-collecting-download-media">
 <h5><cite>crawlinsta.collecting.download_media</cite><a class="headerlink" href="#crawlinsta-collecting-download-media" title="Permalink to this heading"></a></h5>
 <p>Download the image/video based on the given media_url, and store it to the given path.</p>
-<blockquote>
-<div><dl class="simple">
+<dl class="simple">
 <dt>Input:</dt><dd><ul class="simple">
 <li><p>driver: browser driver instance</p></li>
-<li><p>media_url (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): url of the media for downloading.</p></li>
-<li><p>file_name (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>): path for storing the downloaded media.</p></li>
+<li><p>media_url (str): url of the media for downloading.</p></li>
+<li><p>file_name (str): path for storing the downloaded media.</p></li>
 </ul>
 </dd>
 </dl>
@@ -837,7 +810,6 @@ from module <strong>crawlinsta.login</strong> to login with the cookie file, suc
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">download_media</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s2">&quot;dummy_media_url&quot;</span><span class="p">,</span> <span class="s2">&quot;dummy&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div></blockquote>
 </section>
 </section>
 </section>

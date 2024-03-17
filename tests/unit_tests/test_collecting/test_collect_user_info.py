@@ -45,5 +45,4 @@ def test_collect_user_info(mocked_sleep):
         "is_verified": True,
         "profile_pic_url": 'https://scontent-muc2-1.cdninstagram.com/v/t51.2885-19/29090066_159271188110124_1152068159029641216_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent-muc2-1.cdninstagram.com&_nc_cat=1&_nc_ohc=QR8vCKU7rFgAX-lnMuu&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AfC3ixsrquc_5TCJtVEtyC3hGx2rL8bLgprss4AV7rw1Mg&oe=65E1C329&_nc_sid=8b3546',
         'post_count': 4116,
-        'usertags_count': 0,
     }

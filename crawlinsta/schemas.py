@@ -27,8 +27,7 @@ class PreferDefaultsModel(BaseModel):
         The results are then passed to the super class's init method.
         """
         data_without_null_fields = {k: v for k, v in data.items() if (
-                v is not None
-                or self._field_allows_none(k)
+            v is not None or self._field_allows_none(k)
         )}
         super().__init__(**data_without_null_fields)
 
@@ -64,15 +63,15 @@ class UserProfile(PreferDefaultsModel, UserBasicInfo):
                                                    "for detailed information.",
                                        examples=[False])
     is_verified: Optional[bool] = Field(None,
-                                        description="Indicates whether the user account is verified as business/official "
-                                                    "account or not.",
+                                        description="Indicates whether the user account is verified as "
+                                                    "business/official account or not.",
                                         examples=[False])
 
 
 class UserEngagementInfo(PreferDefaultsModel):
     """User engagement information, contains mainly about the interactions between the given user with
     other users or posts. It contains fields like `follower_count`, `following_count`, `following_tag_count`,
-    `post_count`, `usertags_count`."""
+    `post_count`."""
     follower_count: int = Field(0,
                                 description="Number of the followers.",
                                 examples=[10])
@@ -85,9 +84,6 @@ class UserEngagementInfo(PreferDefaultsModel):
     post_count: int = Field(0,
                             description="Number of the posts of the user.",
                             examples=[20])
-    usertags_count: int = Field(0,
-                                description="Number of the times, that the user was tagged in posts.",
-                                examples=[20])
 
 
 class UserInfo(UserProfile, UserEngagementInfo):
@@ -128,9 +124,9 @@ class Comment(PreferDefaultsModel):
     `type` etc."""
     model_config = ConfigDict(coerce_numbers_to_str=True)
 
-    id: str = Field(...,
-                    description="Unique identifier of the comment. It consists of 17 digits.",
-                    examples=["18016617763686865"])
+    id: Optional[str] = Field(...,
+                              description="Unique identifier of the comment. It consists of 17 digits.",
+                              examples=["18016617763686865"])
     user: UserBasicInfo = Field(...,
                                 description="User, who made the comment.",
                                 examples=[UserBasicInfo(id="387381865",
@@ -148,15 +144,16 @@ class Comment(PreferDefaultsModel):
                                               "manually controlled by the post owner.",
                                   examples=["Active"])
     share_enabled: Optional[bool] = Field(None,
-                                          description="Is the comment enabled for sharing? Generally all the visible commends"
-                                            "are legit for sharing, only the hidden commends are not enabled for "
-                                            "sharing. This is a duplicated feature of status.",
+                                          description="Is the comment enabled for sharing? Generally all the visible "
+                                                      "commends are legit for sharing, only the hidden commends are "
+                                                      "not enabled for sharing. This is a duplicated feature "
+                                                      "of status.",
                                           examples=[True])
     is_ranked_comment: Optional[bool] = Field(None,
                                               description="Is the comment a ranked one? The Instagram comments feature "
-                                                "is set up in such a way that it shows first the comments of "
-                                                "people you follow. Or, sometimes, a comment by a verified "
-                                                "account or a comment that is most liked shows up first.",
+                                                          "is set up in such a way that it shows first the comments of "
+                                                          "people you follow. Or, sometimes, a comment by a verified "
+                                                          "account or a comment that is most liked shows up first.",
                                               examples=[True])
     text: str = Field("",
                       description="Comment content in free text format. The Instagram comment character "
@@ -189,18 +186,14 @@ class Comments(PreferDefaultsModel):
                                                        user=UserBasicInfo(id="387381865",
                                                                           username="dummy_user"),
                                                        post_id="3194677555662724330",
-                                                       type=0,
                                                        created_at_utc=1695060863,
-                                                       content_type="comment",
                                                        status="Active",
                                                        share_enabled=True,
                                                        is_ranked_comment=True,
                                                        text="Cool Stuff!",
                                                        has_translation=False,
                                                        is_liked_by_post_owner=True,
-                                                       has_liked_comment=True,
-                                                       comment_like_count=1,
-                                                       child_comments=[])]])
+                                                       comment_like_count=1)]])
     count: int = Field(0,
                        description="Number of comments contained.",
                        examples=[100])
@@ -238,9 +231,9 @@ class LocationBasicInfo(PreferDefaultsModel):
      creating/editing the post."""
     model_config = ConfigDict(coerce_numbers_to_str=True)
 
-    id: str = Field(...,
-                    description="Unique identifier of the location.",
-                    examples=["1107837019238536"])
+    id: Optional[str] = Field(...,
+                              description="Unique identifier of the location.",
+                              examples=["1107837019238536"])
     name: str = Field(...,
                       description="Full name of the location.",
                       examples=["Kedrodasos Beach"])
@@ -299,9 +292,9 @@ class PostBasicInfo(PostEngagementInfo):
     etc."""
     model_config = ConfigDict(coerce_numbers_to_str=True)
 
-    id: str = Field(...,
-                    description="Unique identifier of the post.",
-                    examples=["3179223655971394742"])
+    id: Optional[str] = Field(...,
+                              description="Unique identifier of the post.",
+                              examples=["3179223655971394742"])
     code: str = Field(...,
                       description="Short code of the post url. Can be used in "
                                   "form of www.instagram.com/<code> to access the post.",
@@ -336,7 +329,7 @@ class PostBasicInfo(PostEngagementInfo):
     # the url signature has a time limitation.
     urls: List[str] = Field([],
                             description="Download URL of the media, which is only accessible in a few hours.",
-                            examples=[["https://scontent-muc2-1.cdninstagram.com/v/t39.30808-6/369866539_18384091342039171_8947783907607888457_n.jpg"]])
+                            examples=[["https://scontent-muc2-1.cdninstagram.com/v/t39.30808-6/369866.jpg"]])
 
 
 class MusicBasicInfo(PreferDefaultsModel):
@@ -344,9 +337,9 @@ class MusicBasicInfo(PreferDefaultsModel):
     post it comes, artist etc."""
     model_config = ConfigDict(coerce_numbers_to_str=True)
 
-    id: str = Field(...,
-                    description="id of this audio asset.",
-                    examples=["664212705901923"])
+    id: Optional[str] = Field(...,
+                              description="id of this audio asset.",
+                              examples=["664212705901923"])
     is_trending_in_clips: bool = Field(False,
                                        description="Is this music trending in clips?",
                                        examples=[True, False])
@@ -364,7 +357,7 @@ class MusicBasicInfo(PreferDefaultsModel):
     duration_in_ms: Optional[int] = Field(None, description="Music duration", examples=[6617])
     url: Optional[str] = Field(None,
                                description="the download url of the music",
-                               examples=["https://scontent-muc2-1.xx.fbcdn.net/v/t39.12897-6/419784899_922911948795613_3855576336552877996_n.m4a"])
+                               examples=["https://scontent-muc2-1.xx.fbcdn.net/v/t39.12897-6/4.m4a"])
 
 
 class Music(MusicBasicInfo):
@@ -398,17 +391,20 @@ class Post(PostBasicInfo):
     location: Optional[Location] = Field(None,
                                          description="Location of the post, most of the time it's not given.",
                                          examples=[])
-    music: Optional[MusicBasicInfo] = Field(None,
-                                            description="music used in this post.",
-                                            examples=[MusicBasicInfo(id="664212705901923",
-                                                                     is_trending_in_clips=False,
-                                                                     ig_artist=UserProfile(id="387381865",
-                                                                                           username="dummy_user",
-                                                                                           fullname="Dummy User",
-                                                                                           profile_pic_url="https://dummy-pic.com",
-                                                                                           is_verified=False,
-                                                                                           is_private=None),
-                                                                     title="Original audio")])
+    music: Optional[MusicBasicInfo] = Field(
+        None,
+        description="music used in this post.",
+        examples=[MusicBasicInfo(id="664212705901923",
+                                 is_trending_in_clips=False,
+                                 duration_in_ms=6617,
+                                 url="https://scontent-muc2-1.xx.fbcdn.net/v.m4a",
+                                 artist=UserProfile(id="387381865",
+                                                    username="dummy_user",
+                                                    fullname="Dummy User",
+                                                    profile_pic_url="https://dummy-pic.com",
+                                                    is_verified=False,
+                                                    is_private=True),
+                                 title="Original audio")])
 
 
 class Posts(PreferDefaultsModel):
@@ -432,9 +428,9 @@ class HashtagBasicInfo(PreferDefaultsModel):
     """Hashtag basic information"""
     model_config = ConfigDict(coerce_numbers_to_str=True)
 
-    id: str = Field(...,
-                    description="Unique identifier of the hashtag.",
-                    examples=["17843820562040860"])
+    id: Optional[str] = Field(...,
+                              description="Unique identifier of the hashtag.",
+                              examples=["17843820562040860"])
     name: str = Field(...,
                       description="name of the hashtag.",
                       examples=["asiangames"])
@@ -444,7 +440,7 @@ class HashtagBasicInfo(PreferDefaultsModel):
     profile_pic_url: str = Field("",
                                  description="Hashtag profile picture url. It's created by instagram using one of the "
                                              "popular pictures from posts with the hashtag.",
-                                 examples=["https://scontent-muc2-1.cdninstagram.com/v/t51.2885-15/384945060_3382351958743676_8236780213784037973_n.heic?stp=dst-jpg_e35&_nc_ht=scontent-muc2-1.cdninstagram.com&_nc_cat=108&_nc_ohc=z0_PSswODrcAX-UzX_h&edm=AGyKU4gBAAAA&ccb=7-5&ig_cache_key=MzIwNDA1MjAyOTI2NTQ2Nzc0OA%3D%3D.2-ccb7-5&oh=00_AfDfikF5zUMBZVxEx7KCDJDMEa7xnrtU3FQAKRMl8DgUVw&oe=651FC6D7&_nc_sid=2011ad"])
+                                 examples=["https://scontent-muc2-1.cdninstagram.com/vad"])
 
 
 class HashtagBasicInfos(PreferDefaultsModel):
@@ -454,6 +450,7 @@ class HashtagBasicInfos(PreferDefaultsModel):
                                              description="Found hashtags matched to the keywords.",
                                              examples=[[HashtagBasicInfo(id="17843654935044234",
                                                                          name="primeleague",
+                                                                         profile_pic_url="https://cdninstagram.com/vad",
                                                                          post_count=16)]])
     count: int = Field(0,
                        description="Number of hashtags contained.",
@@ -491,6 +488,7 @@ class SearchingResultHashtag(SearchingResultBasicInfo):
                                       description="Hashtag shows in the search result at the associated position.",
                                       examples=[HashtagBasicInfo(id="17843654935044234",
                                                                  name="primeleague",
+                                                                 profile_pic_url="https://sconte.cdninstagram.com/vad",
                                                                  post_count=16)])
 
 
@@ -531,28 +529,31 @@ class SearchingResultPlace(SearchingResultBasicInfo):
 
 class SearchingResult(PreferDefaultsModel):
     """Searching result contains found hashtags, users and places."""
-    hashtags: List[SearchingResultHashtag] = Field([],
-                                                   description="Found hashtags matched to the keywords.",
-                                                   examples=[[SearchingResultHashtag(position=0,
-                                                                                     hashtag=HashtagBasicInfo(
-                                                                                         id="17843654935044234",
-                                                                                         name="primeleague",
-                                                                                         post_count=16))]])
+    hashtags: List[SearchingResultHashtag] = Field(
+        [],
+        description="Found hashtags matched to the keywords.",
+        examples=[[SearchingResultHashtag(position=0,
+                                          hashtag=HashtagBasicInfo(
+                                              id="17843654935044234",
+                                              name="primeleague",
+                                              profile_pic_url="https://scontent-muc2-1.cdninstagram.com/vad",
+                                              post_count=16))]])
     users: List[SearchingResultUser] = Field([],
                                              description="Found users matched to the keywords.",
-                                             examples=[[SearchingResultUser(position=1,
-                                                                            user=UserProfile(id="387381865",
-                                                                                             username="dummy_user",
-                                                                                             fullname="Dummy User",
-                                                                                             profile_pic_url="https://dummy-pic.com",
-                                                                                             is_verified=False,
-                                                                                             is_private=None))]])
+                                             examples=[[SearchingResultUser(
+                                                 position=1,
+                                                 user=UserProfile(id="387381865",
+                                                                  username="dummy_user",
+                                                                  fullname="Dummy User",
+                                                                  profile_pic_url="https://dummy-pic.com",
+                                                                  is_verified=False,
+                                                                  is_private=None))]])
     places: List[SearchingResultPlace] = Field([],
                                                description="Found places matched to the keywords.",
                                                examples=[[SearchingResultPlace(position=1,
                                                                                place=Place(location=LocationBasicInfo(
-                                                                                   id="213502500",
-                                                                                   name="Beijing, China"),
+                                                                                           id="213502500",
+                                                                                           name="Beijing, China"),
                                                                                            subtitle="",
                                                                                            title="Beijing, China"))]])
     personalised: bool = Field(...,

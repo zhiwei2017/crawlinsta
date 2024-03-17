@@ -6,9 +6,9 @@ from crawlinsta.data_extraction import (
 
 def test_extract_id():
     assert extract_id({"id": "123"}) == "123"
-    assert extract_id({"id": 123}) == 123
+    assert extract_id({"id": 123}) == "123"
     assert extract_id({"pk": "123", "id": "123"}) == "123"
-    assert extract_id({"pk": 123, "id": 123}) == 123
+    assert extract_id({"pk": 123, "id": 123}) == "123"
 
 
 def test_extract_post_urls():

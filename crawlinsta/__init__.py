@@ -1,1 +1,1 @@
-from seleniumwire import webdriver
+from seleniumwire import webdriver  # noqa: F401

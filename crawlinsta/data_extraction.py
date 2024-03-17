@@ -5,7 +5,7 @@ from .schemas import (
 from .utils import get_media_type
 
 
-def extract_id(info_dict: Dict[str, Any]) -> Union[str, int, None]:
+def extract_id(info_dict: Dict[str, Any]) -> Union[str, None]:
     """Extracts the id from the given dictionary.
 
     Args:
@@ -22,7 +22,8 @@ def extract_id(info_dict: Dict[str, Any]) -> Union[str, int, None]:
         >>> extract_id({})
         None
     """
-    return info_dict.get("pk") or info_dict.get("id")
+    id_value = info_dict.get("pk") or info_dict.get("id")
+    return id_value if id_value is None else str(id_value)
 
 
 def extract_post_urls(post_info_dict: Dict[str, Any]) -> List[str]:
@@ -39,7 +40,8 @@ def extract_post_urls(post_info_dict: Dict[str, Any]) -> List[str]:
         ["https://example.com"]
         >>> extract_post_urls({"media_type": 2, "video_versions": [{"url": "https://example.com"}]})
         ["https://example.com"]
-        >>> extract_post_urls({"media_type": 8, "carousel_media": [{"image_versions2": {"candidates": [{"url": "https://example.com"}]}}]})
+        >>> extract_post_urls({"media_type": 8, "carousel_media": [{"image_versions2":
+        ... {"candidates": [{"url": "https://example.com"}]}}]})
         ["https://example.com"]
     """
     post_urls = []
@@ -53,22 +55,30 @@ def extract_post_urls(post_info_dict: Dict[str, Any]) -> List[str]:
     return post_urls
 
 
-def extract_music_info(music_info_dict: Dict[str, Any]) -> Union[MusicBasicInfo, None]:
+def extract_music_info(music_info_dict: Dict[str, Any]) -> MusicBasicInfo:
     """Extracts the music information from the given dictionary.
 
     Args:
         music_info_dict (Dict[str, Any]): Dictionary containing the music information.
 
     Returns:
-        Union[MusicBasicInfo, None]: The extracted music information.
+        MusicBasicInfo: The extracted music information.
 
     Examples:
-        >>> extract_music_info({"music_asset_info": {"audio_cluster_id": 123, "display_artist": "artist", "title": "title", "duration_in_ms": 1000, "progressive_download_url": "https://example.com"}, "music_consumption_info": {"is_trending_in_clips": True}})
-        MusicBasicInfo(id=123, is_trending_in_clips=True, artist=UserProfile(fullname="artist"), title="title", duration_in_ms=1000, url="https://example.com")
+        >>> extract_music_info({"music_asset_info": {"audio_cluster_id": 123, "display_artist": "artist",
+        ... "title": "title", "duration_in_ms": 1000, "progressive_download_url": "https://example.com"},
+        ... "music_consumption_info": {"is_trending_in_clips": True}})
+        MusicBasicInfo(id=123, is_trending_in_clips=True, artist=UserProfile(fullname="artist"), title="title",
+        duration_in_ms=1000, url="https://example.com")
     """
     artist = None
     if music_info_dict["music_asset_info"].get("display_artist"):
-        artist = UserProfile(fullname=music_info_dict["music_asset_info"]["display_artist"])
+        artist = UserProfile(id=None,
+                             username="",
+                             fullname=music_info_dict["music_asset_info"]["display_artist"],
+                             profile_pic_url="",
+                             is_private=None,
+                             is_verified=None)
     music = MusicBasicInfo(id=music_info_dict["music_asset_info"]["audio_cluster_id"],
                            is_trending_in_clips=music_info_dict["music_consumption_info"].get("is_trending_in_clips"),
                            artist=artist,
@@ -78,18 +88,23 @@ def extract_music_info(music_info_dict: Dict[str, Any]) -> Union[MusicBasicInfo,
     return music
 
 
-def extract_sound_info(sound_info_dict: Dict[str, Any]) -> Union[MusicBasicInfo, None]:
+def extract_sound_info(sound_info_dict: Dict[str, Any]) -> MusicBasicInfo:
     """Extracts the sound information from the given dictionary.
 
     Args:
         sound_info_dict (Dict[str, Any]): Dictionary containing the sound information.
 
     Returns:
-        Union[MusicBasicInfo, None]: The extracted sound information.
+        MusicBasicInfo: The extracted sound information.
 
     Examples:
-        >>> extract_sound_info({"audio_asset_id": 123, "consumption_info": {"is_trending_in_clips": True}, "ig_artist": {"pk": 123, "username": "username", "fullname": "fullname", "profile_pic_url": "https://example.com", "is_verified": True, "is_private": False}, "original_audio_title": "title", "duration_in_ms": 1000, "progressive_download_url": "https://example.com"})
-        MusicBasicInfo(id=123, is_trending_in_clips=True, artist=UserProfile(id=123, username="username", fullname="fullname", profile_pic_url="https://example.com", is_verified=True, is_private=False), title="title", duration_in_ms=1000, url="https://example.com")
+        >>> extract_sound_info({"audio_asset_id": 123, "consumption_info": {"is_trending_in_clips": True},
+        ... "ig_artist": {"pk": 123, "username": "username", "fullname": "fullname",
+        ... "profile_pic_url": "https://example.com", "is_verified": True, "is_private": False},
+        ... "original_audio_title": "title", "duration_in_ms": 1000, "progressive_download_url": "https://example.com"})
+        MusicBasicInfo(id=123, is_trending_in_clips=True, artist=UserProfile(id=123, username="username",
+        fullname="fullname", profile_pic_url="https://example.com", is_verified=True, is_private=False),
+        title="title", duration_in_ms=1000, url="https://example.com")
     """
     ig_artist = None
     if sound_info_dict.get("ig_artist"):
@@ -102,7 +117,7 @@ def extract_sound_info(sound_info_dict: Dict[str, Any]) -> Union[MusicBasicInfo,
     music = MusicBasicInfo(id=sound_info_dict["audio_asset_id"],
                            is_trending_in_clips=sound_info_dict["consumption_info"].get("is_trending_in_clips"),
                            artist=ig_artist,
-                           title=sound_info_dict.get("original_audio_title"),
+                           title=sound_info_dict.get("original_audio_title", "Original audio"),
                            duration_in_ms=sound_info_dict.get("duration_in_ms"),
                            url=sound_info_dict.get("progressive_download_url"))
     return music
@@ -118,10 +133,21 @@ def extract_music(post_info_dict: Dict[str, Any]) -> Union[MusicBasicInfo, None]
         Union[MusicBasicInfo, None]: The extracted music.
 
     Examples:
-        >>> extract_music({"clips_metadata": {"audio_type": "licensed_music", "music_info": {"music_asset_info": {"audio_cluster_id": 123, "display_artist": "artist", "title": "title", "duration_in_ms": 1000, "progressive_download_url": "https://example.com"}, "music_consumption_info": {"is_trending_in_clips": True}}}})
-        MusicBasicInfo(id=123, is_trending_in_clips=True, artist=UserProfile(fullname="artist"), title="title", duration_in_ms=1000, url="https://example.com")
-        >>> extract_music({"clips_metadata": {"audio_type": "original_sounds", "original_sound_info": {"audio_asset_id": 123, "consumption_info": {"is_trending_in_clips": True}, "ig_artist": {"pk": 123, "username": "username", "fullname": "fullname", "profile_pic_url": "https://example.com", "is_verified": True, "is_private": False}, "original_audio_title": "title", "duration_in_ms": 1000, "progressive_download_url": "https://example.com"}}})
-        MusicBasicInfo(id=123, is_trending_in_clips=True, artist=UserProfile(id=123, username="username", fullname="fullname", profile_pic_url="https://example.com", is_verified=True, is_private=False), title="title", duration_in_ms=1000, url="https://example.com")
+        >>> extract_music({"clips_metadata": {"audio_type": "licensed_music", "music_info": {"music_asset_info":
+        ... {"audio_cluster_id": 123, "display_artist": "artist", "title": "title", "duration_in_ms": 1000,
+        ... "progressive_download_url": "https://example.com"},
+        ... "music_consumption_info": {"is_trending_in_clips": True}}}})
+        MusicBasicInfo(id=123, is_trending_in_clips=True, artist=UserProfile(fullname="artist"), title="title",
+        duration_in_ms=1000, url="https://example.com")
+        >>> extract_music({"clips_metadata": {"audio_type": "original_sounds",
+        ... "original_sound_info": {"audio_asset_id": 123, "consumption_info": {"is_trending_in_clips": True},
+        ... "ig_artist": {"pk": 123, "username": "username", "fullname": "fullname",
+        ... "profile_pic_url": "https://example.com", "is_verified": True, "is_private": False},
+        ... "original_audio_title": "title", "duration_in_ms": 1000,
+        ... "progressive_download_url": "https://example.com"}}})
+        MusicBasicInfo(id=123, is_trending_in_clips=True, artist=UserProfile(id=123, username="username",
+        fullname="fullname", profile_pic_url="https://example.com", is_verified=True, is_private=False),
+        title="title", duration_in_ms=1000, url="https://example.com")
     """
     metadata = post_info_dict.get("clips_metadata")
     if not metadata:
@@ -133,7 +159,7 @@ def extract_music(post_info_dict: Dict[str, Any]) -> Union[MusicBasicInfo, None]
             music = extract_music_info(metadata["music_info"])
         case "original_sounds":
             music = extract_sound_info(metadata["original_sound_info"])
-        case other:
+        case _:
             if metadata.get("music_info"):
                 music = extract_music_info(metadata["music_info"])
             elif metadata.get("original_sound_info"):
@@ -151,8 +177,24 @@ def extract_post(post_info_dict: Dict[str, Any]) -> Post:
         Post: The extracted post.
 
     Examples:
-        >>> extract_post({"usertags": {"in": [{"user": {"pk": 123, "username": "username", "full_name": "fullname", "profile_pic_url": "https://example.com", "is_private": False, "is_verified": True}, "position": [0.5, 0.5], "start_time_in_video_in_sec": 0, "duration_in_video_in_sec": 10}]}, "location": {"pk": 123, "short_name": "short_name", "name": "name", "city": "city", "lng": 123, "lat": 123, "address": "address"}, "caption": {"pk": 123, "text": "text", "created_at_utc": 123}, "user": {"pk": 123, "username": "username", "full_name": "fullname", "profile_pic_url": "https://example.com", "is_private": False, "is_verified": True}, "media_type": 1, "product_type": "feed", "taken_at": 123, "has_shared_to_fb": 1, "original_width": 123, "original_height": 123, "image_versions2": {"candidates": [{"url": "https://example.com"}]}, "like_count": 123, "comment_count": 123})
-        Post(id=123, code="123", user=UserProfile(id=123, username="username", fullname="fullname", profile_pic_url="https://example.com", is_private=False, is_verified=True), taken_at=123, has_shared_to_fb=True, usertags=[Usertag(user=UserProfile(id=123, username="username", fullname="fullname", profile_pic_url="https://example.com", is_private=False, is_verified=True), position=[0.5, 0.5], start_time_in_video_in_sec=0, duration_in_video_in_sec=10)], media_type="photo", caption=Caption(id=123, text="text", created_at_utc=123), accessibility_caption="text", location=Location(id=123, short_name="short_name", name="name", city="city", lng=123, lat=123, address="address"), original_width=123, original_height=123, urls=["https://example.com"], like_count=123, comment_count=123, music=None)
+        >>> extract_post({"usertags": {"in": [{"user": {"pk": 123, "username": "username", "full_name": "fullname",
+        ... "profile_pic_url": "https://example.com", "is_private": False, "is_verified": True},
+        ... "position": [0.5, 0.5], "start_time_in_video_in_sec": 0, "duration_in_video_in_sec": 10}]},
+        ... "location": {"pk": 123, "short_name": "short_name", "name": "name", "city": "city", "lng": 123,
+        ... "lat": 123, "address": "address"}, "caption": {"pk": 123, "text": "text", "created_at_utc": 123},
+        ... "user": {"pk": 123, "username": "username", "full_name": "fullname",
+        ... "profile_pic_url": "https://example.com", "is_private": False, "is_verified": True}, "media_type": 1,
+        ... "product_type": "feed", "taken_at": 123, "has_shared_to_fb": 1, "original_width": 123,
+        ... "original_height": 123, "image_versions2": {"candidates": [{"url": "https://example.com"}]},
+        ... "like_count": 123, "comment_count": 123})
+        Post(id=123, code="123", user=UserProfile(id=123, username="username", fullname="fullname",
+        profile_pic_url="https://example.com", is_private=False, is_verified=True), taken_at=123,
+        has_shared_to_fb=True, usertags=[Usertag(user=UserProfile(id=123, username="username", fullname="fullname",
+        profile_pic_url="https://example.com", is_private=False, is_verified=True), position=[0.5, 0.5],
+        start_time_in_video_in_sec=0, duration_in_video_in_sec=10)], media_type="photo", caption=Caption(id=123,
+        text="text", created_at_utc=123), accessibility_caption="text", location=Location(id=123,
+        short_name="short_name", name="name", city="city", lng=123, lat=123, address="address"), original_width=123,
+        original_height=123, urls=["https://example.com"], like_count=123, comment_count=123, music=None)
     """
     usertags = []
     usertags_dict = post_info_dict.get("usertags", dict()) or dict()
@@ -212,8 +254,8 @@ def extract_post(post_info_dict: Dict[str, Any]) -> Post:
                 original_width=post_info_dict['original_width'],
                 original_height=post_info_dict['original_height'],
                 urls=post_urls,
-                like_count=post_info_dict.get('like_count'),
-                comment_count=post_info_dict.get('comment_count'),
+                like_count=post_info_dict.get('like_count', 0),
+                comment_count=post_info_dict.get('comment_count', 0),
                 music=music)
     return post
 
@@ -229,8 +271,10 @@ def create_users_list(json_data_list: List[Dict[str, Any]], key: str = "users"):
         List[UserProfile]: The list of users.
 
     Examples:
-        >>> create_users_list([{"user": {"pk": 123, "username": "username", "full_name": "fullname", "profile_pic_url": "https://example.com", "is_private": False, "is_verified": True}}], "user")
-        [UserProfile(id=123, username="username", fullname="fullname", profile_pic_url="https://example.com", is_private=False, is_verified=True)]
+        >>> create_users_list([{"user": {"pk": 123, "username": "username", "full_name": "fullname",
+        ... "profile_pic_url": "https://example.com", "is_private": False, "is_verified": True}}], "user")
+        [UserProfile(id=123, username="username", fullname="fullname", profile_pic_url="https://example.com",
+        is_private=False, is_verified=True)]
     """
     users = []
     for json_data in json_data_list:

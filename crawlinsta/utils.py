@@ -2,7 +2,7 @@ import json
 from pydantic import Json
 from seleniumwire.utils import decode
 from seleniumwire.request import Request, Response
-from typing import List, Union, Optional
+from typing import List, Callable, Optional, Dict, Any, Tuple
 from .constants import INSTAGRAM_DOMAIN, API_VERSION, JsonResponseContentType
 
 
@@ -42,8 +42,8 @@ def filter_requests(requests: List[Request],
 def search_request(requests: List[Request],
                    request_url: str,
                    response_content_type: Optional[str] = JsonResponseContentType.application_json,
-                   additional_search_func: callable = None,
-                   *args, **kwargs) -> Union[int, None]:
+                   additional_search_func: Optional[Callable] = None,
+                   *args, **kwargs) -> int:
     """Search for a request in the list of requests.
 
     Args:
@@ -141,15 +141,15 @@ def get_media_type(media_type: int, product_type: str) -> str:
                     return "IGTV"
                 case 'clips':
                     return "Reel"
-                case other:
+                case _:
                     raise ValueError("Invalid product_type")
         case 8:
             return "Album"
-        case other:
+        case _:
             raise ValueError("Invalid media_type")
 
 
-def get_user_data(requests: List[Request], username: str) -> Union[str, None]:
+def get_user_data(requests: List[Request], username: str) -> Dict[str, Any]:
     """Get the user data from the requests.
 
     Args:
@@ -174,7 +174,7 @@ def get_user_data(requests: List[Request], username: str) -> Union[str, None]:
     return json_data["data"]['user']
 
 
-def find_brackets(text: str) -> List[tuple]:
+def find_brackets(text: str) -> List[Tuple[int, int]]:
     """Find the brackets in the text.
 
     Args:

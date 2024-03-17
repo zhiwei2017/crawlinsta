@@ -80,11 +80,10 @@ def collect_user_info(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
           "is_verified": true,
           "profile_pic_url": "https://dummy.pic.com",
           "post_count": 4116,
-          "usertags_count": 0
         }
     """
     driver.get(f'{INSTAGRAM_DOMAIN}/{username}/')
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.SystemRandom().randint(4, 6))
 
     json_requests = filter_requests(driver.requests)
     del driver.requests
@@ -96,11 +95,11 @@ def collect_user_info(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     following_btn = driver.find_element(By.XPATH, following_btn_xpath)
     following_btn.click()
 
-    time.sleep(random.randint(3, 5))
+    time.sleep(random.SystemRandom().randint(3, 5))
 
     hashtag_btn = driver.find_element(By.XPATH, "//span[text()='Hashtags']")
     hashtag_btn.click()
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.SystemRandom().randint(4, 6))
 
     json_requests += filter_requests(driver.requests)
     del driver.requests
@@ -224,7 +223,7 @@ def collect_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     remaining = n
 
     driver.get(f'{INSTAGRAM_DOMAIN}/{username}/')
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.SystemRandom().randint(4, 6))
 
     json_requests = filter_requests(driver.requests, JsonResponseContentType.text_javascript)
     del driver.requests
@@ -242,7 +241,7 @@ def collect_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         footer = driver.find_element(By.XPATH, "//footer")
         driver.execute_script("return arguments[0].scrollIntoView(true);", footer)
 
-        time.sleep(random.randint(4, 6))
+        time.sleep(random.SystemRandom().randint(4, 6))
         json_requests += filter_requests(driver.requests, JsonResponseContentType.text_javascript)
         del driver.requests
 
@@ -359,7 +358,7 @@ def collect_reels_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     remaining = n
 
     driver.get(f'{INSTAGRAM_DOMAIN}/{username}/reels/')
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.SystemRandom().randint(4, 6))
 
     # get user id
     json_requests = filter_requests(driver.requests)
@@ -382,7 +381,7 @@ def collect_reels_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         footer = driver.find_element(By.XPATH, "//footer")
         driver.execute_script("return arguments[0].scrollIntoView(true);", footer)
 
-        time.sleep(random.randint(4, 6))
+        time.sleep(random.SystemRandom().randint(4, 6))
         json_requests += filter_requests(driver.requests, JsonResponseContentType.text_javascript)
         del driver.requests
 
@@ -499,7 +498,7 @@ def collect_tagged_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Re
     remaining = n
 
     driver.get(f'{INSTAGRAM_DOMAIN}/{username}/tagged/')
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.SystemRandom().randint(4, 6))
 
     # get user id
     json_requests = filter_requests(driver.requests)
@@ -522,7 +521,7 @@ def collect_tagged_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Re
         footer = driver.find_element(By.XPATH, "//footer")
         driver.execute_script("return arguments[0].scrollIntoView(true);", footer)
 
-        time.sleep(random.randint(4, 6))
+        time.sleep(random.SystemRandom().randint(4, 6))
         json_requests += filter_requests(driver.requests, JsonResponseContentType.text_javascript)
         del driver.requests
 
@@ -575,7 +574,7 @@ def get_friendship_status(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     following, followed_by = False, False
     for username in [username1, username2]:
         driver.get(f'{INSTAGRAM_DOMAIN}/{username}/')
-        time.sleep(random.randint(4, 6))
+        time.sleep(random.SystemRandom().randint(4, 6))
 
         json_requests = filter_requests(driver.requests)
         del driver.requests
@@ -586,22 +585,23 @@ def get_friendship_status(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
         following_btn = driver.find_element(By.XPATH, f"//a[@href='/{username}/following/'][@role='link']")
         following_btn.click()
-        time.sleep(random.randint(4, 6))
+        time.sleep(random.SystemRandom().randint(4, 6))
         del driver.requests
 
         searching_username = username2 if username == username1 else username1
 
-        search_input_box = driver.find_element(By.XPATH,
-                                               '//input[@aria-label="Search input"][@placeholder="Search"][@type="text"]')
+        search_input_box = driver.find_element(
+            By.XPATH, '//input[@aria-label="Search input"][@placeholder="Search"][@type="text"]')
         search_input_box.send_keys(searching_username)
-        time.sleep(random.randint(6, 8))
+        time.sleep(random.SystemRandom().randint(6, 8))
 
         json_requests = filter_requests(driver.requests)
         del driver.requests
 
         # get first 12 followings
         query_dict = dict(query=searching_username)
-        target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/following/?{urlencode(query_dict, quote_via=quote)}"
+        query_str = urlencode(query_dict, quote_via=quote)
+        target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/following/?{query_str}"
         idx = search_request(json_requests, target_url)
         request = json_requests.pop(idx)
         json_data = get_json_data(request.response)
@@ -667,7 +667,7 @@ def collect_followers_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remot
     remaining = n
 
     driver.get(f'{INSTAGRAM_DOMAIN}/{username}/')
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.SystemRandom().randint(4, 6))
 
     json_requests = filter_requests(driver.requests)
     del driver.requests
@@ -678,14 +678,15 @@ def collect_followers_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remot
 
     followers_btn = driver.find_element(By.XPATH, f"//a[@href='/{username}/followers/'][@role='link']")
     followers_btn.click()
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.SystemRandom().randint(4, 6))
 
     json_requests += filter_requests(driver.requests)
     del driver.requests
 
     # get 50 followers
     query_dict = dict(count=12, search_surface="follow_list_page")
-    target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/followers/?{urlencode(query_dict, quote_via=quote)}"
+    query_str = urlencode(query_dict, quote_via=quote)
+    target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/followers/?{query_str}"
     idx = search_request(json_requests, target_url)
     request = json_requests.pop(idx)
     json_data = get_json_data(request.response)
@@ -696,13 +697,14 @@ def collect_followers_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remot
         followers_bottom = driver.find_element(By.XPATH, "//div[@class='_aano']//div[@role='progressbar']")
         driver.execute_script("return arguments[0].scrollIntoView(true);", followers_bottom)
 
-        time.sleep(random.randint(4, 6))
+        time.sleep(random.SystemRandom().randint(4, 6))
 
         json_requests += filter_requests(driver.requests)
         del driver.requests
 
         query_dict = dict(count=12, max_id=results[-1]['next_max_id'], search_surface="follow_list_page")
-        target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/followers/?{urlencode(query_dict, quote_via=quote)}"
+        query_str = urlencode(query_dict, quote_via=quote)
+        target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/followers/?{query_str}"
         idx = search_request(json_requests, target_url)
         request = json_requests.pop(idx)
         json_data = get_json_data(request.response)
@@ -760,7 +762,7 @@ def collect_followings_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remo
     remaining = n
 
     driver.get(f'{INSTAGRAM_DOMAIN}/{username}/')
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.SystemRandom().randint(4, 6))
 
     json_requests = filter_requests(driver.requests)
     del driver.requests
@@ -771,14 +773,15 @@ def collect_followings_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remo
 
     following_btn = driver.find_element(By.XPATH, f"//a[@href='/{username}/following/'][@role='link']")
     following_btn.click()
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.SystemRandom().randint(4, 6))
 
     json_requests += filter_requests(driver.requests)
     del driver.requests
 
     # get first 12 followings
     query_dict = dict(count=12)
-    target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/following/?{urlencode(query_dict, quote_via=quote)}"
+    query_str = urlencode(query_dict, quote_via=quote)
+    target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/following/?{query_str}"
     idx = search_request(json_requests, target_url)
     request = json_requests.pop(idx)
     json_data = get_json_data(request.response)
@@ -789,13 +792,14 @@ def collect_followings_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remo
         following_bottom = driver.find_element(By.XPATH, "//div[@class='_aano']//div[@role='progressbar']")
         driver.execute_script("return arguments[0].scrollIntoView(true);", following_bottom)
 
-        time.sleep(random.randint(4, 6))
+        time.sleep(random.SystemRandom().randint(4, 6))
 
         json_requests += filter_requests(driver.requests)
         del driver.requests
 
         query_dict = dict(count=12, max_id=results[-1]['next_max_id'])
-        target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/following/?{urlencode(query_dict, quote_via=quote)}"
+        query_str = urlencode(query_dict, quote_via=quote)
+        target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/following/?{query_str}"
         idx = search_request(json_requests, target_url)
         request = json_requests.pop(idx)
         json_data = get_json_data(request.response)
@@ -852,7 +856,7 @@ def collect_following_hashtags_of_user(driver: Union[Chrome, Edge, Firefox, Safa
     remaining = n
 
     driver.get(f'{INSTAGRAM_DOMAIN}/{username}/')
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.SystemRandom().randint(4, 6))
 
     json_requests = filter_requests(driver.requests)
     del driver.requests
@@ -864,11 +868,11 @@ def collect_following_hashtags_of_user(driver: Union[Chrome, Edge, Firefox, Safa
     following_btn = driver.find_element(By.XPATH, following_btn_xpath)
     following_btn.click()
 
-    time.sleep(random.randint(3, 5))
+    time.sleep(random.SystemRandom().randint(3, 5))
 
     hashtag_btn = driver.find_element(By.XPATH, "//span[text()='Hashtags']")
     hashtag_btn.click()
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.SystemRandom().randint(4, 6))
 
     json_requests += filter_requests(driver.requests)
     del driver.requests
@@ -941,13 +945,13 @@ def collect_likers_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     results = []
 
     driver.get(f"{INSTAGRAM_DOMAIN}/p/{post_code}/")
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.SystemRandom().randint(4, 6))
     del driver.requests
 
     # get the media id for later requests filtering
     meta_tag_xpath = "//meta[@property='al:ios:url']"
     meta_tag = driver.find_element(By.XPATH, meta_tag_xpath)
-    post_id = re.findall("\d+", meta_tag.get_attribute("content"))
+    post_id = re.findall("\d+", meta_tag.get_attribute("content"))  # noqa
     if not post_id:
         return Users(users=[], count=0).model_dump(mode="json")
     post_id = post_id[0]
@@ -955,7 +959,7 @@ def collect_likers_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     likes_btn_xpath = f"//a[@href='/p/{post_code}/liked_by/'][@role='link']"
     likes_btn = driver.find_element(By.XPATH, likes_btn_xpath)
     likes_btn.click()
-    time.sleep(random.randint(3, 5))
+    time.sleep(random.SystemRandom().randint(3, 5))
 
     json_requests = filter_requests(driver.requests)
     del driver.requests
@@ -1043,10 +1047,12 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
             return []
 
         data_str = script_data.get_attribute("innerHTML")
-        start_idx = data_str.find("xdt_api__v1__media__media_id__comments__connection") + len("xdt_api__v1__media__media_id__comments__connection")
+        start_idx = data_str.find("xdt_api__v1__media__media_id__comments__connection")
+        offset = len("xdt_api__v1__media__media_id__comments__connection")
+        start_idx += offset
         data_str = data_str[start_idx:]
         start, stop = find_brackets(data_str)[-1]
-        json_data = json.loads(data_str[start:stop+1])
+        json_data = json.loads(data_str[start:stop + 1])
         return json_data
 
     if n <= 0:
@@ -1056,15 +1062,15 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
     remaining = n
 
     driver.get(f"{INSTAGRAM_DOMAIN}/p/{post_code}/")
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.SystemRandom().randint(4, 6))
 
     # get the media id for later requests filtering
     meta_tag_xpath = "//meta[@property='al:ios:url']"
     meta_tag = driver.find_element(By.XPATH, meta_tag_xpath)
-    post_id = re.findall("\d+", meta_tag.get_attribute("content"))
-    if not post_id:
+    post_ids = re.findall("\d+", meta_tag.get_attribute("content"))  # noqa
+    if not post_ids:
         return Comments(comments=[], count=0).model_dump(mode="json")
-    post_id = post_id[0]
+    post_id = post_ids[0]
 
     json_requests = []
     target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
@@ -1077,22 +1083,33 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
         json_requests = filter_requests(driver.requests, JsonResponseContentType.text_javascript)
         del driver.requests
 
-        idx = search_request(json_requests, target_url, JsonResponseContentType.text_javascript, check_request_data, post_id)
+        idx = search_request(json_requests,
+                             target_url,
+                             JsonResponseContentType.text_javascript,
+                             check_request_data,
+                             post_id)
         request = json_requests.pop(idx)
         json_data = get_json_data(request.response)["data"]["xdt_api__v1__media__media_id__comments__connection"]
         results.append(json_data)
         remaining -= len(json_data["edges"])
 
     while results[-1]["page_info"]['has_next_page'] and remaining > 0:
-        comment_lists = driver.find_elements(By.XPATH, '//div[@class="x78zum5 xdt5ytf x1iyjqo2"]/div[@class="x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh x1uhb9sk x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh x1nhvcw1"]')
+        xpath = '//div[@class="x78zum5 xdt5ytf x1iyjqo2"]/div[@class="x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 ' \
+                'x5pf9jr xo71vjh x1uhb9sk x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh ' \
+                'x1nhvcw1"]'
+        comment_lists = driver.find_elements(By.XPATH, xpath)
         driver.execute_script("return arguments[0].scrollIntoView(true);", comment_lists[-1])
 
-        time.sleep(random.randint(4, 6))
-        json_requests += filter_requests(driver.requests, JsonResponseContentType.text_javascript)
+        time.sleep(random.SystemRandom().randint(4, 6))
+        json_requests += filter_requests(driver.requests,
+                                         JsonResponseContentType.text_javascript)
         del driver.requests
 
-        idx = search_request(json_requests, target_url, JsonResponseContentType.text_javascript,
-                             check_request_data, post_id)
+        idx = search_request(json_requests,
+                             target_url,
+                             JsonResponseContentType.text_javascript,
+                             check_request_data,
+                             post_id)
         request = json_requests.pop(idx)
         json_data = get_json_data(request.response)["data"]["xdt_api__v1__media__media_id__comments__connection"]
         results.append(json_data)
@@ -1113,7 +1130,7 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
                               is_ranked_comment=comment_dict.get("is_ranked_comment"),
                               text=comment_dict["text"],
                               has_translation=comment_dict.get("has_translation", False),
-                              is_liked_by_posst_owner=comment_dict.get("has_liked_comment", False),
+                              is_liked_by_post_owner=comment_dict.get("has_liked_comment", False),
                               comment_like_count=comment_dict.get("comment_like_count", 0))
             comments.append(comment)
 
@@ -1163,7 +1180,7 @@ def search_with_keyword(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                 "id": "7594441262",
                 "username": "shanghai.explore",
                 "fullname": "Shanghai 🇨🇳 Travel | Hotels | Food | Tips",
-                "profile_pic_url": "https://scontent.cdninstagram.com/v/t51.2885-19/409741157_243678455262812_2168807265478461941_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=108&_nc_ohc=S3SAe59tdbUAX9SLkyd&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfALvv52ytTyye_PDEjKCmWAUetHX8BXCGsS7rnFThzNTQ&oe=65ECAABE&_nc_sid=10d13b",
+                "profile_pic_url": "https://scontent.cdninstagram.com/v13b",
                 "is_private": null,
                 "is_verified": true
               }
@@ -1198,23 +1215,26 @@ def search_with_keyword(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         return True
 
     driver.get(f'{INSTAGRAM_DOMAIN}')
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.SystemRandom().randint(4, 6))
 
     search_btn = driver.find_element(By.XPATH, '//a[@href="#"][@role="link"]')
     search_btn.click()
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.SystemRandom().randint(4, 6))
 
     del driver.requests
 
-    search_input_box = driver.find_element(By.XPATH, '//input[@aria-label="Search input"][@placeholder="Search"][@type="text"]')
+    search_input_box = driver.find_element(
+        By.XPATH, '//input[@aria-label="Search input"][@placeholder="Search"][@type="text"]')
     search_input_box.send_keys(keyword)
-    time.sleep(random.randint(6, 8))
+    time.sleep(random.SystemRandom().randint(6, 8))
 
     if not pers:
         del driver.requests
-        not_pers_btn = driver.find_element(By.XPATH, '//div[@aria-label="Not personalised"][@role="button"][@tabindex="0"]//span[text()="Not personalised"]')
+        not_pers_btn = driver.find_element(
+            By.XPATH,
+            '//div[@aria-label="Not personalised"][@role="button"][@tabindex="0"]//span[text()="Not personalised"]')
         not_pers_btn.click()
-        time.sleep(random.randint(6, 8))
+        time.sleep(random.SystemRandom().randint(6, 8))
 
     json_requests = filter_requests(driver.requests, response_content_type=JsonResponseContentType.text_javascript)
     del driver.requests
@@ -1230,11 +1250,14 @@ def search_with_keyword(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     hashtags = []
     places = []
     if pers:
-        for hashtag_info in json_data.get("hashtags", []):
-            hashtag = SearchingResultHashtag(position=hashtag_info["position"],
-                                             hashtag=HashtagBasicInfo(id=extract_id(hashtag_info["hashtag"]),
-                                                                      name=hashtag_info["hashtag"]["name"],
-                                                                      post_count=hashtag_info["hashtag"]["media_count"]))
+        for hashtag_dict in json_data.get("hashtags", []):
+            hashtag_info_dict = hashtag_dict["hashtag"]
+            hashtag_basic_info = HashtagBasicInfo(id=extract_id(hashtag_info_dict),
+                                                  name=hashtag_info_dict["name"],
+                                                  post_count=hashtag_info_dict["media_count"],
+                                                  profile_pic_url=hashtag_info_dict.get("profile_pic_url", ""))
+            hashtag = SearchingResultHashtag(position=hashtag_dict["position"],
+                                             hashtag=hashtag_basic_info)
             hashtags.append(hashtag)
 
         for place_info in json_data.get("places", []):
@@ -1260,7 +1283,8 @@ def search_with_keyword(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                                                     username=user_info_dict["username"],
                                                     fullname=user_info_dict["full_name"],
                                                     profile_pic_url=user_info_dict["profile_pic_url"],
-                                                    is_verified=user_info_dict["is_verified"]))
+                                                    is_verified=user_info_dict.get("is_verified"),
+                                                    is_private=user_info_dict.get("is_private")))
         users.append(user)
 
     searching_result = SearchingResult(hashtags=hashtags,
@@ -1345,7 +1369,7 @@ def collect_top_posts_of_hashtag(driver: Union[Chrome, Edge, Firefox, Safari, Re
         }
     """
     driver.get(f'{INSTAGRAM_DOMAIN}/explore/tags/{hashtag}')
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.SystemRandom().randint(4, 6))
 
     json_requests = filter_requests(driver.requests)
     del driver.requests
@@ -1470,7 +1494,7 @@ def collect_posts_by_music_id(driver: Union[Chrome, Edge, Firefox, Safari, Remot
     remaining = n
 
     driver.get(f'{INSTAGRAM_DOMAIN}/reels/audio/{music_id}/')
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.SystemRandom().randint(4, 6))
 
     json_requests = filter_requests(driver.requests)
     del driver.requests
@@ -1487,7 +1511,7 @@ def collect_posts_by_music_id(driver: Union[Chrome, Edge, Firefox, Safari, Remot
         footer = driver.find_element(By.XPATH, "//footer")
         driver.execute_script("return arguments[0].scrollIntoView(true);", footer)
 
-        time.sleep(random.randint(4, 6))
+        time.sleep(random.SystemRandom().randint(4, 6))
         json_requests += filter_requests(driver.requests)
         del driver.requests
 
@@ -1540,10 +1564,10 @@ def download_media(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         >>> # if you already used once the login function, you can use the
         >>> # login_with_cookies function to login with the cookie file.
         >>> login(driver, "your_username", "your_password")  # or login_with_cookies(driver)
-        >>> download_media(driver, "https://scontent-muc2-1.xx.fbcdn.net/v/t39.12897-6/419784899_922911948795613_3855576336552877996_n.m4a", "tmp")
+        >>> download_media(driver, "https://scontent-muc2-1.xx.fbcdn.net/v/t39.12897-6/4197848_n.m4a", "tmp")
     """
     driver.get(media_url)
-    time.sleep(random.randint(4, 6))
+    time.sleep(random.SystemRandom().randint(4, 6))
 
     idx = search_request(driver.requests, media_url, response_content_type=None)
     request = driver.requests.pop(idx)

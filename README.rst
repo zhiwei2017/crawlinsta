@@ -62,7 +62,7 @@ Crawling
 Current available crawling functions:
 
 `crawlinsta.collecting.collect_user_info`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""""""""""""""""""""
 Collects user information for the given `username`.
 
 Input:
@@ -92,7 +92,7 @@ Output:
 
 
 `crawlinsta.collecting.collect_posts_of_user`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""""""""""""""""""""""""
 Collects n posts from the account with given `username`
 
 Input:
@@ -159,7 +159,7 @@ Output:
     }
 
 `crawlinsta.collecting.collect_reels_of_user`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""""""""""""""""""""""""
 Collects n reels from the account with given `username`
 
 Input:
@@ -226,7 +226,7 @@ Output:
     }
 
 `crawlinsta.collecting.collect_tagged_posts_of_user`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+""""""""""""""""""""""""""""""""""""""""""""""""""""
 Collects n posts in which the user with given `username` is tagged
 
 Input:
@@ -293,7 +293,7 @@ Output:
     }
 
 `crawlinsta.collecting.get_friendship_status`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""""""""""""""""""""""""
 Get the relationship between the user with `username1` and the user with `username2`, i.e. finding out who is following whom.
 
 Input:
@@ -313,7 +313,7 @@ Output:
     }
 
 `crawlinsta.collecting.collect_followers_of_user`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""""""""""""""""""""""""""""
 Collects n followers from the account with given `username`
 
 Input:
@@ -343,7 +343,7 @@ Output:
     }
 
 `crawlinsta.collecting.collect_followings_of_user`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+""""""""""""""""""""""""""""""""""""""""""""""""""
 Collects n following users from the account with given `username`
 
 Input:
@@ -373,7 +373,7 @@ Output:
     }
 
 `crawlinsta.collecting.collect_following_hashtags_of_user`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Collects n following hashtags from the account with given `username`
 
 Input:
@@ -401,7 +401,7 @@ Output:
     }
 
 `crawlinsta.collecting.collect_likers_of_post`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+""""""""""""""""""""""""""""""""""""""""""""""
 Collect the users, who likes a given post.
 
 Input:
@@ -431,7 +431,7 @@ Output:
     }
 
 `crawlinsta.collecting.collect_comments_of_post`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+""""""""""""""""""""""""""""""""""""""""""""""""
 Collect n comments of a given post.
 
 Input:
@@ -469,7 +469,7 @@ Output:
     }
 
 `crawlinsta.collecting.search_with_keyword`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""""""""""""""""""""""
 Search hashtags or users with given keyword.
 
 Input:
@@ -525,7 +525,7 @@ Output:
     }
 
 `crawlinsta.collecting.collect_top_posts_of_hashtag`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+""""""""""""""""""""""""""""""""""""""""""""""""""""
 Collect top posts of a given hashtag.
 
 Input:
@@ -591,7 +591,7 @@ Output:
     }
 
 `crawlinsta.collecting.collect_posts_by_music_id`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""""""""""""""""""""""""""""
 Collect n posts containing the given music_id. If n is set to 0, collect all posts.
 
 Input:
@@ -658,7 +658,7 @@ Output:
     }
 
 `crawlinsta.collecting.download_media`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+""""""""""""""""""""""""""""""""""""""
 Download the image/video based on the given media_url, and store it to the given path.
 
 Input:

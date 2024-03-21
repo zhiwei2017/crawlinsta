@@ -1,9 +1,13 @@
 import json
+import logging
 from pydantic import Json
 from seleniumwire.utils import decode
 from seleniumwire.request import Request, Response
-from typing import List, Callable, Optional, Dict, Any, Tuple
+from typing import List, Callable, Optional, Dict, Any, Tuple, Union
 from .constants import INSTAGRAM_DOMAIN, API_VERSION, JsonResponseContentType
+
+
+logger = logging.getLogger("crawlinsta")
 
 
 def filter_requests(requests: List[Request],
@@ -27,9 +31,9 @@ def filter_requests(requests: List[Request],
         >>> from crawlinsta.utils import filter_requests
         >>> json_requests = filter_requests(driver.requests)
     """
-    if not requests:
-        raise ValueError("No requests to filter.")
     result = []
+    if not requests:
+        logger.error("No requests to filter.")
     for request in requests:
         if not request.response:
             continue
@@ -43,7 +47,7 @@ def search_request(requests: List[Request],
                    request_url: str,
                    response_content_type: Optional[str] = JsonResponseContentType.application_json,
                    additional_search_func: Optional[Callable] = None,
-                   *args, **kwargs) -> int:
+                   *args, **kwargs) -> Union[int, None]:
     """Search for a request in the list of requests.
 
     Args:
@@ -67,7 +71,8 @@ def search_request(requests: List[Request],
         >>> idx = search_request(driver.requests, "https://www.instagram.com", "application/json; charset=utf-8")
     """
     if not requests:
-        raise ValueError("No requests to search.")
+        logger.error("No requests to search.")
+        return None
     for i, request in enumerate(requests):
         if request.url != request_url:
             continue
@@ -80,7 +85,8 @@ def search_request(requests: List[Request],
         elif additional_search_func and not additional_search_func(request, *args, **kwargs):
             continue
         return i
-    raise ValueError(f"No response with content-type [{response_content_type}] to the url '{request_url}' found.")
+    logger.error(f"No response with content-type [{response_content_type}] to the url '{request_url}' found.")
+    return None
 
 
 def get_json_data(response: Response) -> Json:
@@ -169,7 +175,7 @@ def get_user_data(requests: List[Request], username: str) -> Dict[str, Any]:
     json_requests = filter_requests(requests)
     target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username={username}"
     idx = search_request(json_requests, target_url)
-    request = json_requests.pop(idx)
+    request = json_requests.pop(idx)  # type: ignore
     json_data = get_json_data(request.response)
     return json_data["data"]['user']
 

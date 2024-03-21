@@ -59,3 +59,43 @@ def test_collect_followers_of_user_fail(n):
     with pytest.raises(ValueError) as exc_info:
         collect_followers_of_user(MockedDriver(), "anasaiaofficial", n)
     assert str(exc_info.value) == "The number of followers to collect must be a positive integer."
+
+
+@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+def test_collect_followers_of_user_no_request(mocked_sleep):
+    with pytest.raises(ValueError) as exc_info:
+        collect_followers_of_user(BaseMockedDriver(), "anasaiaofficial")
+    assert str(exc_info.value) == "User 'anasaiaofficial' not found."
+
+
+@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.logger")
+def test_collect_followers_of_user_no_followers(mocked_logger, mocked_search_request, mocked_sleep):
+    result = collect_followers_of_user(MockedDriver(), "anasaiaofficial", 30)
+    assert result == {"users": [], "count": 0}
+    mocked_logger.warning.assert_called_once_with("No followers found for user 'anasaiaofficial'.")
+
+
+class MockedDriverPrivate(MockedDriver):
+    def get(self, url):
+        self.user_id = "1798450984"
+        username = url.split("/")[-2]
+
+        url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username={username}"
+        with open("tests/resources/followers/web_profile_info.json", "r") as file:
+            data = json.load(file)
+        data["data"]["user"]["is_private"] = True
+        request = mock.Mock()
+        request.url = url
+        request.response = mock.Mock(headers={"Content-Type": "application/json; charset=utf-8",
+                                              'Content-Encoding': 'identity'},
+                                     body=json.dumps(data).encode())
+
+        self.requests = [request]
+
+
+@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+def test_collect_followers_of_user_private(mocked_sleep):
+    result = collect_followers_of_user(MockedDriverPrivate(), "anasaiaofficial", 30)
+    assert result == {"users": [], "count": 0}

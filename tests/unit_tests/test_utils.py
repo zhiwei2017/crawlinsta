@@ -5,11 +5,14 @@ from crawlinsta.utils import (
 )
 from crawlinsta.constants import JsonResponseContentType, INSTAGRAM_DOMAIN, API_VERSION
 from seleniumwire.request import Request, Response
+from unittest import mock
 
 
-def test_filter_requests_fail():
-    with pytest.raises(ValueError, match="No requests to filter."):
-        filter_requests([])
+@mock.patch("crawlinsta.utils.logger", autospec=True)
+def test_filter_requests_empty_requests(mocked_logger):
+    result = filter_requests([])
+    assert result == []
+    mocked_logger.error.assert_called_once_with("No requests to filter.")
 
 
 def test_filter_requests_success():
@@ -31,15 +34,19 @@ def test_filter_requests_success():
     assert result[0] == request3
 
 
-def test_search_request_empty_requests_fail():
-    with pytest.raises(ValueError, match="No requests to search."):
-        search_request([], request_url="http://dummy.com")
+@mock.patch("crawlinsta.utils.logger", autospec=True)
+def test_search_request_empty_requests(mocked_logger):
+    result = search_request([], request_url="http://dummy.com")
+    assert result is None
+    mocked_logger.error.assert_called_once_with("No requests to search.")
 
 
-def test_search_request_not_found_fail():
-    with pytest.raises(ValueError, match="No response with content-type \[application/json; charset=utf-8\] to the url 'http://dummy.com' found."):
-        search_request([Request(method="GET", url="http://dummy.com", headers=[])],
-                       request_url="http://dummy.com")
+@mock.patch("crawlinsta.utils.logger", autospec=True)
+def test_search_request_not_found_fail(mocked_logger):
+    result = search_request([Request(method="GET", url="http://dummy.com", headers=[])],
+                   request_url="http://dummy.com")
+    assert result is None
+    mocked_logger.error.assert_called_once_with("No response with content-type [application/json; charset=utf-8] to the url 'http://dummy.com' found.")
 
 
 def test_search_request_success():

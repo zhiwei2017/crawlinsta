@@ -86,3 +86,19 @@ def test_collect_posts_of_user_fail(n):
     with pytest.raises(ValueError) as exc_info:
         collect_posts_of_user(MockedDriver(), "anasaiaofficial", n)
     assert str(exc_info.value) == "The number of posts to collect must be a positive integer."
+
+
+@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+def test_collect_posts_of_user_no_request(mocked_sleep):
+    with pytest.raises(ValueError) as exc_info:
+        collect_posts_of_user(BaseMockedDriver(), "anasaiaofficial")
+    assert str(exc_info.value) == "User 'anasaiaofficial' not found."
+
+
+@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.logger")
+def test_collect_posts_of_user_no_posts(mocked_logger, mocked_search_request, mocked_sleep):
+    result = collect_posts_of_user(MockedDriver(), "anasaiaofficial", 30)
+    assert result == {"posts": [], "count": 0}
+    mocked_logger.warning.assert_called_once_with("No posts found for user 'anasaiaofficial'.")

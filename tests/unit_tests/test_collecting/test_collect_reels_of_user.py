@@ -88,3 +88,19 @@ def test_collect_reels_of_user_fail():
     with pytest.raises(ValueError) as exc_info:
         collect_reels_of_user(MockedDriver(), "anasaiaofficial", -1)
     assert str(exc_info.value) == "The number of reels to collect must be a positive integer."
+
+
+@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+def test_collect_reels_of_user_no_request(mocked_sleep):
+    with pytest.raises(ValueError) as exc_info:
+        collect_reels_of_user(BaseMockedDriver(), "anasaiaofficial")
+    assert str(exc_info.value) == "User 'anasaiaofficial' not found."
+
+
+@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.logger")
+def test_collect_reels_of_user_no_posts(mocked_logger, mocked_search_request, mocked_sleep):
+    result = collect_reels_of_user(MockedDriver(), "anasaiaofficial", 30)
+    assert result == {"posts": [], "count": 0}
+    mocked_logger.warning.assert_called_once_with("No reels found for user 'anasaiaofficial'.")

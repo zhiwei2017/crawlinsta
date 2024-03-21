@@ -71,3 +71,34 @@ def test_collect_posts_by_music_id_fail(n):
         collect_posts_by_music_id(MockedDriver(["tests/resources/posts_by_music_id/music1.json", "tests/resources/posts_by_music_id/music2.json"],
                                                "Grb-yYqzpqONu1uUrLfb5-CBvlvW98aSzq_261vY2J6Dovf64VuY-af7kuyV4lvWz7KLsNvl0Fua8ZLane6_5Fuo35rDm7SG9Fvql5LT2YGyu1vq9pnCoKDbvlvu28Lq4oT47VsmgMKUlsBjFBY0AikIGAAaCDoGGQwA"), "1053780911670375", n)
     assert str(exc.value) == "The number of posts to collect must be a positive integer."
+
+
+@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+def test_collect_posts_by_music_id_fail_no_request(mocked_sleep):
+    with pytest.raises(ValueError) as exc:
+        collect_posts_by_music_id(BaseMockedDriver(), "1053780911670375", 20)
+    assert str(exc.value) == "Music id '1053780911670375' not found."
+
+
+
+@pytest.mark.parametrize("data_files, max_id, result_file, music_id",
+                         [(["tests/resources/posts_by_music_id/music1.json", "tests/resources/posts_by_music_id/music2.json"],
+                           "Grb-yYqzpqONu1uUrLfb5-CBvlvW98aSzq_261vY2J6Dovf64VuY-af7kuyV4lvWz7KLsNvl0Fua8ZLane6_5Fuo35rDm7SG9Fvql5LT2YGyu1vq9pnCoKDbvlvu28Lq4oT47VsmgMKUlsBjFBY0AikIGAAaCDoGGQwA",
+                           "tests/resources/posts_by_music_id/music_result.json",
+                           "1053780911670375")])
+@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.logger")
+def test_collect_posts_by_music_id_no_data(mocked_logger, mocked_search_requests, mocked_sleep, data_files, max_id, result_file, music_id):
+    result = collect_posts_by_music_id(MockedDriver(data_files, max_id), music_id, 20)
+    assert result == {'count': 0,
+                      'music': {'artist': None,
+                                'clips_count': 0,
+                                'duration_in_ms': None,
+                                'id': '1053780911670375',
+                                'is_trending_in_clips': False,
+                                'photos_count': 0,
+                                'title': 'Original audio',
+                                'url': None},
+                      'posts': []}
+    mocked_logger.warning.assert_called_once_with("No data found for music id '1053780911670375'.")

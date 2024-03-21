@@ -55,3 +55,12 @@ def test_collect_likers_of_post_fail_on_wrong_n(n):
     with pytest.raises(ValueError) as exc:
         collect_likers_of_post(MockedDriver(), "C2P19gPrUw5", n)
     assert str(exc.value) == "The number of likers to collect must be a positive integer."
+
+
+@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.logger")
+def test_collect_likers_of_post_no_likers(mocked_logger, mocked_search_request, mocked_sleep):
+    result = collect_likers_of_post(MockedDriver(), "C2P19gPrUw5", 30)
+    assert result == {"users": [], "count": 0}
+    mocked_logger.warning.assert_called_once_with("No likers found for post 'C2P19gPrUw5'.")

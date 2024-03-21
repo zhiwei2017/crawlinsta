@@ -63,3 +63,14 @@ def test_search_with_keyword_not_pers(mocked_sleep):
     with open("tests/resources/search_with_keyword/not_personalised_result.json", "r") as file:
         expected = json.load(file)
     assert result == expected
+
+
+@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.logger")
+def test_search_with_keyword_pers_no_request_found(mocked_logger, mocked_search_request, mocked_sleep):
+    keyword = "shanghai"
+    driver = MockedDriver(keyword=keyword)
+    result = search_with_keyword(driver, keyword, pers=True)
+    assert result == {"hashtags": [], "places": [], "users": [], "personalised": True}
+    mocked_logger.warning.assert_called_once_with("No search results found for keyword 'shanghai'.")

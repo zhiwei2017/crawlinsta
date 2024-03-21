@@ -59,6 +59,9 @@ def collect_user_info(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     Returns:
         Json: user information in json format.
 
+    Raises:
+        ValueError: if the user with the given username is not found.
+
     Examples:
         >>> from crawlinsta import webdriver
         >>> from crawlinsta.login import login, login_with_cookies
@@ -88,29 +91,37 @@ def collect_user_info(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     json_requests = filter_requests(driver.requests)
     del driver.requests
 
+    if not json_requests:
+        raise ValueError(f"User {username} not found.")
+
     user_data = get_user_data(json_requests, username)
     user_id = extract_id(user_data)
 
-    following_btn_xpath = f"//a[@href='/{username}/following/'][@role='link']"
-    following_btn = driver.find_element(By.XPATH, following_btn_xpath)
-    following_btn.click()
+    following_hashtags_number = 0
+    if not user_data["is_private"]:
+        following_btn_xpath = f"//a[@href='/{username}/following/'][@role='link']"
+        following_btn = driver.find_element(By.XPATH, following_btn_xpath)
+        following_btn.click()
 
-    time.sleep(random.SystemRandom().randint(3, 5))
+        time.sleep(random.SystemRandom().randint(3, 5))
 
-    hashtag_btn = driver.find_element(By.XPATH, "//span[text()='Hashtags']")
-    hashtag_btn.click()
-    time.sleep(random.SystemRandom().randint(4, 6))
+        hashtag_btn = driver.find_element(By.XPATH, "//span[text()='Hashtags']")
+        hashtag_btn.click()
+        time.sleep(random.SystemRandom().randint(4, 6))
 
-    json_requests += filter_requests(driver.requests)
-    del driver.requests
+        json_requests += filter_requests(driver.requests)
+        del driver.requests
 
-    variables = dict(id=user_id)
-    query_dict = dict(doc_id=FOLLOWING_DOC_ID, variables=json.dumps(variables, separators=(',', ':')))
-    target_url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}/?{urlencode(query_dict, quote_via=quote)}"
-    idx = search_request(json_requests, target_url)
-    request = json_requests.pop(idx)
-    json_data = get_json_data(request.response)
-    following_hashtags_number = json_data["data"]['user']['edge_following_hashtag']['count']
+        variables = dict(id=user_id)
+        query_dict = dict(doc_id=FOLLOWING_DOC_ID, variables=json.dumps(variables, separators=(',', ':')))
+        target_url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}/?{urlencode(query_dict, quote_via=quote)}"
+        idx = search_request(json_requests, target_url)
+        if idx is not None:
+            request = json_requests.pop(idx)
+            json_data = get_json_data(request.response)
+            following_hashtags_number = json_data["data"]['user']['edge_following_hashtag']['count']
+        else:
+            logger.warning(f"Following hashtags number not found for user '{username}'.")
 
     result = UserInfo(id=user_id,
                       username=user_data["username"],
@@ -141,6 +152,10 @@ def collect_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
     Returns:
         Json: all visible post of the given user in json format.
+
+    Raises:
+        ValueError: if the number of posts to collect is not a positive integer.
+        ValueError: if the user with the given username is not found.
 
     Examples:
         >>> from crawlinsta import webdriver
@@ -227,11 +242,19 @@ def collect_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
     json_requests = filter_requests(driver.requests, JsonResponseContentType.text_javascript)
     del driver.requests
+
+    if not json_requests:
+        raise ValueError(f"User '{username}' not found.")
+
     # get first 12 documents
     target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
     idx = search_request(json_requests, target_url,
                          JsonResponseContentType.text_javascript,
                          check_request_data, username)
+    if idx is None:
+        logger.warning(f"No posts found for user '{username}'.")
+        return Posts(posts=[], count=0).model_dump(mode="json")  # type: ignore
+
     request = json_requests.pop(idx)
     json_data = get_json_data(request.response)["data"]["xdt_api__v1__feed__user_timeline_graphql_connection"]
     results.append(json_data)
@@ -247,6 +270,8 @@ def collect_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
         idx = search_request(json_requests, target_url, JsonResponseContentType.text_javascript,
                              check_request_data, username, after=results[-1]['page_info']["end_cursor"])
+        if idx is None:
+            break
         request = json_requests.pop(idx)
         json_data = get_json_data(request.response)["data"]["xdt_api__v1__feed__user_timeline_graphql_connection"]
         results.append(json_data)
@@ -276,6 +301,10 @@ def collect_reels_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
     Returns:
         Json: all visible reels user information of the given user in json format.
+
+    Raises:
+        ValueError: if the number of reels to collect is not a positive integer.
+        ValueError: if the user with the given username is not found.
 
     Examples:
         >>> from crawlinsta import webdriver
@@ -362,6 +391,10 @@ def collect_reels_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
     # get user id
     json_requests = filter_requests(driver.requests)
+
+    if not json_requests:
+        raise ValueError(f"User '{username}' not found.")
+
     user_data = get_user_data(json_requests, username)
     user_id = extract_id(user_data)
 
@@ -372,6 +405,10 @@ def collect_reels_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
     idx = search_request(json_requests, target_url, JsonResponseContentType.text_javascript,
                          check_request_data, user_id)
+    if idx is None:
+        logger.warning(f"No reels found for user '{username}'.")
+        return Posts(posts=[], count=0).model_dump(mode="json")  # type: ignore
+
     request = json_requests.pop(idx)
     json_data = get_json_data(request.response)["data"]["xdt_api__v1__clips__user__connection_v2"]
     results.append(json_data)
@@ -387,6 +424,8 @@ def collect_reels_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
         idx = search_request(json_requests, target_url, JsonResponseContentType.text_javascript,
                              check_request_data, user_id, results[-1]['page_info']["end_cursor"])
+        if idx is None:
+            break
         request = json_requests.pop(idx)
         json_data = get_json_data(request.response)["data"]["xdt_api__v1__clips__user__connection_v2"]
         results.append(json_data)
@@ -416,6 +455,10 @@ def collect_tagged_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Re
 
     Returns:
         Json: all visible tagged posts in json format.
+
+    Raises:
+        ValueError: if the number of tagged posts to collect is not a positive integer.
+        ValueError: if the user with the given username is not found.
 
     Examples:
         >>> from crawlinsta import webdriver
@@ -502,6 +545,9 @@ def collect_tagged_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Re
 
     # get user id
     json_requests = filter_requests(driver.requests)
+    if not json_requests:
+        raise ValueError(f"User '{username}' not found.")
+
     user_data = get_user_data(json_requests, username)
     user_id = extract_id(user_data)
 
@@ -512,6 +558,10 @@ def collect_tagged_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Re
     target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
     idx = search_request(json_requests, target_url, JsonResponseContentType.text_javascript,
                          check_request_data, user_id)
+    if idx is None:
+        logger.warning(f"No tagged posts found for user '{username}'.")
+        return Posts(posts=[], count=0).model_dump(mode="json")  # type: ignore
+
     request = json_requests.pop(idx)
     json_data = get_json_data(request.response)["data"]["xdt_api__v1__usertags__user_id__feed_connection"]
     results.append(json_data)
@@ -527,6 +577,8 @@ def collect_tagged_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Re
 
         idx = search_request(json_requests, target_url, JsonResponseContentType.text_javascript,
                              check_request_data, user_id, results[-1]['page_info']["end_cursor"])
+        if idx is None:
+            break
         request = json_requests.pop(idx)
         json_data = get_json_data(request.response)["data"]["xdt_api__v1__usertags__user_id__feed_connection"]
         results.append(json_data)
@@ -557,6 +609,9 @@ def get_friendship_status(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     Returns:
         Json: friendship indication between person A with `username1` and person B with `username2`.
 
+    Raises:
+        ValueError: if the user with the given username is not found.
+
     Examples:
         >>> from crawlinsta import webdriver
         >>> from crawlinsta.login import login, login_with_cookies
@@ -579,9 +634,16 @@ def get_friendship_status(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         json_requests = filter_requests(driver.requests)
         del driver.requests
 
+        if not json_requests:
+            raise ValueError(f"User '{username}' not found.")
+
         # get user data
         user_data = get_user_data(json_requests, username)
         user_id = extract_id(user_data)
+
+        if user_data["is_private"]:
+            logger.warning(f"User '{username}' has a private account.")
+            continue
 
         following_btn = driver.find_element(By.XPATH, f"//a[@href='/{username}/following/'][@role='link']")
         following_btn.click()
@@ -603,6 +665,12 @@ def get_friendship_status(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         query_str = urlencode(query_dict, quote_via=quote)
         target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/following/?{query_str}"
         idx = search_request(json_requests, target_url)
+
+        if idx is None:
+            logger.warning(f"Searching request for user '{searching_username}' in "
+                           f"followings of user '{username}' not found.")
+            continue
+
         request = json_requests.pop(idx)
         json_data = get_json_data(request.response)
 
@@ -635,6 +703,10 @@ def collect_followers_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remot
 
     Returns:
         Json: all visible followers' user information of the given user in json format.
+
+    Raises:
+        ValueError: if the number of followers to collect is not a positive integer.
+        ValueError: if the user with the given username is not found.
 
     Examples:
         >>> from crawlinsta import webdriver
@@ -672,9 +744,16 @@ def collect_followers_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remot
     json_requests = filter_requests(driver.requests)
     del driver.requests
 
+    if not json_requests:
+        raise ValueError(f"User '{username}' not found.")
+
     # get user data
     user_data = get_user_data(json_requests, username)
     user_id = extract_id(user_data)
+
+    if user_data["is_private"]:
+        logger.warning(f"User '{username}' has a private account.")
+        return Users(users=[], count=0).model_dump(mode="json")
 
     followers_btn = driver.find_element(By.XPATH, f"//a[@href='/{username}/followers/'][@role='link']")
     followers_btn.click()
@@ -688,6 +767,11 @@ def collect_followers_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remot
     query_str = urlencode(query_dict, quote_via=quote)
     target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/followers/?{query_str}"
     idx = search_request(json_requests, target_url)
+
+    if idx is None:
+        logger.warning(f"No followers found for user '{username}'.")
+        return Users(users=[], count=0).model_dump(mode="json")
+
     request = json_requests.pop(idx)
     json_data = get_json_data(request.response)
     results.append(json_data)
@@ -706,6 +790,8 @@ def collect_followers_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remot
         query_str = urlencode(query_dict, quote_via=quote)
         target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/followers/?{query_str}"
         idx = search_request(json_requests, target_url)
+        if idx is None:
+            break
         request = json_requests.pop(idx)
         json_data = get_json_data(request.response)
         results.append(json_data)
@@ -730,6 +816,10 @@ def collect_followings_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remo
 
     Returns:
         Json: all visible followings' user information of the given user in json format.
+
+    Raises:
+        ValueError: if the number of followings to collect is not a positive integer.
+        ValueError: if the user with the given username is not found.
 
     Examples:
         >>> from crawlinsta import webdriver
@@ -767,9 +857,16 @@ def collect_followings_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remo
     json_requests = filter_requests(driver.requests)
     del driver.requests
 
+    if not json_requests:
+        raise ValueError(f"User '{username}' not found.")
+
     # get user data
     user_data = get_user_data(json_requests, username)
     user_id = extract_id(user_data)
+
+    if user_data["is_private"]:
+        logger.warning(f"User '{username}' has a private account.")
+        return Users(users=[], count=0).model_dump(mode="json")
 
     following_btn = driver.find_element(By.XPATH, f"//a[@href='/{username}/following/'][@role='link']")
     following_btn.click()
@@ -783,6 +880,11 @@ def collect_followings_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remo
     query_str = urlencode(query_dict, quote_via=quote)
     target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/following/?{query_str}"
     idx = search_request(json_requests, target_url)
+
+    if idx is None:
+        logger.warning(f"No followings found for user '{username}'.")
+        return Users(users=[], count=0).model_dump(mode="json")
+
     request = json_requests.pop(idx)
     json_data = get_json_data(request.response)
     results.append(json_data)
@@ -801,6 +903,8 @@ def collect_followings_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remo
         query_str = urlencode(query_dict, quote_via=quote)
         target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/following/?{query_str}"
         idx = search_request(json_requests, target_url)
+        if idx is None:
+            break
         request = json_requests.pop(idx)
         json_data = get_json_data(request.response)
         results.append(json_data)
@@ -826,6 +930,10 @@ def collect_following_hashtags_of_user(driver: Union[Chrome, Edge, Firefox, Safa
     Returns:
         Json: all visible followings hashtags' information of the given user in
         json format.
+
+    Raises:
+        ValueError: if the number of following hashtags to collect is not a positive integer.
+        ValueError: if the user with the given username is not found.
 
     Examples:
         >>> from crawlinsta import webdriver
@@ -861,13 +969,19 @@ def collect_following_hashtags_of_user(driver: Union[Chrome, Edge, Firefox, Safa
     json_requests = filter_requests(driver.requests)
     del driver.requests
 
+    if not json_requests:
+        raise ValueError(f"User '{username}' not found.")
+
     user_data = get_user_data(json_requests, username)
     user_id = extract_id(user_data)
+
+    if user_data["is_private"]:
+        logger.warning(f"User '{username}' has a private account.")
+        return HashtagBasicInfos(hashtags=[], count=0).model_dump(mode="json")
 
     following_btn_xpath = f"//a[@href='/{username}/following/'][@role='link']"
     following_btn = driver.find_element(By.XPATH, following_btn_xpath)
     following_btn.click()
-
     time.sleep(random.SystemRandom().randint(3, 5))
 
     hashtag_btn = driver.find_element(By.XPATH, "//span[text()='Hashtags']")
@@ -882,6 +996,11 @@ def collect_following_hashtags_of_user(driver: Union[Chrome, Edge, Firefox, Safa
     query_dict = dict(doc_id=FOLLOWING_DOC_ID, variables=json.dumps(variables, separators=(',', ':')))
     target_url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}/?{urlencode(query_dict, quote_via=quote)}"
     idx = search_request(json_requests, target_url)
+
+    if idx is None:
+        logger.warning(f"No following hashtags found for user '{username}'.")
+        return HashtagBasicInfos(hashtags=[], count=0).model_dump(mode="json")
+
     request = json_requests.pop(idx)
     json_data = get_json_data(request.response)
     results.append(json_data)
@@ -914,6 +1033,9 @@ def collect_likers_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
     Returns:
         Json: all likers' user information of the given post in json format.
+
+    Raises:
+        ValueError: if the number of likers to collect is not a positive integer.
 
     Examples:
         >>> from crawlinsta import webdriver
@@ -967,6 +1089,11 @@ def collect_likers_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     # get 50 likers
     target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/media/{post_id}/likers/"
     idx = search_request(json_requests, target_url)
+
+    if idx is None:
+        logger.warning(f"No likers found for post '{post_code}'.")
+        return Users(users=[], count=0).model_dump(mode="json")
+
     request = json_requests.pop(idx)
     json_data = get_json_data(request.response)
     results.append(json_data)
@@ -990,6 +1117,9 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
 
     Returns:
         Json: all comments of the given post in json format.
+
+    Raises:
+        ValueError: if the number of comments to collect is not a positive integer.
 
     Examples:
         >>> from crawlinsta import webdriver
@@ -1069,6 +1199,7 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
     meta_tag = driver.find_element(By.XPATH, meta_tag_xpath)
     post_ids = re.findall("\d+", meta_tag.get_attribute("content"))  # noqa
     if not post_ids:
+        logger.warning(f"No post id found for post '{post_code}'.")
         return Comments(comments=[], count=0).model_dump(mode="json")
     post_id = post_ids[0]
 
@@ -1088,6 +1219,10 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
                              JsonResponseContentType.text_javascript,
                              check_request_data,
                              post_id)
+        if idx is None:
+            logger.warning(f"No comments found for post '{post_code}'.")
+            return Comments(comments=[], count=0).model_dump(mode="json")
+
         request = json_requests.pop(idx)
         json_data = get_json_data(request.response)["data"]["xdt_api__v1__media__media_id__comments__connection"]
         results.append(json_data)
@@ -1110,6 +1245,8 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
                              JsonResponseContentType.text_javascript,
                              check_request_data,
                              post_id)
+        if idx is None:
+            break
         request = json_requests.pop(idx)
         json_data = get_json_data(request.response)["data"]["xdt_api__v1__media__media_id__comments__connection"]
         results.append(json_data)
@@ -1242,6 +1379,11 @@ def search_with_keyword(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
     idx = search_request(json_requests, target_url, JsonResponseContentType.text_javascript,
                          check_request_data, keyword, pers)
+
+    if idx is None:
+        logger.warning(f"No search results found for keyword '{keyword}'.")
+        return SearchingResult(hashtags=[], users=[], places=[], personalised=pers).model_dump(mode="json")
+
     request = json_requests.pop(idx)
     json_data = get_json_data(request.response)
     data_key = "xdt_api__v1__fbsearch__topsearch_connection" if pers else "xdt_api__v1__fbsearch__non_profiled_serp"
@@ -1306,6 +1448,9 @@ def collect_top_posts_of_hashtag(driver: Union[Chrome, Edge, Firefox, Safari, Re
 
     Returns:
         Json: Hashtag information in a json format.
+
+    Raises:
+        ValueError: if the hashtag is not found.
 
     Examples:
         >>> from crawlinsta import webdriver
@@ -1374,8 +1519,14 @@ def collect_top_posts_of_hashtag(driver: Union[Chrome, Edge, Firefox, Safari, Re
     json_requests = filter_requests(driver.requests)
     del driver.requests
 
+    if not json_requests:
+        raise ValueError(f"Hashtag '{hashtag}' not found.")
+
     target_url = f'{INSTAGRAM_DOMAIN}/{API_VERSION}/tags/web_info/?tag_name={hashtag}'
     idx = search_request(json_requests, target_url)
+    if idx is None:
+        logger.warning(f"No data found for hashtag '{hashtag}'.")
+        return Hashtag(id=None, name=hashtag).model_dump(mode="json")  # type: ignore
     request = json_requests.pop(idx)
     json_data = get_json_data(request.response)
 
@@ -1417,6 +1568,10 @@ def collect_posts_by_music_id(driver: Union[Chrome, Edge, Firefox, Safari, Remot
 
     Returns:
         Json: a list of posts containing the music.
+
+    Raises:
+        ValueError: if the number of posts to collect is not a positive integer.
+        ValueError: if the music id is not found.
 
     Examples:
         >>> from crawlinsta import webdriver
@@ -1498,10 +1653,18 @@ def collect_posts_by_music_id(driver: Union[Chrome, Edge, Firefox, Safari, Remot
 
     json_requests = filter_requests(driver.requests)
     del driver.requests
+
+    if not json_requests:
+        raise ValueError(f"Music id '{music_id}' not found.")
+
     # get first 12 documents
     target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/clips/music/"
     idx = search_request(json_requests, target_url, JsonResponseContentType.application_json,
                          check_request_data, music_id)
+    if idx is None:
+        logger.warning(f"No data found for music id '{music_id}'.")
+        return MusicPosts(posts=[], music=Music(id=music_id), count=0).model_dump(mode="json")  # type: ignore
+
     request = json_requests.pop(idx)
     json_data = get_json_data(request.response)
     results.append(json_data)
@@ -1517,6 +1680,8 @@ def collect_posts_by_music_id(driver: Union[Chrome, Edge, Firefox, Safari, Remot
 
         idx = search_request(json_requests, target_url, JsonResponseContentType.application_json,
                              check_request_data, music_id, results[-1]["paging_info"]['max_id'])
+        if idx is None:
+            break
         request = json_requests.pop(idx)
         json_data = get_json_data(request.response)
         results.append(json_data)
@@ -1556,6 +1721,9 @@ def download_media(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         media_url (str): url of the media for downloading.
         file_name (str): path for storing the downloaded media.
 
+    Raises:
+        ValueError: if the media url is not found.
+
     Examples:
         >>> from crawlinsta import webdriver
         >>> from crawlinsta.login import login, login_with_cookies
@@ -1570,6 +1738,8 @@ def download_media(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     time.sleep(random.SystemRandom().randint(4, 6))
 
     idx = search_request(driver.requests, media_url, response_content_type=None)
+    if idx is None:
+        raise ValueError(f"Media url '{media_url}' not found.")
     request = driver.requests.pop(idx)
     file_extension = request.response.headers["Content-Type"].split("/")[1]
     with open(f"{file_name}.{file_extension}", "wb") as f:

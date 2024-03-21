@@ -57,43 +57,50 @@ def generic_test(driver, func_to_test, result_model, key_with_list=None, *args, 
     del driver.requests
 
 
-@pytest.mark.parametrize("username", ["angibieneck"])
+@pytest.mark.parametrize("username", ["nasa", "angibieneck"])
 def test_collect_user_info(chrome_driver, username):
     generic_test(chrome_driver, collect_user_info, UserInfo, None, username)
 
 
-@pytest.mark.parametrize("username, number_of_posts", [("onesmileymonkey", 20)])
+@pytest.mark.parametrize("username, number_of_posts", [("onesmileymonkey", 20),
+                                                       ("angibieneck", 20)])
 def test_collect_posts_of_user(chrome_driver, username, number_of_posts):
     generic_test(chrome_driver, collect_posts_of_user, Posts, "posts", username, number_of_posts)
 
 
-@pytest.mark.parametrize("username, number_of_posts", [("onesmileymonkey", 20)])
+@pytest.mark.parametrize("username, number_of_posts", [("onesmileymonkey", 20),
+                                                       ("angibieneck", 20)])
 def test_collect_reels_of_user(chrome_driver, username, number_of_posts):
     generic_test(chrome_driver, collect_reels_of_user, Posts, "posts", username, number_of_posts)
 
 
-@pytest.mark.parametrize("username, number_of_posts", [("onesmileymonkey", 20)])
+@pytest.mark.parametrize("username, number_of_posts", [("onesmileymonkey", 20),
+                                                       ("angibieneck", 20)])
 def test_collect_tagged_posts_of_user(chrome_driver, username, number_of_posts):
     generic_test(chrome_driver, collect_tagged_posts_of_user, Posts, "posts", username, number_of_posts)
 
 
-@pytest.mark.parametrize("username1, username2", [("nasa", "astro_frankrubio")])
+@pytest.mark.parametrize("username1, username2", [("nasa", "astro_frankrubio"),
+                                                  ("nasa", "angibieneck")])
 def test_get_friendship_status(chrome_driver, username1, username2):
     generic_test(chrome_driver, get_friendship_status, FriendshipStatus, None, username1, username2)
 
 
-@pytest.mark.parametrize("username, number_of_users", [("onesmileymonkey", 20)])
+@pytest.mark.parametrize("username, number_of_users", [("onesmileymonkey", 20),
+                                                       ("angibieneck", 20)])
 def test_collect_followers_of_user(chrome_driver, username, number_of_users):
     generic_test(chrome_driver, collect_followers_of_user, Users, "users", username, number_of_users)
 
 
 @pytest.mark.parametrize("username, number_of_users", [("onesmileymonkey", 20),
-                                                       ("angibieneck", 100)])
+                                                       ("nasa", 100),
+                                                       ("angibieneck", 20)])
 def test_collect_followings_of_user(chrome_driver, username, number_of_users):
     generic_test(chrome_driver, collect_followings_of_user, Users, "users", username, number_of_users)
 
 
-@pytest.mark.parametrize("username, number_of_hashtags", [("angibieneck", 100)])
+@pytest.mark.parametrize("username, number_of_hashtags", [("nasa", 100),
+                                                          ("angibieneck", 20)])
 def test_collect_following_hashtags_of_user(chrome_driver, username, number_of_hashtags):
     generic_test(chrome_driver, collect_following_hashtags_of_user, HashtagBasicInfos, "hashtags", username, number_of_hashtags)
 
@@ -125,7 +132,7 @@ def test_collect_posts_by_music_id(chrome_driver, music_id, number_of_posts):
 
 @pytest.mark.parametrize("music_id, number_of_posts", [("997508674672914", 20)])
 def test_download_media(chrome_driver, music_id, number_of_posts):
-    user_info = collect_user_info(chrome_driver, "angibieneck")
+    user_info = collect_user_info(chrome_driver, "nasa")
     tmp_dir = tempfile.mkdtemp()
     tmp_filename = os.path.join(tmp_dir, "image")
     download_media(chrome_driver, user_info["profile_pic_url"], tmp_filename)

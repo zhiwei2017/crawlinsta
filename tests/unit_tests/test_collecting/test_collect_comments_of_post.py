@@ -132,6 +132,17 @@ def test_collect_comments_of_post_fail_on_wrong_n(n):
 
 
 @mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
-def test_collect_comments_of_post_on_no_post_id_found(mocked_sleep):
+@mock.patch("crawlinsta.collecting.logger")
+def test_collect_comments_of_post_on_no_post_id_found(mocked_logger, mocked_sleep):
     result = collect_comments_of_post(MockedDriverLoaded(""), "C10MvewSSYl", 10)
     assert result == {'comments': [], 'count': 0}
+    mocked_logger.warning.assert_called_once_with("No post id found for post 'C10MvewSSYl'.")
+
+
+@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.logger")
+def test_collect_comments_of_post_load_no_request_found(mocked_logger, mocked_search_request, mocked_sleep):
+    result = collect_comments_of_post(MockedDriverLoaded(), "C10MvewSSYl", 100)
+    assert result == {'comments': [], 'count': 0}
+    mocked_logger.warning.assert_called_once_with("No comments found for post 'C10MvewSSYl'.")

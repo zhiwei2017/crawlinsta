@@ -1281,19 +1281,19 @@
     <span class="n">post_id</span> <span class="o">=</span> <span class="n">post_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="n">json_requests</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">target_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/api/graphql&quot;</span>
+    <span class="n">target_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">GRAPHQL_QUERY_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">cached_data</span> <span class="o">=</span> <span class="n">find_cached_data</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">cached_data</span><span class="p">:</span>
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cached_data</span><span class="p">)</span>
         <span class="n">remaining</span> <span class="o">-=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cached_data</span><span class="p">[</span><span class="s2">&quot;edges&quot;</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">json_requests</span> <span class="o">=</span> <span class="n">filter_requests</span><span class="p">(</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span><span class="p">,</span> <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">text_javascript</span><span class="p">)</span>
+        <span class="n">json_requests</span> <span class="o">=</span> <span class="n">filter_requests</span><span class="p">(</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span><span class="p">,</span> <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">application_json</span><span class="p">)</span>
         <span class="k">del</span> <span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
 
         <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span>
                              <span class="n">target_url</span><span class="p">,</span>
-                             <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">text_javascript</span><span class="p">,</span>
+                             <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">application_json</span><span class="p">,</span>
                              <span class="n">check_request_data</span><span class="p">,</span>
                              <span class="n">post_id</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1314,12 +1314,12 @@
 
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">SystemRandom</span><span class="p">()</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
         <span class="n">json_requests</span> <span class="o">+=</span> <span class="n">filter_requests</span><span class="p">(</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span><span class="p">,</span>
-                                         <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">text_javascript</span><span class="p">)</span>
+                                         <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">application_json</span><span class="p">)</span>
         <span class="k">del</span> <span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
 
         <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span>
                              <span class="n">target_url</span><span class="p">,</span>
-                             <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">text_javascript</span><span class="p">,</span>
+                             <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">application_json</span><span class="p">,</span>
                              <span class="n">check_request_data</span><span class="p">,</span>
                              <span class="n">post_id</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1347,7 +1347,7 @@
                               <span class="n">is_liked_by_post_owner</span><span class="o">=</span><span class="n">comment_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;has_liked_comment&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
                               <span class="n">comment_like_count</span><span class="o">=</span><span class="n">comment_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;comment_like_count&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
             <span class="n">comments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
-
+    <span class="n">comments</span> <span class="o">=</span> <span class="n">comments</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">Comments</span><span class="p">(</span><span class="n">comments</span><span class="o">=</span><span class="n">comments</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">comments</span><span class="p">))</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span></div>
 
 

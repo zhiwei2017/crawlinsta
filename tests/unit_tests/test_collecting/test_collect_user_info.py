@@ -1,7 +1,9 @@
 import json
 import pytest
 from unittest import mock
-from crawlinsta.collecting import INSTAGRAM_DOMAIN, API_VERSION, collect_user_info
+from crawlinsta.collecting import (
+    INSTAGRAM_DOMAIN, API_VERSION, GRAPHQL_QUERY_PATH, collect_user_info
+)
 from .base_mocked_driver import BaseMockedDriver
 
 
@@ -19,7 +21,7 @@ class MockedDriver(BaseMockedDriver):
         self.requests = [request]
 
     def find_element(self, by, value):
-        url = "https://www.instagram.com/graphql/query/?doc_id=17901966028246171&variables=%7B%22id%22%3A%22528817151%22%7D"
+        url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}/?doc_id=17901966028246171&variables=%7B%22id%22%3A%22528817151%22%7D"
         with open("tests/resources/user_info/query.json", "r") as file:
             data = json.load(file)
         request = mock.Mock()
@@ -70,7 +72,7 @@ class MockedDriverPrivate(BaseMockedDriver):
         self.requests = [request]
 
     def find_element(self, by, value):
-        url = "https://www.instagram.com/graphql/query/?doc_id=17901966028246171&variables=%7B%22id%22%3A%22528817151%22%7D"
+        url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}/?doc_id=17901966028246171&variables=%7B%22id%22%3A%22528817151%22%7D"
         with open("tests/resources/user_info/query.json", "r") as file:
             data = json.load(file)
         request = mock.Mock()

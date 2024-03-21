@@ -3,7 +3,9 @@ import pytest
 from lxml import html
 from unittest import mock
 from urllib.parse import urlencode, quote
-from crawlinsta.collecting import INSTAGRAM_DOMAIN, JsonResponseContentType, collect_comments_of_post
+from crawlinsta.collecting import (
+    INSTAGRAM_DOMAIN, GRAPHQL_QUERY_PATH, JsonResponseContentType, collect_comments_of_post
+)
 from .base_mocked_driver import BaseMockedDriver
 
 
@@ -25,7 +27,7 @@ class MockedDriverCached(BaseMockedDriver):
                 scripts.append(script)
             self.call_find_element_number += 1
             return scripts
-        url = f"{INSTAGRAM_DOMAIN}/graphql/query"
+        url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}"
         with open(f"tests/resources/comments/comments_cached{self.call_find_element_number}.json", "r") as file:
             data = json.load(file)
         response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
@@ -61,7 +63,7 @@ class MockedDriverLoaded(BaseMockedDriver):
         super().__init__()
 
     def get(self, url):
-        url = f"{INSTAGRAM_DOMAIN}/graphql/query"
+        url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}"
         with open(f"tests/resources/comments/comments_load{self.call_find_element_number}.json", "r") as file:
             data = json.load(file)
         response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
@@ -78,7 +80,7 @@ class MockedDriverLoaded(BaseMockedDriver):
         if not self.call_find_element_number:
             self.call_find_element_number += 1
             return []
-        url = f"{INSTAGRAM_DOMAIN}/graphql/query"
+        url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}"
         with open(f"tests/resources/comments/comments_load{self.call_find_element_number}.json", "r") as file:
             data = json.load(file)
         response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,

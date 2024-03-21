@@ -193,9 +193,12 @@
         <span class="n">query_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">doc_id</span><span class="o">=</span><span class="n">FOLLOWING_DOC_ID</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">)))</span>
         <span class="n">target_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">GRAPHQL_QUERY_PATH</span><span class="si">}</span><span class="s2">/?</span><span class="si">{</span><span class="n">urlencode</span><span class="p">(</span><span class="n">query_dict</span><span class="p">,</span><span class="w"> </span><span class="n">quote_via</span><span class="o">=</span><span class="n">quote</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">)</span>
-        <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
-        <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
-        <span class="n">following_hashtags_number</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s1">&#39;user&#39;</span><span class="p">][</span><span class="s1">&#39;edge_following_hashtag&#39;</span><span class="p">][</span><span class="s1">&#39;count&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+            <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
+            <span class="n">following_hashtags_number</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s1">&#39;user&#39;</span><span class="p">][</span><span class="s1">&#39;edge_following_hashtag&#39;</span><span class="p">][</span><span class="s1">&#39;count&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Following hashtags number not found for user &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
 
     <span class="n">result</span> <span class="o">=</span> <span class="n">UserInfo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
                       <span class="n">username</span><span class="o">=</span><span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">],</span>
@@ -318,7 +321,7 @@
     <span class="k">del</span> <span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">json_requests</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User </span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
 
     <span class="c1"># get first 12 documents</span>
     <span class="n">target_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/api/graphql&quot;</span>
@@ -326,7 +329,8 @@
                          <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">text_javascript</span><span class="p">,</span>
                          <span class="n">check_request_data</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Posts</span><span class="p">(</span><span class="n">posts</span><span class="o">=</span><span class="p">[],</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No posts found for user &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Posts</span><span class="p">(</span><span class="n">posts</span><span class="o">=</span><span class="p">[],</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 
     <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
     <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;xdt_api__v1__feed__user_timeline_graphql_connection&quot;</span><span class="p">]</span>
@@ -343,6 +347,8 @@
 
         <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">,</span> <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">text_javascript</span><span class="p">,</span>
                              <span class="n">check_request_data</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="n">results</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;page_info&#39;</span><span class="p">][</span><span class="s2">&quot;end_cursor&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">break</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
         <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;xdt_api__v1__feed__user_timeline_graphql_connection&quot;</span><span class="p">]</span>
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
@@ -464,7 +470,7 @@
     <span class="n">json_requests</span> <span class="o">=</span> <span class="n">filter_requests</span><span class="p">(</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">json_requests</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User </span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
 
     <span class="n">user_data</span> <span class="o">=</span> <span class="n">get_user_data</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">extract_id</span><span class="p">(</span><span class="n">user_data</span><span class="p">)</span>
@@ -477,7 +483,8 @@
     <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">,</span> <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">text_javascript</span><span class="p">,</span>
                          <span class="n">check_request_data</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Posts</span><span class="p">(</span><span class="n">posts</span><span class="o">=</span><span class="p">[],</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No reels found for user &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Posts</span><span class="p">(</span><span class="n">posts</span><span class="o">=</span><span class="p">[],</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 
     <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
     <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;xdt_api__v1__clips__user__connection_v2&quot;</span><span class="p">]</span>
@@ -494,6 +501,8 @@
 
         <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">,</span> <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">text_javascript</span><span class="p">,</span>
                              <span class="n">check_request_data</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">results</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;page_info&#39;</span><span class="p">][</span><span class="s2">&quot;end_cursor&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">break</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
         <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;xdt_api__v1__clips__user__connection_v2&quot;</span><span class="p">]</span>
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
@@ -614,7 +623,7 @@
     <span class="c1"># get user id</span>
     <span class="n">json_requests</span> <span class="o">=</span> <span class="n">filter_requests</span><span class="p">(</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">json_requests</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User </span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
 
     <span class="n">user_data</span> <span class="o">=</span> <span class="n">get_user_data</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">extract_id</span><span class="p">(</span><span class="n">user_data</span><span class="p">)</span>
@@ -627,7 +636,8 @@
     <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">,</span> <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">text_javascript</span><span class="p">,</span>
                          <span class="n">check_request_data</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Posts</span><span class="p">(</span><span class="n">posts</span><span class="o">=</span><span class="p">[],</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No tagged posts found for user &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Posts</span><span class="p">(</span><span class="n">posts</span><span class="o">=</span><span class="p">[],</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 
     <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
     <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;xdt_api__v1__usertags__user_id__feed_connection&quot;</span><span class="p">]</span>
@@ -644,6 +654,8 @@
 
         <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">,</span> <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">text_javascript</span><span class="p">,</span>
                              <span class="n">check_request_data</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">results</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;page_info&#39;</span><span class="p">][</span><span class="s2">&quot;end_cursor&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">break</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
         <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;xdt_api__v1__usertags__user_id__feed_connection&quot;</span><span class="p">]</span>
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
@@ -700,11 +712,15 @@
         <span class="k">del</span> <span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">json_requests</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User </span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
 
         <span class="c1"># get user data</span>
         <span class="n">user_data</span> <span class="o">=</span> <span class="n">get_user_data</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
         <span class="n">user_id</span> <span class="o">=</span> <span class="n">extract_id</span><span class="p">(</span><span class="n">user_data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;is_private&quot;</span><span class="p">]:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39; has a private account.&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
 
         <span class="n">following_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;//a[@href=&#39;/</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">/following/&#39;][@role=&#39;link&#39;]&quot;</span><span class="p">)</span>
         <span class="n">following_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
@@ -728,6 +744,8 @@
         <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Searching request for user &#39;</span><span class="si">{</span><span class="n">searching_username</span><span class="si">}</span><span class="s2">&#39; in &quot;</span>
+                           <span class="sa">f</span><span class="s2">&quot;followings of user &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
             <span class="k">continue</span>
 
         <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
@@ -804,11 +822,15 @@
     <span class="k">del</span> <span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">json_requests</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User </span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
 
     <span class="c1"># get user data</span>
     <span class="n">user_data</span> <span class="o">=</span> <span class="n">get_user_data</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">extract_id</span><span class="p">(</span><span class="n">user_data</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;is_private&quot;</span><span class="p">]:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39; has a private account.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Users</span><span class="p">(</span><span class="n">users</span><span class="o">=</span><span class="p">[],</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
 
     <span class="n">followers_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;//a[@href=&#39;/</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">/followers/&#39;][@role=&#39;link&#39;]&quot;</span><span class="p">)</span>
     <span class="n">followers_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
@@ -824,6 +846,7 @@
     <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No followers found for user &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Users</span><span class="p">(</span><span class="n">users</span><span class="o">=</span><span class="p">[],</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
 
     <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
@@ -844,6 +867,8 @@
         <span class="n">query_str</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">query_dict</span><span class="p">,</span> <span class="n">quote_via</span><span class="o">=</span><span class="n">quote</span><span class="p">)</span>
         <span class="n">target_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">API_VERSION</span><span class="si">}</span><span class="s2">/friendships/</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">/followers/?</span><span class="si">{</span><span class="n">query_str</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">break</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
         <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
@@ -910,11 +935,15 @@
     <span class="k">del</span> <span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">json_requests</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User </span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
 
     <span class="c1"># get user data</span>
     <span class="n">user_data</span> <span class="o">=</span> <span class="n">get_user_data</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">extract_id</span><span class="p">(</span><span class="n">user_data</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;is_private&quot;</span><span class="p">]:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39; has a private account.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Users</span><span class="p">(</span><span class="n">users</span><span class="o">=</span><span class="p">[],</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
 
     <span class="n">following_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;//a[@href=&#39;/</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">/following/&#39;][@role=&#39;link&#39;]&quot;</span><span class="p">)</span>
     <span class="n">following_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
@@ -930,6 +959,7 @@
     <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No followings found for user &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Users</span><span class="p">(</span><span class="n">users</span><span class="o">=</span><span class="p">[],</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
 
     <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
@@ -950,6 +980,8 @@
         <span class="n">query_str</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">query_dict</span><span class="p">,</span> <span class="n">quote_via</span><span class="o">=</span><span class="n">quote</span><span class="p">)</span>
         <span class="n">target_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">API_VERSION</span><span class="si">}</span><span class="s2">/friendships/</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">/following/?</span><span class="si">{</span><span class="n">query_str</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">break</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
         <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
@@ -1015,15 +1047,18 @@
     <span class="k">del</span> <span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">json_requests</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User </span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
 
     <span class="n">user_data</span> <span class="o">=</span> <span class="n">get_user_data</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">extract_id</span><span class="p">(</span><span class="n">user_data</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="n">user_data</span><span class="p">[</span><span class="s2">&quot;is_private&quot;</span><span class="p">]:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39; has a private account.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">HashtagBasicInfos</span><span class="p">(</span><span class="n">hashtags</span><span class="o">=</span><span class="p">[],</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+
     <span class="n">following_btn_xpath</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;//a[@href=&#39;/</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">/following/&#39;][@role=&#39;link&#39;]&quot;</span>
     <span class="n">following_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="n">following_btn_xpath</span><span class="p">)</span>
     <span class="n">following_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
-
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">SystemRandom</span><span class="p">()</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 
     <span class="n">hashtag_btn</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s2">&quot;//span[text()=&#39;Hashtags&#39;]&quot;</span><span class="p">)</span>
@@ -1040,6 +1075,7 @@
     <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No following hashtags found for user &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">HashtagBasicInfos</span><span class="p">(</span><span class="n">hashtags</span><span class="o">=</span><span class="p">[],</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
 
     <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
@@ -1132,6 +1168,7 @@
     <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No likers found for post &#39;</span><span class="si">{</span><span class="n">post_code</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Users</span><span class="p">(</span><span class="n">users</span><span class="o">=</span><span class="p">[],</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
 
     <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
@@ -1239,6 +1276,7 @@
     <span class="n">meta_tag</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="n">meta_tag_xpath</span><span class="p">)</span>
     <span class="n">post_ids</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;\d+&quot;</span><span class="p">,</span> <span class="n">meta_tag</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s2">&quot;content&quot;</span><span class="p">))</span>  <span class="c1"># noqa</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">post_ids</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No post id found for post &#39;</span><span class="si">{</span><span class="n">post_code</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Comments</span><span class="p">(</span><span class="n">comments</span><span class="o">=</span><span class="p">[],</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
     <span class="n">post_id</span> <span class="o">=</span> <span class="n">post_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -1259,6 +1297,7 @@
                              <span class="n">check_request_data</span><span class="p">,</span>
                              <span class="n">post_id</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No comments found for post &#39;</span><span class="si">{</span><span class="n">post_code</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">Comments</span><span class="p">(</span><span class="n">comments</span><span class="o">=</span><span class="p">[],</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
 
         <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
@@ -1283,6 +1322,8 @@
                              <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">text_javascript</span><span class="p">,</span>
                              <span class="n">check_request_data</span><span class="p">,</span>
                              <span class="n">post_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">break</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
         <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;xdt_api__v1__media__media_id__comments__connection&quot;</span><span class="p">]</span>
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
@@ -1417,6 +1458,7 @@
                          <span class="n">check_request_data</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">pers</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No search results found for keyword &#39;</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">SearchingResult</span><span class="p">(</span><span class="n">hashtags</span><span class="o">=</span><span class="p">[],</span> <span class="n">users</span><span class="o">=</span><span class="p">[],</span> <span class="n">places</span><span class="o">=</span><span class="p">[],</span> <span class="n">personalised</span><span class="o">=</span><span class="n">pers</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
 
     <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
@@ -1555,10 +1597,13 @@
     <span class="k">del</span> <span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">json_requests</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hashtag </span><span class="si">{</span><span class="n">hashtag</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hashtag &#39;</span><span class="si">{</span><span class="n">hashtag</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
 
     <span class="n">target_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">API_VERSION</span><span class="si">}</span><span class="s1">/tags/web_info/?tag_name=</span><span class="si">{</span><span class="n">hashtag</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No data found for hashtag &#39;</span><span class="si">{</span><span class="n">hashtag</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Hashtag</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">hashtag</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
     <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
     <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
 
@@ -1687,14 +1732,15 @@
     <span class="k">del</span> <span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">json_requests</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Music id </span><span class="si">{</span><span class="n">music_id</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Music id &#39;</span><span class="si">{</span><span class="n">music_id</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
 
     <span class="c1"># get first 12 documents</span>
     <span class="n">target_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">API_VERSION</span><span class="si">}</span><span class="s2">/clips/music/&quot;</span>
     <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">,</span> <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">application_json</span><span class="p">,</span>
                          <span class="n">check_request_data</span><span class="p">,</span> <span class="n">music_id</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">MusicPosts</span><span class="p">(</span><span class="n">posts</span><span class="o">=</span><span class="p">[],</span> <span class="n">music</span><span class="o">=</span><span class="n">Music</span><span class="p">(),</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No data found for music id &#39;</span><span class="si">{</span><span class="n">music_id</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">MusicPosts</span><span class="p">(</span><span class="n">posts</span><span class="o">=</span><span class="p">[],</span> <span class="n">music</span><span class="o">=</span><span class="n">Music</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">music_id</span><span class="p">),</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 
     <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
     <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
@@ -1711,6 +1757,8 @@
 
         <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">,</span> <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">application_json</span><span class="p">,</span>
                              <span class="n">check_request_data</span><span class="p">,</span> <span class="n">music_id</span><span class="p">,</span> <span class="n">results</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;paging_info&quot;</span><span class="p">][</span><span class="s1">&#39;max_id&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">break</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
         <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
@@ -1768,7 +1816,7 @@
 
     <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span><span class="p">,</span> <span class="n">media_url</span><span class="p">,</span> <span class="n">response_content_type</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Media url </span><span class="si">{</span><span class="n">media_url</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Media url &#39;</span><span class="si">{</span><span class="n">media_url</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
     <span class="n">request</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
     <span class="n">file_extension</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">file_extension</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>

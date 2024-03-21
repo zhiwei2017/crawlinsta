@@ -79,7 +79,7 @@ def login(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
 
 
 def login_with_cookies(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
-                       cookies_path: str = "instagram_cookies.pkl"):
+                       cookies_path: str = "instagram_cookies.joblib"):
     """Log into Instagram using stored cookies.
 
     Args:

@@ -1204,19 +1204,19 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
     post_id = post_ids[0]
 
     json_requests = []
-    target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
+    target_url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}"
     cached_data = find_cached_data()
 
     if cached_data:
         results.append(cached_data)
         remaining -= len(cached_data["edges"])
     else:
-        json_requests = filter_requests(driver.requests, JsonResponseContentType.text_javascript)
+        json_requests = filter_requests(driver.requests, JsonResponseContentType.application_json)
         del driver.requests
 
         idx = search_request(json_requests,
                              target_url,
-                             JsonResponseContentType.text_javascript,
+                             JsonResponseContentType.application_json,
                              check_request_data,
                              post_id)
         if idx is None:
@@ -1237,12 +1237,12 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
 
         time.sleep(random.SystemRandom().randint(4, 6))
         json_requests += filter_requests(driver.requests,
-                                         JsonResponseContentType.text_javascript)
+                                         JsonResponseContentType.application_json)
         del driver.requests
 
         idx = search_request(json_requests,
                              target_url,
-                             JsonResponseContentType.text_javascript,
+                             JsonResponseContentType.application_json,
                              check_request_data,
                              post_id)
         if idx is None:
@@ -1270,7 +1270,7 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
                               is_liked_by_post_owner=comment_dict.get("has_liked_comment", False),
                               comment_like_count=comment_dict.get("comment_like_count", 0))
             comments.append(comment)
-
+    comments = comments[:n]
     return Comments(comments=comments, count=len(comments)).model_dump(mode="json")
 
 

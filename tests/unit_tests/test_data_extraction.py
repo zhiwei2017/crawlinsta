@@ -33,6 +33,17 @@ def test_extract_post_urls():
     assert extract_post_urls(post_info_dict) == ["https://www.instagram.com/p/1234567890"]
 
     post_info_dict = {
+        "media_type": 2,
+        "image_versions2": {
+            "candidates": [
+                {"url": "https://www.instagram.com/p/1234567890"},
+                {"url": "https://www.instagram.com/p/1234567891"}
+            ]
+        }
+    }
+    assert extract_post_urls(post_info_dict) == ["https://www.instagram.com/p/1234567890"]
+
+    post_info_dict = {
         "media_type": 8,
         "carousel_media": [
             {
@@ -61,6 +72,17 @@ def test_extract_post_urls():
     assert extract_post_urls(post_info_dict) == ["https://www.instagram.com/p/1234567890",
                                                  "https://www.instagram.com/p/1234567891",
                                                  "https://www.instagram.com/p/1234567892"]
+
+    post_info_dict = {
+        "media_type": 8,
+        "image_versions2": {
+            "candidates": [
+                {"url": "https://www.instagram.com/p/1234567890"},
+                {"url": "https://www.instagram.com/p/1234567891"}
+            ]
+        }
+    }
+    assert extract_post_urls(post_info_dict) == ["https://www.instagram.com/p/1234567890"]
 
 
 def test_extract_music_info():

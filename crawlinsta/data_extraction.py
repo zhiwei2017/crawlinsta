@@ -45,11 +45,11 @@ def extract_post_urls(post_info_dict: Dict[str, Any]) -> List[str]:
         ["https://example.com"]
     """
     post_urls = []
-    if post_info_dict['media_type'] == 2:
-        post_urls.append(post_info_dict["video_versions"][-1]["url"])
-    elif post_info_dict['media_type'] == 8:
+    if post_info_dict['media_type'] == 8 and post_info_dict.get("carousel_media"):
         for media_dict in post_info_dict["carousel_media"]:
             post_urls.append(media_dict["image_versions2"]['candidates'][0]["url"])
+    elif post_info_dict.get("video_versions"):
+        post_urls.append(post_info_dict["video_versions"][-1]["url"])
     else:
         post_urls.append(post_info_dict["image_versions2"]['candidates'][0]["url"])
     return post_urls

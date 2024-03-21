@@ -25,14 +25,14 @@ class MockedDriverCached(BaseMockedDriver):
                 scripts.append(script)
             self.call_find_element_number += 1
             return scripts
-        url = f"{INSTAGRAM_DOMAIN}/api/graphql"
+        url = f"{INSTAGRAM_DOMAIN}/graphql/query"
         with open(f"tests/resources/comments/comments_cached{self.call_find_element_number}.json", "r") as file:
             data = json.load(file)
-        response = mock.Mock(headers={"Content-Type": JsonResponseContentType.text_javascript,
+        response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
                                       'Content-Encoding': 'identity'},
                              body=json.dumps(data).encode())
         request = mock.Mock(url=url, response=response)
-        request.body = urlencode(dict(av="17841461911219001", doc_id="6974885689225067",
+        request.body = urlencode(dict(av="17841461911219001",
                                       variables=json.dumps({"media_id": self.post_id},
                                                            separators=(',', ':'))),
                                  quote_via=quote).encode()
@@ -61,10 +61,10 @@ class MockedDriverLoaded(BaseMockedDriver):
         super().__init__()
 
     def get(self, url):
-        url = f"{INSTAGRAM_DOMAIN}/api/graphql"
+        url = f"{INSTAGRAM_DOMAIN}/graphql/query"
         with open(f"tests/resources/comments/comments_load{self.call_find_element_number}.json", "r") as file:
             data = json.load(file)
-        response = mock.Mock(headers={"Content-Type": JsonResponseContentType.text_javascript,
+        response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
                                       'Content-Encoding': 'identity'},
                              body=json.dumps(data).encode())
         request = mock.Mock(url=url, response=response)
@@ -78,10 +78,10 @@ class MockedDriverLoaded(BaseMockedDriver):
         if not self.call_find_element_number:
             self.call_find_element_number += 1
             return []
-        url = f"{INSTAGRAM_DOMAIN}/api/graphql"
+        url = f"{INSTAGRAM_DOMAIN}/graphql/query"
         with open(f"tests/resources/comments/comments_load{self.call_find_element_number}.json", "r") as file:
             data = json.load(file)
-        response = mock.Mock(headers={"Content-Type": JsonResponseContentType.text_javascript,
+        response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
                                       'Content-Encoding': 'identity'},
                              body=json.dumps(data).encode())
 

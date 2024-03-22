@@ -2,7 +2,8 @@ import json
 import pytest
 from unittest import mock
 from urllib.parse import urlencode, quote
-from crawlinsta.collecting import INSTAGRAM_DOMAIN, API_VERSION, collect_posts_by_music_id
+from crawlinsta.collecting.collect_posts_by_music_id import collect_posts_by_music_id
+from crawlinsta.constants import INSTAGRAM_DOMAIN, API_VERSION, JsonResponseContentType
 from .base_mocked_driver import BaseMockedDriver
 
 
@@ -20,7 +21,7 @@ class MockedDriver(BaseMockedDriver):
         body = urlencode(dict(audio_cluster_id=self.music_id), quote_via=quote).encode()
         with open(self.data_files[0], "r") as file:
             data = json.load(file)
-        response = mock.Mock(headers={"Content-Type": "application/json; charset=utf-8",
+        response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
                                       'Content-Encoding': 'identity'},
                              body=json.dumps(data).encode())
         request = mock.Mock(url=url, body=body, response=response)
@@ -33,7 +34,7 @@ class MockedDriver(BaseMockedDriver):
                          quote_via=quote).encode()
         with open(self.data_files[1], "r") as file:
             data = json.load(file)
-        response = mock.Mock(headers={"Content-Type": "application/json; charset=utf-8",
+        response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
                                       'Content-Encoding': 'identity'},
                              body=json.dumps(data).encode())
 
@@ -57,7 +58,7 @@ class MockedDriver(BaseMockedDriver):
                            "GsauteCL34_Dm1yGhce0nbnTjVzKjr2L-MOnk1zUgpmq7cy9lVzWl7K66LOEllzYtqbD-MXgmlyavdXzsc2LmVykwunLgt6TmFyu2NXjmbWhmFy0zI_z9aS0jFy6_bSr1u7Li1y88cDbh4HEhlwm4pLD1cdjFBg0AikIGAAaCDoGGQwA",
                            "tests/resources/posts_by_music_id/audio_result.json",
                            "955300842838255")])
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.collect_posts_by_music_id.time.sleep", return_value=None)
 def test_collect_posts_by_music_id(mocked_sleep, data_files, max_id, result_file, music_id):
     result = collect_posts_by_music_id(MockedDriver(data_files, max_id), music_id, 20)
     with open(result_file, "r") as file:
@@ -73,7 +74,7 @@ def test_collect_posts_by_music_id_fail(n):
     assert str(exc.value) == "The number of posts to collect must be a positive integer."
 
 
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.collect_posts_by_music_id.time.sleep", return_value=None)
 def test_collect_posts_by_music_id_fail_no_request(mocked_sleep):
     with pytest.raises(ValueError) as exc:
         collect_posts_by_music_id(BaseMockedDriver(), "1053780911670375", 20)
@@ -86,9 +87,9 @@ def test_collect_posts_by_music_id_fail_no_request(mocked_sleep):
                            "Grb-yYqzpqONu1uUrLfb5-CBvlvW98aSzq_261vY2J6Dovf64VuY-af7kuyV4lvWz7KLsNvl0Fua8ZLane6_5Fuo35rDm7SG9Fvql5LT2YGyu1vq9pnCoKDbvlvu28Lq4oT47VsmgMKUlsBjFBY0AikIGAAaCDoGGQwA",
                            "tests/resources/posts_by_music_id/music_result.json",
                            "1053780911670375")])
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.search_request", return_value=None)
-@mock.patch("crawlinsta.collecting.logger")
+@mock.patch("crawlinsta.collecting.collect_posts_by_music_id.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.collect_posts_by_music_id.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.collect_posts_by_music_id.logger")
 def test_collect_posts_by_music_id_no_data(mocked_logger, mocked_search_requests, mocked_sleep, data_files, max_id, result_file, music_id):
     result = collect_posts_by_music_id(MockedDriver(data_files, max_id), music_id, 20)
     assert result == {'count': 0,

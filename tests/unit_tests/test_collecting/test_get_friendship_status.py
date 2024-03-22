@@ -2,7 +2,8 @@ import json
 import pytest
 from unittest import mock
 from urllib.parse import urlencode, quote
-from crawlinsta.collecting import INSTAGRAM_DOMAIN, API_VERSION, get_friendship_status
+from crawlinsta.collecting.get_friendship_status import get_friendship_status
+from crawlinsta.constants import INSTAGRAM_DOMAIN, API_VERSION, JsonResponseContentType
 from .base_mocked_driver import BaseMockedDriver
 
 
@@ -17,7 +18,7 @@ class MockedDriver(BaseMockedDriver):
         url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username={self.username}"
         with open(self.user_dict[self.username]["profile_file"], "r") as file:
             data = json.load(file)
-        response = mock.Mock(headers={"Content-Type": "application/json; charset=utf-8",
+        response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
                                       'Content-Encoding': 'identity'},
                              body=json.dumps(data).encode())
         request = mock.Mock(url=url, response=response)
@@ -35,7 +36,7 @@ class MockedDriver(BaseMockedDriver):
 
         with open(data_file, "r") as file:
             data = json.load(file)
-        response = mock.Mock(headers={"Content-Type": "application/json; charset=utf-8",
+        response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
                                       'Content-Encoding': 'identity'},
                              body=json.dumps(data).encode())
         request = mock.Mock(url=url, response=response)
@@ -46,7 +47,7 @@ class MockedDriver(BaseMockedDriver):
 @pytest.mark.parametrize("username1, username2, user_id1, user_id2",
                          [("nasa", "astro_frankrubio", "528817151", "54688074404"),
                           ("regina_steinhauer", "nasa", "2057642850", "528817151")])
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.get_friendship_status.time.sleep", return_value=None)
 def test_get_friendship_status(mocked_sleep, username1, username2, user_id1, user_id2):
     user_dict = {
         username1: {
@@ -72,9 +73,9 @@ def test_get_friendship_status(mocked_sleep, username1, username2, user_id1, use
 @pytest.mark.parametrize("username1, username2, user_id1, user_id2",
                          [("nasa", "astro_frankrubio", "528817151", "54688074404"),
                           ("regina_steinhauer", "nasa", "2057642850", "528817151")])
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.search_request", return_value=None)
-@mock.patch("crawlinsta.collecting.logger")
+@mock.patch("crawlinsta.collecting.get_friendship_status.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.get_friendship_status.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.get_friendship_status.logger")
 def test_get_friendship_status_no_request_found(mocked_logger, mocked_search_request, mocked_sleep, username1, username2, user_id1, user_id2):
     user_dict = {
         username1: {
@@ -110,7 +111,7 @@ class MockedDriverPrivate(MockedDriver):
         with open(self.user_dict[self.username]["profile_file"], "r") as file:
             data = json.load(file)
         data["data"]["user"]["is_private"] = True
-        response = mock.Mock(headers={"Content-Type": "application/json; charset=utf-8",
+        response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
                                       'Content-Encoding': 'identity'},
                              body=json.dumps(data).encode())
         request = mock.Mock(url=url, response=response)
@@ -128,7 +129,7 @@ class MockedDriverPrivate(MockedDriver):
 
         with open(data_file, "r") as file:
             data = json.load(file)
-        response = mock.Mock(headers={"Content-Type": "application/json; charset=utf-8",
+        response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
                                       'Content-Encoding': 'identity'},
                              body=json.dumps(data).encode())
         request = mock.Mock(url=url, response=response)
@@ -139,7 +140,7 @@ class MockedDriverPrivate(MockedDriver):
 @pytest.mark.parametrize("username1, username2, user_id1, user_id2",
                          [("nasa", "astro_frankrubio", "528817151", "54688074404"),
                           ("regina_steinhauer", "nasa", "2057642850", "528817151")])
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.get_friendship_status.time.sleep", return_value=None)
 def test_get_friendship_status_private_account(mocked_sleep, username1, username2, user_id1, user_id2):
     user_dict = {
         username1: {
@@ -160,7 +161,7 @@ def test_get_friendship_status_private_account(mocked_sleep, username1, username
     assert result == {"following": False, "followed_by": False}
 
 
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.get_friendship_status.time.sleep", return_value=None)
 def test_collect_posts_of_user_no_request(mocked_sleep):
     with pytest.raises(ValueError) as exc_info:
         get_friendship_status(BaseMockedDriver(), "nasa", "astro_frankrubio")

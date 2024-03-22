@@ -1,7 +1,8 @@
 import json
 from unittest import mock
 from urllib.parse import urlencode, quote
-from crawlinsta.collecting import INSTAGRAM_DOMAIN, search_with_keyword
+from crawlinsta.collecting.search_with_keyword import search_with_keyword
+from crawlinsta.constants import INSTAGRAM_DOMAIN, JsonResponseContentType
 from .base_mocked_driver import BaseMockedDriver
 
 
@@ -33,7 +34,7 @@ class MockedDriver(BaseMockedDriver):
         with open(data_file, "r") as file:
             data = json.load(file)
 
-        response = mock.Mock(headers={"Content-Type": "text/javascript; charset=utf-8",
+        response = mock.Mock(headers={"Content-Type": JsonResponseContentType.text_javascript,
                                       'Content-Encoding': 'identity'},
                              body=json.dumps(data).encode())
         request = mock.Mock(url=url, body=body, response=response)
@@ -45,7 +46,7 @@ class MockedDriver(BaseMockedDriver):
         return mock.Mock()
 
 
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.search_with_keyword.time.sleep", return_value=None)
 def test_search_with_keyword_pers(mocked_sleep):
     keyword = "shanghai"
     driver = MockedDriver(keyword=keyword)
@@ -55,7 +56,7 @@ def test_search_with_keyword_pers(mocked_sleep):
     assert result == expected
 
 
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.search_with_keyword.time.sleep", return_value=None)
 def test_search_with_keyword_not_pers(mocked_sleep):
     keyword = "shanghai"
     driver = MockedDriver(keyword=keyword)
@@ -65,9 +66,9 @@ def test_search_with_keyword_not_pers(mocked_sleep):
     assert result == expected
 
 
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.search_request", return_value=None)
-@mock.patch("crawlinsta.collecting.logger")
+@mock.patch("crawlinsta.collecting.search_with_keyword.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.search_with_keyword.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.search_with_keyword.logger")
 def test_search_with_keyword_pers_no_request_found(mocked_logger, mocked_search_request, mocked_sleep):
     keyword = "shanghai"
     driver = MockedDriver(keyword=keyword)

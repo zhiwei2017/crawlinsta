@@ -3,7 +3,7 @@ import pytest
 import shutil
 import tempfile
 from unittest import mock
-from crawlinsta.collecting import download_media
+from crawlinsta.collecting.download_media import download_media
 from .base_mocked_driver import BaseMockedDriver
 
 
@@ -16,7 +16,7 @@ class MockedDriver(BaseMockedDriver):
         self.requests = [request]
 
 
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.download_media.time.sleep", return_value=None)
 def test_download_media(mocked_sleep):
     driver = MockedDriver()
     tmp_dir = tempfile.mkdtemp()
@@ -28,8 +28,8 @@ def test_download_media(mocked_sleep):
     shutil.rmtree(tmp_dir)
 
 
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.download_media.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.download_media.search_request", return_value=None)
 def test_download_media_fail(mocked_search_request, mocked_sleep):
     driver = MockedDriver()
     with pytest.raises(ValueError) as exc:

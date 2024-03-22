@@ -1,8 +1,9 @@
 import json
 import pytest
 from unittest import mock
-from crawlinsta.collecting import (
-    INSTAGRAM_DOMAIN, API_VERSION, GRAPHQL_QUERY_PATH, collect_user_info
+from crawlinsta.collecting.collect_user_info import collect_user_info
+from crawlinsta.constants import (
+    INSTAGRAM_DOMAIN, API_VERSION, GRAPHQL_QUERY_PATH, JsonResponseContentType
 )
 from .base_mocked_driver import BaseMockedDriver
 
@@ -15,7 +16,7 @@ class MockedDriver(BaseMockedDriver):
             data = json.load(file)
         request = mock.Mock()
         request.url = url
-        request.response = mock.Mock(headers={"Content-Type": "application/json; charset=utf-8",
+        request.response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
                                               'Content-Encoding': 'identity'},
                                      body=json.dumps(data).encode())
         self.requests = [request]
@@ -26,14 +27,14 @@ class MockedDriver(BaseMockedDriver):
             data = json.load(file)
         request = mock.Mock()
         request.url = url
-        request.response = mock.Mock(headers={"Content-Type": "application/json; charset=utf-8",
+        request.response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
                                               'Content-Encoding': 'identity'},
                                      body=json.dumps(data).encode())
         self.requests = [request]
         return mock.Mock()
 
 
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.collect_user_info.time.sleep", return_value=None)
 def test_collect_user_info(mocked_sleep):
     result = collect_user_info(MockedDriver(), "nasa")
     assert result == {
@@ -51,7 +52,7 @@ def test_collect_user_info(mocked_sleep):
     }
 
 
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.collect_user_info.time.sleep", return_value=None)
 def test_collect_user_info_fail(mocked_sleep):
     with pytest.raises(ValueError, match="User nasa not found.") as exc:
         collect_user_info(BaseMockedDriver(), "nasa")
@@ -66,7 +67,7 @@ class MockedDriverPrivate(BaseMockedDriver):
         data["data"]["user"]["is_private"] = True
         request = mock.Mock()
         request.url = url
-        request.response = mock.Mock(headers={"Content-Type": "application/json; charset=utf-8",
+        request.response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
                                               'Content-Encoding': 'identity'},
                                      body=json.dumps(data).encode())
         self.requests = [request]
@@ -77,14 +78,14 @@ class MockedDriverPrivate(BaseMockedDriver):
             data = json.load(file)
         request = mock.Mock()
         request.url = url
-        request.response = mock.Mock(headers={"Content-Type": "application/json; charset=utf-8",
+        request.response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
                                               'Content-Encoding': 'identity'},
                                      body=json.dumps(data).encode())
         self.requests = [request]
         return mock.Mock()
 
 
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.collect_user_info.time.sleep", return_value=None)
 def test_collect_user_info_private(mocked_sleep):
     result = collect_user_info(MockedDriverPrivate(), "nasa")
     assert result == {
@@ -102,9 +103,9 @@ def test_collect_user_info_private(mocked_sleep):
     }
 
 
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.logger")
-@mock.patch("crawlinsta.collecting.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.collect_user_info.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.collect_user_info.logger")
+@mock.patch("crawlinsta.collecting.collect_user_info.search_request", return_value=None)
 def test_collect_user_info_private(mocked_search_request, mocked_logger, mocked_sleep):
     result = collect_user_info(MockedDriver(), "nasa")
     assert result == {

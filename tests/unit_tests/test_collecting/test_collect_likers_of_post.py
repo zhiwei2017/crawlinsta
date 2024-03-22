@@ -1,7 +1,8 @@
 import json
 import pytest
 from unittest import mock
-from crawlinsta.collecting import INSTAGRAM_DOMAIN, API_VERSION, collect_likers_of_post
+from crawlinsta.collecting.collect_likers_of_post import collect_likers_of_post
+from crawlinsta.constants import INSTAGRAM_DOMAIN, API_VERSION, JsonResponseContentType
 from .base_mocked_driver import BaseMockedDriver
 
 
@@ -21,7 +22,7 @@ class MockedDriver(BaseMockedDriver):
             url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/media/{self.post_id}/likers/"
             with open(self.data_file, "r") as file:
                 data = json.load(file)
-            response = mock.Mock(headers={"Content-Type": "application/json; charset=utf-8",
+            response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
                                           'Content-Encoding': 'identity'},
                                  body=json.dumps(data).encode())
             request = mock.Mock(url=url, response=response)
@@ -30,7 +31,7 @@ class MockedDriver(BaseMockedDriver):
         return mocked_element
 
 
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.collect_likers_of_post.time.sleep", return_value=None)
 def test_collect_likers_of_post_success(mocked_sleep):
     result = collect_likers_of_post(MockedDriver(), "C2P19gPrUw5", 100)
     with open("tests/resources/likers/result.json", "r") as file:
@@ -44,7 +45,7 @@ class MockedDriverFail(BaseMockedDriver):
         return mocked_element
 
 
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.collect_likers_of_post.time.sleep", return_value=None)
 def test_collect_likers_of_post_fail(mocked_sleep):
     result = collect_likers_of_post(MockedDriverFail(), "C2P19gPrUw5", 100)
     assert result == {"users": [], "count": 0}
@@ -57,9 +58,9 @@ def test_collect_likers_of_post_fail_on_wrong_n(n):
     assert str(exc.value) == "The number of likers to collect must be a positive integer."
 
 
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.search_request", return_value=None)
-@mock.patch("crawlinsta.collecting.logger")
+@mock.patch("crawlinsta.collecting.collect_likers_of_post.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.collect_likers_of_post.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.collect_likers_of_post.logger")
 def test_collect_likers_of_post_no_likers(mocked_logger, mocked_search_request, mocked_sleep):
     result = collect_likers_of_post(MockedDriver(), "C2P19gPrUw5", 30)
     assert result == {"users": [], "count": 0}

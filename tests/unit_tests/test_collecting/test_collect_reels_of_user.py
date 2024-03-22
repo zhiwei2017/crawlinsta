@@ -2,7 +2,8 @@ import json
 import pytest
 from unittest import mock
 from urllib.parse import urlencode, quote
-from crawlinsta.collecting import INSTAGRAM_DOMAIN, API_VERSION, collect_reels_of_user
+from crawlinsta.collecting.collect_reels_of_user import collect_reels_of_user
+from crawlinsta.constants import INSTAGRAM_DOMAIN, API_VERSION, JsonResponseContentType
 from .base_mocked_driver import BaseMockedDriver
 
 
@@ -20,7 +21,7 @@ class MockedDriver(BaseMockedDriver):
             data1 = json.load(file)
         request1 = mock.Mock()
         request1.url = url1
-        request1.response = mock.Mock(headers={"Content-Type": "application/json; charset=utf-8",
+        request1.response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
                                                'Content-Encoding': 'identity'},
                                       body=json.dumps(data1).encode())
 
@@ -31,7 +32,7 @@ class MockedDriver(BaseMockedDriver):
         request2.url = url2
         request2.body = urlencode(dict(av="17841461911219001", doc_id="7191572580905225", variables=json.dumps({"data": {"target_user_id": self.user_id}}, separators=(',', ':'))),
                                   quote_via=quote).encode()
-        request2.response = mock.Mock(headers={"Content-Type": "text/javascript; charset=utf-8",
+        request2.response = mock.Mock(headers={"Content-Type": JsonResponseContentType.text_javascript,
                                                'Content-Encoding': 'identity'},
                                       body=json.dumps(data2).encode())
         self.requests = [request1, request2]
@@ -41,7 +42,7 @@ class MockedDriver(BaseMockedDriver):
         after = "QVFCU1EwZjBPaDVQQ0U1ZHNvYnByell3YkJMYkJRLUdUR3FlazVXbGlXRnlVOHhFcTRsWGtuZU1nTjZYRXZzM2FCM042MFNmT2hRcDQ2a0lIU25KT1J0cA=="
         with open("tests/resources/reels/graphql2.json", "r") as file:
             data = json.load(file)
-        response = mock.Mock(headers={"Content-Type": "text/javascript; charset=utf-8",
+        response = mock.Mock(headers={"Content-Type": JsonResponseContentType.text_javascript,
                                       'Content-Encoding': 'identity'},
                              body=json.dumps(data).encode())
 
@@ -76,7 +77,7 @@ class MockedDriver(BaseMockedDriver):
         return mock.Mock()
 
 
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.collect_reels_of_user.time.sleep", return_value=None)
 def test_collect_reels_of_user(mocked_sleep):
     result = collect_reels_of_user(MockedDriver(), "anasaiaofficial", 20)
     with open("tests/resources/reels/result.json", "r") as file:
@@ -90,16 +91,16 @@ def test_collect_reels_of_user_fail():
     assert str(exc_info.value) == "The number of reels to collect must be a positive integer."
 
 
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.collect_reels_of_user.time.sleep", return_value=None)
 def test_collect_reels_of_user_no_request(mocked_sleep):
     with pytest.raises(ValueError) as exc_info:
         collect_reels_of_user(BaseMockedDriver(), "anasaiaofficial")
     assert str(exc_info.value) == "User 'anasaiaofficial' not found."
 
 
-@mock.patch("crawlinsta.collecting.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.search_request", return_value=None)
-@mock.patch("crawlinsta.collecting.logger")
+@mock.patch("crawlinsta.collecting.collect_reels_of_user.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.collect_reels_of_user.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.collect_reels_of_user.logger")
 def test_collect_reels_of_user_no_posts(mocked_logger, mocked_search_request, mocked_sleep):
     result = collect_reels_of_user(MockedDriver(), "anasaiaofficial", 30)
     assert result == {"posts": [], "count": 0}

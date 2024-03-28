@@ -47,7 +47,7 @@ class MockedDriver(BaseMockedDriver):
         return mock.Mock()
 
 
-@mock.patch("crawlinsta.collecting.collect_followers_of_user.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_collect_followers_of_user(mocked_sleep):
     result = collect_followers_of_user(MockedDriver(), "marie_2_0", 30)
     with open("tests/resources/followers/result.json", "r") as file:
@@ -62,16 +62,16 @@ def test_collect_followers_of_user_fail(n):
     assert str(exc_info.value) == "The number of followers to collect must be a positive integer."
 
 
-@mock.patch("crawlinsta.collecting.collect_followers_of_user.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_collect_followers_of_user_no_request(mocked_sleep):
     with pytest.raises(ValueError) as exc_info:
         collect_followers_of_user(BaseMockedDriver(), "anasaiaofficial")
     assert str(exc_info.value) == "User 'anasaiaofficial' not found."
 
 
-@mock.patch("crawlinsta.collecting.collect_followers_of_user.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.collect_followers_of_user.search_request", return_value=None)
-@mock.patch("crawlinsta.collecting.collect_followers_of_user.logger")
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.base.logger")
 def test_collect_followers_of_user_no_followers(mocked_logger, mocked_search_request, mocked_sleep):
     result = collect_followers_of_user(MockedDriver(), "anasaiaofficial", 30)
     assert result == {"users": [], "count": 0}
@@ -96,7 +96,7 @@ class MockedDriverPrivate(MockedDriver):
         self.requests = [request]
 
 
-@mock.patch("crawlinsta.collecting.collect_followers_of_user.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_collect_followers_of_user_private(mocked_sleep):
     result = collect_followers_of_user(MockedDriverPrivate(), "anasaiaofficial", 30)
     assert result == {"users": [], "count": 0}

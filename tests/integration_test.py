@@ -33,8 +33,8 @@ def chrome_driver():
     driver = webdriver.Chrome()
     username = os.environ.get("INSTAGRAM_USERNAME")
     password = os.environ.get("INSTAGRAM_PASSWORD")
-    if os.path.exists("instagram_cookies.pkl"):
-        login_with_cookies(driver, "instagram_cookies.pkl")
+    if os.path.exists("instagram_cookies.joblib"):
+        login_with_cookies(driver, "instagram_cookies.joblib")
     elif username and password:
         login(driver, username, password)
     else:

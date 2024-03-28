@@ -10,9 +10,80 @@ from ..schemas import Users
 from ..utils import search_request, get_json_data, filter_requests
 from ..decorators import driver_implicit_wait
 from ..data_extraction import create_users_list
-from ..constants import INSTAGRAM_DOMAIN, API_VERSION
+from ..constants import INSTAGRAM_DOMAIN, API_VERSION, JsonResponseContentType
 
 logger = logging.getLogger("crawlinsta")
+
+
+class CollectLikersOfPost:
+    def __init__(self,
+                 driver: Union[Chrome, Edge, Firefox, Safari, Remote],
+                 post_code: str,
+                 n: int = 100):
+        if n <= 0:
+            raise ValueError("The number of likers to collect must be a positive integer.")
+        self.driver = driver
+        self.post_code = post_code
+        self.n = n
+        self.json_requests = []
+        self.json_data_list = []
+
+    def get_post_id(self) -> Union[str, None]:
+        meta_tag_xpath = "//meta[@property='al:ios:url']"
+        meta_tag = self.driver.find_element(By.XPATH, meta_tag_xpath)
+        post_id = re.findall("\d+", meta_tag.get_attribute("content"))  # noqa
+        if not post_id:
+            return None
+        return post_id[0]
+
+    def initial_load_data(self) -> None:
+        likes_btn_xpath = f"//a[@href='/p/{self.post_code}/liked_by/'][@role='link']"
+        likes_btn = self.driver.find_element(By.XPATH, likes_btn_xpath)
+        likes_btn.click()
+        time.sleep(random.SystemRandom().randint(3, 5))
+
+        self.json_requests += filter_requests(self.driver.requests)
+        del self.driver.requests
+
+    def get_users_data(self, post_id: str) -> bool:
+        target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/media/{post_id}/likers/"
+        idx = search_request(self.json_requests, target_url,
+                             JsonResponseContentType.application_json)
+
+        if idx is None:
+            return False
+
+        request = self.json_requests.pop(idx)
+        json_data = get_json_data(request.response)
+        self.json_data_list.append(json_data)
+        return True
+
+    def collect(self, url) -> Json:
+        """Collect the users, who likes a given post.
+
+        Returns:
+            Json: all likers' user information of the given post in json format.
+        """
+        self.driver.get(url)
+        time.sleep(random.SystemRandom().randint(4, 6))
+        del self.driver.requests
+
+        # get the media id for later requests filtering
+        post_id = self.get_post_id()
+        if not post_id:
+            return Users(users=[], count=0).model_dump(mode="json")
+
+        self.initial_load_data()
+
+        # get 50 likers
+        status = self.get_users_data(post_id)
+
+        if not status:
+            logger.warning(f"No likers found for post '{self.post_code}'.")
+            return Users(users=[], count=0).model_dump(mode="json")
+
+        likers = create_users_list(self.json_data_list, "users")[:self.n]
+        return Users(users=likers, count=len(likers)).model_dump(mode="json")
 
 
 @driver_implicit_wait(10)
@@ -58,42 +129,4 @@ def collect_likers_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
           "count": 100
         }
     """
-    if n <= 0:
-        raise ValueError("The number of likers to collect must be a positive integer.")
-
-    results = []
-
-    driver.get(f"{INSTAGRAM_DOMAIN}/p/{post_code}/")
-    time.sleep(random.SystemRandom().randint(4, 6))
-    del driver.requests
-
-    # get the media id for later requests filtering
-    meta_tag_xpath = "//meta[@property='al:ios:url']"
-    meta_tag = driver.find_element(By.XPATH, meta_tag_xpath)
-    post_id = re.findall("\d+", meta_tag.get_attribute("content"))  # noqa
-    if not post_id:
-        return Users(users=[], count=0).model_dump(mode="json")
-    post_id = post_id[0]
-
-    likes_btn_xpath = f"//a[@href='/p/{post_code}/liked_by/'][@role='link']"
-    likes_btn = driver.find_element(By.XPATH, likes_btn_xpath)
-    likes_btn.click()
-    time.sleep(random.SystemRandom().randint(3, 5))
-
-    json_requests = filter_requests(driver.requests)
-    del driver.requests
-
-    # get 50 likers
-    target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/media/{post_id}/likers/"
-    idx = search_request(json_requests, target_url)
-
-    if idx is None:
-        logger.warning(f"No likers found for post '{post_code}'.")
-        return Users(users=[], count=0).model_dump(mode="json")
-
-    request = json_requests.pop(idx)
-    json_data = get_json_data(request.response)
-    results.append(json_data)
-
-    likers = create_users_list(results, "users")[:n]
-    return Users(users=likers, count=len(likers)).model_dump(mode="json")
+    return CollectLikersOfPost(driver, post_code, n).collect(f"{INSTAGRAM_DOMAIN}/p/{post_code}/")

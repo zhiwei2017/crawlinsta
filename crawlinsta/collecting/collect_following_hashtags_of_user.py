@@ -11,9 +11,145 @@ from ..schemas import HashtagBasicInfo, HashtagBasicInfos
 from ..utils import search_request, get_json_data, filter_requests, get_user_data
 from ..decorators import driver_implicit_wait
 from ..data_extraction import extract_id
-from ..constants import INSTAGRAM_DOMAIN, GRAPHQL_QUERY_PATH, FOLLOWING_DOC_ID
+from ..constants import INSTAGRAM_DOMAIN, GRAPHQL_QUERY_PATH, FOLLOWING_DOC_ID, JsonResponseContentType
 
 logger = logging.getLogger("crawlinsta")
+
+
+class CollectFollowingHashtagsOfUser:
+    """Base class for collecting posts."""
+    def __init__(self,
+                 driver: Union[Chrome, Edge, Firefox, Safari, Remote],
+                 username: str,
+                 n: int,
+                 url,
+                 collect_type: str):
+        """Initialize CollectPostsBase.
+
+        Args:
+            driver ():
+            username ():
+            n ():
+            target_url ():
+            collect_type ():
+            json_data_key ():
+        """
+        self.driver = driver
+        self.username = username
+        if n <= 0:
+            raise ValueError(f"The number of {collect_type} to collect "
+                             f"must be a positive integer.")
+        self.n = n
+        self.url = url
+        self.collect_type = collect_type
+        self.json_data_list = []
+        self.json_requests = []
+        self.user_id = None
+
+    def get_user_id(self):
+        json_requests = filter_requests(self.driver.requests,
+                                        JsonResponseContentType.application_json)
+
+        if not json_requests:
+            raise ValueError(f"User '{self.username}' not found.")
+
+        user_data = get_user_data(json_requests, self.username)
+        self.user_id = extract_id(user_data)
+        return user_data["is_private"]
+
+    def get_target_url(self):
+        variables = dict(id=self.user_id)
+        query_dict = dict(doc_id=FOLLOWING_DOC_ID,
+                          variables=json.dumps(variables, separators=(',', ':')))
+        target_url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}/?{urlencode(query_dict, quote_via=quote)}"
+        return target_url
+
+    def get_posts_data(self):
+        """Get posts data.
+
+        Args:
+            json_requests ():
+            after ():
+
+        Returns:
+
+        """
+        target_url = self.get_target_url()
+        idx = search_request(self.json_requests, target_url,
+                             JsonResponseContentType.application_json)
+        if idx is None:
+            return False
+
+        request = self.json_requests.pop(idx)
+        json_data = get_json_data(request.response)
+        self.json_data_list.append(json_data)
+        return True
+
+    def loading_action(self):
+        """Loading action."""
+        following_btn_xpath = f"//a[@href='/{self.username}/following/'][@role='link']"
+        following_btn = self.driver.find_element(By.XPATH, following_btn_xpath)
+        following_btn.click()
+        time.sleep(random.SystemRandom().randint(3, 5))
+
+        hashtag_btn = self.driver.find_element(By.XPATH, "//span[text()='Hashtags']")
+        hashtag_btn.click()
+        time.sleep(random.SystemRandom().randint(4, 6))
+
+        self.json_requests += filter_requests(self.driver.requests,
+                                              JsonResponseContentType.application_json)
+        del self.driver.requests
+
+    def create_hashtag_list(self):
+        """Create post list.
+
+        Args:
+            primary_key ():
+            secondary_key ():
+
+        Returns:
+
+        """
+        hashtags = []
+        for json_data in self.json_data_list:
+            for item in json_data["data"]['user']['edge_following_hashtag']['edges']:
+                hashtag = HashtagBasicInfo(id=extract_id(item["node"]),
+                                           name=item["node"]["name"],
+                                           post_count=item["node"]["media_count"],
+                                           profile_pic_url=item["node"]["profile_pic_url"])
+                hashtags.append(hashtag)
+        return hashtags
+
+    def collect(self):
+        """Collect posts.
+
+        Args:
+            url ():
+            primary_key ():
+            secondary_key ():
+
+        Returns:
+
+        """
+        self.driver.get(self.url)
+        time.sleep(random.SystemRandom().randint(4, 6))
+
+        is_private_account = self.get_user_id()
+        del self.driver.requests
+
+        if is_private_account:
+            logger.warning(f"User '{self.username}' has a private account.")
+            return HashtagBasicInfos(hashtags=[], count=0).model_dump(mode="json")
+
+        self.loading_action()
+
+        status = self.get_posts_data()
+        if not status:
+            logger.warning(f"No following hashtags found for user '{self.username}'.")
+            return HashtagBasicInfos(hashtags=[], count=0).model_dump(mode="json")
+
+        hashtags = self.create_hashtag_list()[:self.n]
+        return HashtagBasicInfos(hashtags=hashtags, count=len(hashtags)).model_dump(mode="json")
 
 
 @driver_implicit_wait(10)
@@ -59,63 +195,7 @@ def collect_following_hashtags_of_user(driver: Union[Chrome, Edge, Firefox, Safa
           "count": 100
         }
     """
-    if n <= 0:
-        raise ValueError("The number of following hashtags to collect must be a positive integer.")
-
-    results = []
-    remaining = n
-
-    driver.get(f'{INSTAGRAM_DOMAIN}/{username}/')
-    time.sleep(random.SystemRandom().randint(4, 6))
-
-    json_requests = filter_requests(driver.requests)
-    del driver.requests
-
-    if not json_requests:
-        raise ValueError(f"User '{username}' not found.")
-
-    user_data = get_user_data(json_requests, username)
-    user_id = extract_id(user_data)
-
-    if user_data["is_private"]:
-        logger.warning(f"User '{username}' has a private account.")
-        return HashtagBasicInfos(hashtags=[], count=0).model_dump(mode="json")
-
-    following_btn_xpath = f"//a[@href='/{username}/following/'][@role='link']"
-    following_btn = driver.find_element(By.XPATH, following_btn_xpath)
-    following_btn.click()
-    time.sleep(random.SystemRandom().randint(3, 5))
-
-    hashtag_btn = driver.find_element(By.XPATH, "//span[text()='Hashtags']")
-    hashtag_btn.click()
-    time.sleep(random.SystemRandom().randint(4, 6))
-
-    json_requests += filter_requests(driver.requests)
-    del driver.requests
-
-    # get first 12 followings
-    variables = dict(id=user_id)
-    query_dict = dict(doc_id=FOLLOWING_DOC_ID, variables=json.dumps(variables, separators=(',', ':')))
-    target_url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}/?{urlencode(query_dict, quote_via=quote)}"
-    idx = search_request(json_requests, target_url)
-
-    if idx is None:
-        logger.warning(f"No following hashtags found for user '{username}'.")
-        return HashtagBasicInfos(hashtags=[], count=0).model_dump(mode="json")
-
-    request = json_requests.pop(idx)
-    json_data = get_json_data(request.response)
-    results.append(json_data)
-    remaining -= len(json_data["data"]['user']['edge_following_hashtag']['edges'])
-
-    hashtags = []
-    for json_data in results:
-        for item in json_data["data"]['user']['edge_following_hashtag']['edges']:
-            hashtag = HashtagBasicInfo(id=extract_id(item["node"]),
-                                       name=item["node"]["name"],
-                                       post_count=item["node"]["media_count"],
-                                       profile_pic_url=item["node"]["profile_pic_url"])
-            hashtags.append(hashtag)
-    hashtags = hashtags[:n]
-    return HashtagBasicInfos(hashtags=hashtags, count=len(hashtags)).model_dump(mode="json")
+    return CollectFollowingHashtagsOfUser(driver, username, n,
+                                          f'{INSTAGRAM_DOMAIN}/{username}/',
+                                          "following hashtags").collect()
 

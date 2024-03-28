@@ -3,7 +3,6 @@ import random
 import time
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union
-
 from ..decorators import driver_implicit_wait
 from ..utils import search_request
 

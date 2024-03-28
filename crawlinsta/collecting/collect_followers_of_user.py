@@ -1,18 +1,30 @@
 import logging
-import random
-import time
-from urllib.parse import quote, urlencode
 from pydantic import Json
-from selenium.webdriver.common.by import By
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
-from typing import Union
-from ..schemas import Users
-from ..utils import search_request, get_json_data, filter_requests, get_user_data
+from typing import Union, Dict, Any
 from ..decorators import driver_implicit_wait
-from ..data_extraction import extract_id, create_users_list
 from ..constants import INSTAGRAM_DOMAIN, API_VERSION
+from .base import CollectUsersBase
 
 logger = logging.getLogger("crawlinsta")
+
+
+class CollectFollowersOfUser(CollectUsersBase):
+    def __init__(self,
+                 driver: Union[Chrome, Edge, Firefox, Safari, Remote],
+                 username: str,
+                 n: int = 100):
+        target_url_format = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/" + "{user_id}/followers/?{query_str}"
+        collect_type = "followers"
+        initial_load_data_btn_xpath = f"//a[@href='/{username}/followers/'][@role='link']"
+        url = f'{INSTAGRAM_DOMAIN}/{username}/'
+        super().__init__(driver, username, n, url, target_url_format, collect_type, initial_load_data_btn_xpath)
+
+    def get_request_query_dict(self) -> Dict[str, Any]:
+        """Get request query dict."""
+        if not self.json_data_list:
+            return dict(count=12, search_surface="follow_list_page")
+        return dict(count=12, max_id=self.json_data_list[-1]['next_max_id'], search_surface="follow_list_page")
 
 
 @driver_implicit_wait(10)
@@ -61,70 +73,4 @@ def collect_followers_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remot
           "count": 100
         }
     """
-    if n <= 0:
-        raise ValueError("The number of followers to collect must be a positive integer.")
-
-    results = []
-    remaining = n
-
-    driver.get(f'{INSTAGRAM_DOMAIN}/{username}/')
-    time.sleep(random.SystemRandom().randint(4, 6))
-
-    json_requests = filter_requests(driver.requests)
-    del driver.requests
-
-    if not json_requests:
-        raise ValueError(f"User '{username}' not found.")
-
-    # get user data
-    user_data = get_user_data(json_requests, username)
-    user_id = extract_id(user_data)
-
-    if user_data["is_private"]:
-        logger.warning(f"User '{username}' has a private account.")
-        return Users(users=[], count=0).model_dump(mode="json")
-
-    followers_btn = driver.find_element(By.XPATH, f"//a[@href='/{username}/followers/'][@role='link']")
-    followers_btn.click()
-    time.sleep(random.SystemRandom().randint(4, 6))
-
-    json_requests += filter_requests(driver.requests)
-    del driver.requests
-
-    # get 50 followers
-    query_dict = dict(count=12, search_surface="follow_list_page")
-    query_str = urlencode(query_dict, quote_via=quote)
-    target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/followers/?{query_str}"
-    idx = search_request(json_requests, target_url)
-
-    if idx is None:
-        logger.warning(f"No followers found for user '{username}'.")
-        return Users(users=[], count=0).model_dump(mode="json")
-
-    request = json_requests.pop(idx)
-    json_data = get_json_data(request.response)
-    results.append(json_data)
-    remaining -= len(json_data["users"])
-
-    while 'next_max_id' in results[-1] and remaining > 0:
-        followers_bottom = driver.find_element(By.XPATH, "//div[@class='_aano']//div[@role='progressbar']")
-        driver.execute_script("return arguments[0].scrollIntoView(true);", followers_bottom)
-
-        time.sleep(random.SystemRandom().randint(4, 6))
-
-        json_requests += filter_requests(driver.requests)
-        del driver.requests
-
-        query_dict = dict(count=12, max_id=results[-1]['next_max_id'], search_surface="follow_list_page")
-        query_str = urlencode(query_dict, quote_via=quote)
-        target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/{user_id}/followers/?{query_str}"
-        idx = search_request(json_requests, target_url)
-        if idx is None:
-            break
-        request = json_requests.pop(idx)
-        json_data = get_json_data(request.response)
-        results.append(json_data)
-        remaining -= len(json_data["users"])
-
-    users = create_users_list(results, "users")[:n]
-    return Users(users=users, count=len(users)).model_dump(mode="json")
+    return CollectFollowersOfUser(driver, username, n).collect()

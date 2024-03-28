@@ -89,7 +89,7 @@ def search_request(requests: List[Request],
     return None
 
 
-def get_json_data(response: Response) -> Json:
+def get_json_data(response: Response) -> Dict[str, Any]:
     """Get the json data from the response.
 
     Args:

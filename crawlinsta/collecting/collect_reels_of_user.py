@@ -1,19 +1,53 @@
 import json
-import logging
-import random
-import time
 from urllib.parse import parse_qs
 from pydantic import Json
-from selenium.webdriver.common.by import By
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union
-from ..schemas import Posts
-from ..utils import search_request, get_json_data, filter_requests, get_user_data
+from ..utils import filter_requests, get_user_data
 from ..decorators import driver_implicit_wait
-from ..data_extraction import extract_post, extract_id
+from ..data_extraction import extract_id
 from ..constants import INSTAGRAM_DOMAIN, JsonResponseContentType
+from .collect_posts_of_user import CollectPostsBase
 
-logger = logging.getLogger("crawlinsta")
+
+class CollectReelsOfUser(CollectPostsBase):
+    def __init__(self,
+                 driver: Union[Chrome, Edge, Firefox, Safari, Remote],
+                 username: str,
+                 n: int = 100):
+        target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
+        collect_type = "reels"
+        json_data_key = "xdt_api__v1__clips__user__connection_v2"
+        url = f'{INSTAGRAM_DOMAIN}/{username}/reels/'
+        primary_key = "node"
+        secondary_key = "media"
+        super().__init__(driver, username, n, url, target_url, collect_type,
+                         json_data_key, primary_key, secondary_key)
+        self.user_id = None
+
+    def check_request_data(self, request, after=""):
+        request_data = parse_qs(request.body.decode())
+        variables = json.loads(request_data.get("variables", ["{}"])[0])
+        if request_data.get("av", [''])[0] != "17841461911219001":
+            return False
+        elif not variables:
+            return False
+        elif variables.get("data", dict()).get("target_user_id", "") != self.user_id:
+            return False
+        elif variables.get("after", "") != after:
+            return False
+        return True
+
+    def get_user_id(self):
+        json_requests = filter_requests(self.driver.requests,
+                                        JsonResponseContentType.application_json)
+
+        if not json_requests:
+            raise ValueError(f"User '{self.username}' not found.")
+
+        user_data = get_user_data(json_requests, self.username)
+        self.user_id = extract_id(user_data)
+        return user_data["is_private"]
 
 
 @driver_implicit_wait(10)
@@ -97,74 +131,4 @@ def collect_reels_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
           "count": 100
         }
     """
-    def check_request_data(request, user_id, after=""):
-        request_data = parse_qs(request.body.decode())
-        variables = json.loads(request_data.get("variables", ["{}"])[0])
-        if request_data.get("av", [''])[0] != "17841461911219001":
-            return False
-        elif not variables:
-            return False
-        elif variables.get("data", dict()).get("target_user_id", "") != user_id:
-            return False
-        elif variables.get("after", "") != after:
-            return False
-        return True
-
-    if n <= 0:
-        raise ValueError("The number of reels to collect must be a positive integer.")
-
-    results = []
-    remaining = n
-
-    driver.get(f'{INSTAGRAM_DOMAIN}/{username}/reels/')
-    time.sleep(random.SystemRandom().randint(4, 6))
-
-    # get user id
-    json_requests = filter_requests(driver.requests)
-
-    if not json_requests:
-        raise ValueError(f"User '{username}' not found.")
-
-    user_data = get_user_data(json_requests, username)
-    user_id = extract_id(user_data)
-
-    json_requests = filter_requests(driver.requests, JsonResponseContentType.text_javascript)
-    del driver.requests
-
-    # get first 12 documents
-    target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
-    idx = search_request(json_requests, target_url, JsonResponseContentType.text_javascript,
-                         check_request_data, user_id)
-    if idx is None:
-        logger.warning(f"No reels found for user '{username}'.")
-        return Posts(posts=[], count=0).model_dump(mode="json")  # type: ignore
-
-    request = json_requests.pop(idx)
-    json_data = get_json_data(request.response)["data"]["xdt_api__v1__clips__user__connection_v2"]
-    results.append(json_data)
-    remaining -= len(json_data["edges"])
-
-    while results[-1]['page_info']["has_next_page"] and remaining > 0:
-        footer = driver.find_element(By.XPATH, "//footer")
-        driver.execute_script("return arguments[0].scrollIntoView(true);", footer)
-
-        time.sleep(random.SystemRandom().randint(4, 6))
-        json_requests += filter_requests(driver.requests, JsonResponseContentType.text_javascript)
-        del driver.requests
-
-        idx = search_request(json_requests, target_url, JsonResponseContentType.text_javascript,
-                             check_request_data, user_id, results[-1]['page_info']["end_cursor"])
-        if idx is None:
-            break
-        request = json_requests.pop(idx)
-        json_data = get_json_data(request.response)["data"]["xdt_api__v1__clips__user__connection_v2"]
-        results.append(json_data)
-        remaining -= len(json_data["edges"])
-
-    posts = []
-    for result in results:
-        for item in result['edges']:
-            post = extract_post(item['node']["media"])
-            posts.append(post)
-    posts = posts[:n]
-    return Posts(posts=posts, count=len(posts)).model_dump(mode="json")
+    return CollectReelsOfUser(driver, username, n).collect()

@@ -74,7 +74,7 @@ class MockedDriver(BaseMockedDriver):
         return mock.Mock()
 
 
-@mock.patch("crawlinsta.collecting.collect_posts_of_user.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_collect_posts_of_user(mocked_sleep):
     result = collect_posts_of_user(MockedDriver(), "anasaiaofficial", 30)
     with open("tests/resources/posts/result.json", "r") as file:
@@ -89,16 +89,16 @@ def test_collect_posts_of_user_fail(n):
     assert str(exc_info.value) == "The number of posts to collect must be a positive integer."
 
 
-@mock.patch("crawlinsta.collecting.collect_posts_of_user.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_collect_posts_of_user_no_request(mocked_sleep):
     with pytest.raises(ValueError) as exc_info:
         collect_posts_of_user(BaseMockedDriver(), "anasaiaofficial")
     assert str(exc_info.value) == "User 'anasaiaofficial' not found."
 
 
-@mock.patch("crawlinsta.collecting.collect_posts_of_user.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.collect_posts_of_user.search_request", return_value=None)
-@mock.patch("crawlinsta.collecting.collect_posts_of_user.logger")
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.base.logger")
 def test_collect_posts_of_user_no_posts(mocked_logger, mocked_search_request, mocked_sleep):
     result = collect_posts_of_user(MockedDriver(), "anasaiaofficial", 30)
     assert result == {"posts": [], "count": 0}

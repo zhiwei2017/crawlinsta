@@ -13,6 +13,63 @@ from ..constants import INSTAGRAM_DOMAIN, API_VERSION
 logger = logging.getLogger("crawlinsta")
 
 
+class CollectTopPostsOfHashtag:
+    def __init__(self, driver: Union[Chrome, Edge, Firefox, Safari, Remote], hashtag: str):
+        self.driver = driver
+        self.hashtag = hashtag
+        self.json_requests = []
+        self.url = f'{INSTAGRAM_DOMAIN}/explore/tags/{hashtag}'
+
+    def get_hashtag_data(self):
+        target_url = f'{INSTAGRAM_DOMAIN}/{API_VERSION}/tags/web_info/?tag_name={self.hashtag}'
+        idx = search_request(self.json_requests, target_url)
+        if idx is None:
+            return None
+        request = self.json_requests.pop(idx)
+        return get_json_data(request.response)
+
+    def get_post_list(self, hashtag_data):
+        posts = []
+        for section in hashtag_data["data"]["top"]["sections"]:
+            if section["layout_type"] == "one_by_two_left":
+                items = section["layout_content"].get("fill_items", [])
+                items += section["layout_content"].get("one_by_two_item", dict()).get("clips", dict()).get("items", [])
+
+            else:
+                items = section["layout_content"].get("medias", [])
+            for item in items:
+                post = extract_post(item["media"])
+                posts.append(post)
+        return posts
+
+    def collect(self):
+        self.driver.get(self.url)
+        time.sleep(random.SystemRandom().randint(4, 6))
+
+        self.json_requests += filter_requests(self.driver.requests)
+        del self.driver.requests
+
+        if not self.json_requests:
+            raise ValueError(f"Hashtag '{self.hashtag}' not found.")
+
+        hashtag_data = self.get_hashtag_data()
+        if hashtag_data is None:
+            logger.warning(f"No data found for hashtag '{self.hashtag}'.")
+            return Hashtag(id=None, name=self.hashtag).model_dump(mode="json")  # type: ignore
+
+        posts = self.get_post_list(hashtag_data)
+
+        tag = Hashtag(id=extract_id(hashtag_data["data"]),
+                      name=hashtag_data["data"]["name"],
+                      post_count=hashtag_data["data"]["media_count"],
+                      profile_pic_url=hashtag_data["data"]["profile_pic_url"],
+                      is_trending=hashtag_data["data"]["is_trending"],
+                      related_tags=hashtag_data["data"]["related_tags"],
+                      subtitle=hashtag_data["data"]["subtitle"],
+                      posts=posts)
+        return tag.model_dump(mode="json")
+
+
 @driver_implicit_wait(10)
 def collect_top_posts_of_hashtag(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                                  hashtag: str) -> Json:
@@ -90,41 +147,4 @@ def collect_top_posts_of_hashtag(driver: Union[Chrome, Edge, Firefox, Safari, Re
           "count": 100
         }
     """
-    driver.get(f'{INSTAGRAM_DOMAIN}/explore/tags/{hashtag}')
-    time.sleep(random.SystemRandom().randint(4, 6))
-
-    json_requests = filter_requests(driver.requests)
-    del driver.requests
-
-    if not json_requests:
-        raise ValueError(f"Hashtag '{hashtag}' not found.")
-
-    target_url = f'{INSTAGRAM_DOMAIN}/{API_VERSION}/tags/web_info/?tag_name={hashtag}'
-    idx = search_request(json_requests, target_url)
-    if idx is None:
-        logger.warning(f"No data found for hashtag '{hashtag}'.")
-        return Hashtag(id=None, name=hashtag).model_dump(mode="json")  # type: ignore
-    request = json_requests.pop(idx)
-    json_data = get_json_data(request.response)
-
-    posts = []
-    for section in json_data["data"]["top"]["sections"]:
-        if section["layout_type"] == "one_by_two_left":
-            items = section["layout_content"].get("fill_items", [])
-            items += section["layout_content"].get("one_by_two_item", dict()).get("clips", dict()).get("items", [])
-
-        else:
-            items = section["layout_content"].get("medias", [])
-        for item in items:
-            post = extract_post(item["media"])
-            posts.append(post)
-
-    tag = Hashtag(id=extract_id(json_data["data"]),
-                  name=json_data["data"]["name"],
-                  post_count=json_data["data"]["media_count"],
-                  profile_pic_url=json_data["data"]["profile_pic_url"],
-                  is_trending=json_data["data"]["is_trending"],
-                  related_tags=json_data["data"]["related_tags"],
-                  subtitle=json_data["data"]["subtitle"],
-                  posts=posts)
-    return tag.model_dump(mode="json")
+    return CollectTopPostsOfHashtag(driver, hashtag).collect()

@@ -54,7 +54,7 @@ def test_collect_user_info(mocked_sleep):
 
 @mock.patch("crawlinsta.collecting.collect_user_info.time.sleep", return_value=None)
 def test_collect_user_info_fail(mocked_sleep):
-    with pytest.raises(ValueError, match="User nasa not found.") as exc:
+    with pytest.raises(ValueError, match="User 'nasa' not found.") as exc:
         collect_user_info(BaseMockedDriver(), "nasa")
 
 

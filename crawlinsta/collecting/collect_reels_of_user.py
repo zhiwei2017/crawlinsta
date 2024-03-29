@@ -19,11 +19,8 @@ class CollectReelsOfUser(CollectPostsBase):
         collect_type = "reels"
         json_data_key = "xdt_api__v1__clips__user__connection_v2"
         url = f'{INSTAGRAM_DOMAIN}/{username}/reels/'
-        primary_key = "node"
-        secondary_key = "media"
         super().__init__(driver, username, n, url, target_url, collect_type,
-                         json_data_key, primary_key, secondary_key)
-        self.user_id = None
+                         json_data_key, ("node", "media"))
 
     def check_request_data(self, request, after=""):
         request_data = parse_qs(request.body.decode())
@@ -37,17 +34,6 @@ class CollectReelsOfUser(CollectPostsBase):
         elif variables.get("after", "") != after:
             return False
         return True
-
-    def get_user_id(self):
-        json_requests = filter_requests(self.driver.requests,
-                                        JsonResponseContentType.application_json)
-
-        if not json_requests:
-            raise ValueError(f"User '{self.username}' not found.")
-
-        user_data = get_user_data(json_requests, self.username)
-        self.user_id = extract_id(user_data)
-        return user_data["is_private"]
 
 
 @driver_implicit_wait(10)

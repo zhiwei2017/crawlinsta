@@ -7,15 +7,15 @@ from selenium.webdriver.common.by import By
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union
 from ..schemas import FriendshipStatus
-from ..utils import search_request, get_json_data, filter_requests, get_user_data
+from ..utils import search_request, get_json_data, filter_requests
 from ..decorators import driver_implicit_wait
-from ..data_extraction import extract_id
 from ..constants import INSTAGRAM_DOMAIN, API_VERSION, JsonResponseContentType
+from .base import UserIDRequiredCollect
 
 logger = logging.getLogger("crawlinsta")
 
 
-class GetFriendshipStatus:
+class GetFriendshipStatus(UserIDRequiredCollect):
     """Base class for collecting posts."""
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
@@ -31,23 +31,10 @@ class GetFriendshipStatus:
             collect_type ():
             json_data_key ():
         """
-        self.driver = driver
-        self.username = username
+        super().__init__(driver, username)
         self.searching_username = searching_username
         self.json_requests = []
         self.json_data = None
-        self.user_id = None
-
-    def get_user_id(self):
-        json_requests = filter_requests(self.driver.requests,
-                                        JsonResponseContentType.application_json)
-
-        if not json_requests:
-            raise ValueError(f"User '{self.username}' not found.")
-
-        user_data = get_user_data(json_requests, self.username)
-        self.user_id = extract_id(user_data)
-        return user_data["is_private"]
 
     def get_users_data(self):
         """Get posts data.

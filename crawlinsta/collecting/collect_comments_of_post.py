@@ -5,9 +5,10 @@ import re
 import time
 from urllib.parse import parse_qs
 from pydantic import Json
+from seleniumwire.request import Request
 from selenium.webdriver.common.by import By
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
-from typing import Union
+from typing import Union, List, Dict, Any
 from ..schemas import UserBasicInfo, Comment, Comments
 from ..utils import search_request, get_json_data, filter_requests, find_brackets
 from ..decorators import driver_implicit_wait
@@ -18,23 +19,39 @@ logger = logging.getLogger("crawlinsta")
 
 
 class CollectCommentOfPost:
-    """Base class for collecting posts."""
+    """Base class for collecting comments of a post.
+
+    Attributes:
+        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver.
+        post_code (str): The code of the post.
+        n (int): The number of comments to collect.
+        url (str): The URL of the post.
+        target_url (str): The target URL to search for.
+        collect_type (str): The type of data to collect.
+        json_data_list (List[Dict[str, Any]]): The list of json data.
+        json_requests (List[Dict[str, Any]]): The list of json requests.
+        remaining (int): The remaining number of comments to collect.
+        post_id (str): The post id.
+    """
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  post_code: str,
                  n: int,
-                 url,
-                 target_url,
+                 url: str,
+                 target_url: str,
                  collect_type: str):
-        """Initialize CollectPostsBase.
+        """Initialize CollectCommentOfPost.
 
         Args:
-            driver ():
-            username ():
-            n ():
-            target_url ():
-            collect_type ():
-            json_data_key ():
+            driver (Union[Chrome, Edge, Firefox, Safari, Remote]):
+            post_code (str): The code of the post.
+            n (int): The number of comments to collect.
+            url (str): The URL of the post.
+            target_url (str): The target URL to search for.
+            collect_type (str): The type of data to collect.
+
+        Raises:
+            ValueError: If the number of comments to collect is not a positive integer.
         """
         self.driver = driver
         self.post_code = post_code
@@ -50,7 +67,8 @@ class CollectCommentOfPost:
         self.remaining = n
         self.post_id = None
 
-    def get_post_id(self):
+    def get_post_id(self) -> None:
+        """Get the post id."""
         meta_tag_xpath = "//meta[@property='al:ios:url']"
         meta_tag = self.driver.find_element(By.XPATH, meta_tag_xpath)
         post_ids = re.findall("\d+", meta_tag.get_attribute("content"))  # noqa
@@ -58,7 +76,15 @@ class CollectCommentOfPost:
             return
         self.post_id = post_ids[0]
 
-    def check_request_data(self, request):
+    def check_request_data(self, request: Request) -> bool:
+        """Check the request data.
+
+        Args:
+            request (seleniumwire.request.Request): The request object.
+
+        Returns:
+            bool: True if the request data is valid, otherwise False.
+        """
         request_data = parse_qs(request.body.decode())
         variables = json.loads(request_data.get("variables", ["{}"])[0])
         if request_data.get("av", [''])[0] != "17841461911219001":
@@ -69,7 +95,12 @@ class CollectCommentOfPost:
             return False
         return True
 
-    def find_cached_data(self):
+    def find_cached_data(self) -> List[Dict[str, Any]]:
+        """Find the cached data.
+
+        Returns:
+            Dict[str, Any]: The cached data.
+        """
         scripts = self.driver.find_elements(By.XPATH, '//script[@type="application/json"]')
         script_data = None
         for script in scripts:
@@ -90,15 +121,11 @@ class CollectCommentOfPost:
         json_data = json.loads(data_str[start:stop + 1])
         return json_data
 
-    def get_posts_data(self):
-        """Get posts data.
-
-        Args:
-            json_requests ():
-            after ():
+    def get_comments_data(self) -> bool:
+        """Get comments data.
 
         Returns:
-
+            bool: True if the posts data is valid, otherwise False.
         """
         idx = search_request(self.json_requests,
                              self.target_url,
@@ -113,7 +140,7 @@ class CollectCommentOfPost:
         self.remaining -= len(json_data["edges"])
         return True
 
-    def loading_action(self):
+    def loading_action(self) -> None:
         """Loading action."""
         xpath = '//div[@class="x78zum5 xdt5ytf x1iyjqo2"]/div[@class="x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 ' \
                 'x5pf9jr xo71vjh x1uhb9sk x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh ' \
@@ -126,15 +153,11 @@ class CollectCommentOfPost:
                                               JsonResponseContentType.application_json)
         del self.driver.requests
 
-    def create_comment_list(self):
-        """Create post list.
-
-        Args:
-            primary_key ():
-            secondary_key ():
+    def create_comment_list(self) -> List[Comment]:
+        """Create comment list.
 
         Returns:
-
+            List[Comment]: The list of comments.
         """
         comments = []
         for json_data in self.json_data_list:
@@ -156,16 +179,11 @@ class CollectCommentOfPost:
                 comments.append(comment)
         return comments
 
-    def collect(self):
-        """Collect posts.
-
-        Args:
-            url ():
-            primary_key ():
-            secondary_key ():
+    def collect(self) -> Json:
+        """Collect comments.
 
         Returns:
-
+            Json: The collected comments in json format.
         """
         self.driver.get(self.url)
         time.sleep(random.SystemRandom().randint(4, 6))
@@ -186,7 +204,7 @@ class CollectCommentOfPost:
                                                  JsonResponseContentType.application_json)
             del self.driver.requests
 
-            status = self.get_posts_data()
+            status = self.get_comments_data()
             if not status:
                 logger.warning(f"No comments found for post '{self.post_code}'.")
                 return Comments(comments=[], count=0).model_dump(mode="json")
@@ -194,7 +212,7 @@ class CollectCommentOfPost:
         while self.json_data_list[-1]["page_info"]['has_next_page'] and self.remaining > 0:
             self.loading_action()
 
-            status = self.get_posts_data()
+            status = self.get_comments_data()
             if not status:
                 break
 

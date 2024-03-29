@@ -10,21 +10,47 @@ logger = logging.getLogger("crawlinsta")
 
 
 class CollectFollowersOfUser(CollectUsersBase):
+    """Collect followers of the given user.
+
+    Attributes:
+        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver.
+        username (str): The username of the user.
+        n (int): The number of users to collect.
+        target_url_format (str): The target URL format to search for.
+        collect_type (str): The type of data to collect.
+        json_data_list (List[Dict[str, Any]]): The list of json data.
+        remaining (int): The remaining number of users to collect.
+        json_requests (List[Dict[str, Any]]): The list of json requests.
+        initial_load_data_btn_xpath (str): The xpath of the initial load data button.
+    """
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  username: str,
-                 n: int = 100):
+                 n: int = 100) -> None:
+        """Initialize the CollectFollowersOfUser class.
+
+        Args:
+            driver (Union[Chrome, Edge, Firefox, Safari, Remote]):
+            username (str): The username of the user.
+            n (int): The number of users to collect.
+        """
         target_url_format = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/" + "{user_id}/followers/?{query_str}"
         collect_type = "followers"
         initial_load_data_btn_xpath = f"//a[@href='/{username}/followers/'][@role='link']"
         url = f'{INSTAGRAM_DOMAIN}/{username}/'
-        super().__init__(driver, username, n, url, target_url_format, collect_type, initial_load_data_btn_xpath)
+        super().__init__(driver, username, n, url, target_url_format,
+                         collect_type, initial_load_data_btn_xpath)
 
     def get_request_query_dict(self) -> Dict[str, Any]:
-        """Get request query dict."""
+        """Get request query dict.
+
+        Returns:
+            Dict[str, Any]: The request query dictionary.
+        """
         if not self.json_data_list:
             return dict(count=12, search_surface="follow_list_page")
-        return dict(count=12, max_id=self.json_data_list[-1]['next_max_id'], search_surface="follow_list_page")
+        return dict(count=12, max_id=self.json_data_list[-1]['next_max_id'],
+                    search_surface="follow_list_page")
 
 
 @driver_implicit_wait(10)

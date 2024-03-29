@@ -17,10 +17,11 @@ class CollectPostsOfUser(CollectPostsBase):
         collect_type = "posts"
         json_data_key = "xdt_api__v1__feed__user_timeline_graphql_connection"
         url = f'{INSTAGRAM_DOMAIN}/{username}/'
-        primary_key = "node"
-        secondary_key = None
         super().__init__(driver, username, n, url, target_url, collect_type,
-                         json_data_key, primary_key, secondary_key)
+                         json_data_key, ("node", ))
+
+    def get_user_id(self):
+        return False
 
     def check_request_data(self, request, after=""):
         request_data = parse_qs(request.body.decode())

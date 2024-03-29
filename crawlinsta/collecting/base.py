@@ -1,11 +1,13 @@
 import logging
 import random
 import time
+from pydantic import Json
 from urllib.parse import quote, urlencode
+from seleniumwire.request import Request
 from selenium.webdriver.common.by import By
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
-from typing import Union, List, Dict, Any
-from ..schemas import Posts, Users, UserProfile
+from typing import Union, List, Dict, Any, Tuple
+from ..schemas import Posts, Users, UserProfile, Post
 from ..utils import search_request, get_json_data, filter_requests, get_user_data
 from ..data_extraction import extract_post, extract_id
 from ..constants import JsonResponseContentType
@@ -13,33 +15,86 @@ from ..constants import JsonResponseContentType
 logger = logging.getLogger("crawlinsta")
 
 
-class CollectPostsBase:
-    """Base class for collecting posts."""
+class UserIDRequiredCollect:
+    """Base class for collecting data that requires user id.
+
+    Attributes:
+        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver.
+        username (str): The username of the user.
+        user_id (Optional[int]): The user id.
+        user_data (Optional[Dict[str, Any]]): The user data dictionary."""
+    def __init__(self, driver: Union[Chrome, Edge, Firefox, Safari, Remote],
+                 username: str) -> None:
+        """Initialize UserIDRequiredCollect.
+
+        Args:
+            driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver.
+            username (str): The username of the user.
+        """
+        self.driver = driver
+        self.username = username
+        self.user_id = None
+        self.user_data = None
+
+    def get_user_id(self) -> bool:
+        """Get user id.
+
+        Returns:
+            bool: True if the user has a private account, False otherwise.
+
+        Raises:
+            ValueError: If the user is not found.
+        """
+        json_requests = filter_requests(self.driver.requests,
+                                        JsonResponseContentType.application_json)
+
+        if not json_requests:
+            raise ValueError(f"User '{self.username}' not found.")
+
+        self.user_data = get_user_data(json_requests, self.username)
+        self.user_id = extract_id(self.user_data)
+        return self.user_data["is_private"]
+
+
+class CollectPostsBase(UserIDRequiredCollect):
+    """Base class for collecting posts.
+
+    Attributes:
+        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver.
+        username (str): The username of the user.
+        n (int): The number of posts to collect.
+        target_url (str): The target URL to search for.
+        collect_type (str): The type of data to collect.
+        json_data_key (str): The key to extract the json data from.
+        json_data_list (List[Dict[str, Any]]): The list of json data.
+        remaining (int): The remaining number of posts to collect.
+        json_requests (List[Dict[str, Any]]): The list of json requests.
+        access_keys (Tuple[str]): The keys to access the post data.
+    """
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  username: str,
                  n: int,
-                 url,
+                 url: str,
                  target_url: str,
                  collect_type: str,
                  json_data_key: str,
-                 primary_key="node",
-                 secondary_key=None):
+                 access_keys: Tuple[str] = ("node", )) -> None:
         """Initialize CollectPostsBase.
 
         Args:
-            driver ():
-            username ():
-            n ():
-            target_url ():
-            collect_type ():
-            json_data_key ():
+            driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver.
+            username (str): The username of the user.
+            n (int): The number of posts to collect.
+            target_url (str): The target URL to search for.
+            collect_type (str): The type of data to collect.
+            json_data_key (str): The key to extract the json data from.
+            access_keys (Tuple[str]): The keys to access the post data.
         """
-        self.driver = driver
-        self.username = username
         if n <= 0:
             raise ValueError(f"The number of {collect_type} to collect "
                              f"must be a positive integer.")
+        super().__init__(driver, username)
         self.n = n
         self.target_url = target_url
         self.url = url
@@ -48,26 +103,28 @@ class CollectPostsBase:
         self.json_data_list = []
         self.remaining = n
         self.json_requests = []
-        self.primary_key = primary_key
-        self.secondary_key = secondary_key
+        self.access_keys = access_keys
 
-    def get_user_id(self):
-        """Get user ID."""
-        pass
+    def check_request_data(self, request: Request, after: str = "") -> bool:
+        """Check request data.
 
-    def check_request_data(self, request, after=""):
-        """Check request data."""
-        pass
+        Args:
+            request (Request): The request to check.
+            after (str): The after cursor.
 
-    def get_posts_data(self, after=""):
+        Returns:
+            bool: True if the request data is valid, False otherwise.
+        """
+        raise NotImplementedError
+
+    def get_posts_data(self, after: str = "") -> bool:
         """Get posts data.
 
         Args:
-            json_requests ():
-            after ():
+            after (str): The after cursor in request body.
 
         Returns:
-
+            bool: True if the posts data is found, False otherwise.
         """
         idx = search_request(self.json_requests, self.target_url,
                              JsonResponseContentType.text_javascript,
@@ -81,7 +138,7 @@ class CollectPostsBase:
         self.remaining -= len(json_data["edges"])
         return True
 
-    def loading_action(self):
+    def loading_action(self) -> None:
         """Loading action."""
         footer = self.driver.find_element(By.XPATH, "//footer")
         self.driver.execute_script("return arguments[0].scrollIntoView(true);", footer)
@@ -91,40 +148,39 @@ class CollectPostsBase:
                                               JsonResponseContentType.text_javascript)
         del self.driver.requests
 
-    def create_post_list(self):
+    def create_post_list(self) -> List[Post]:
         """Create post list.
 
-        Args:
-            primary_key ():
-            secondary_key ():
-
         Returns:
-
+            List[Dict[str, Any]]: The list of posts.
         """
         posts = []
         for result in self.json_data_list:
             for item in result['edges']:
-                item_dict = item[self.primary_key] if not self.secondary_key \
-                    else item[self.primary_key][self.secondary_key]
+                for k in self.access_keys:
+                    item = item.get(k)
+                item_dict = item
                 post = extract_post(item_dict)
                 posts.append(post)
         return posts
 
-    def collect(self):
+    def collect(self) -> Json:
         """Collect posts.
 
-        Args:
-            url ():
-            primary_key ():
-            secondary_key ():
-
         Returns:
+            Json: The collected posts in json format.
 
+        Raises:
+            ValueError: If the user is not found.
         """
         self.driver.get(self.url)
         time.sleep(random.SystemRandom().randint(4, 6))
 
-        self.get_user_id()
+        is_private_account = self.get_user_id()
+
+        if is_private_account:
+            logger.warning(f"User '{self.username}' has a private account.")
+            return Posts(posts=[], count=0).model_dump(mode="json")
 
         self.json_requests += filter_requests(self.driver.requests,
                                               JsonResponseContentType.text_javascript)
@@ -149,8 +205,20 @@ class CollectPostsBase:
         return Posts(posts=posts, count=len(posts)).model_dump(mode="json")
 
 
-class CollectUsersBase:
-    """Base class for collecting posts."""
+class CollectUsersBase(UserIDRequiredCollect):
+    """Base class for collecting posts.
+
+    Attributes:
+        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver.
+        username (str): The username of the user.
+        n (int): The number of users to collect.
+        target_url_format (str): The target URL format to search for.
+        collect_type (str): The type of data to collect.
+        json_data_list (List[Dict[str, Any]]): The list of json data.
+        remaining (int): The remaining number of users to collect.
+        json_requests (List[Dict[str, Any]]): The list of json requests.
+        initial_load_data_btn_xpath (str): The xpath of the initial load data button.
+    """
 
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
@@ -159,44 +227,31 @@ class CollectUsersBase:
                  url: str,
                  target_url_format: str,
                  collect_type: str,
-                 initial_load_data_btn_xpath: str):
+                 initial_load_data_btn_xpath: str) -> None:
         """Initialize CollectPostsBase.
 
         Args:
-            driver ():
-            username ():
-            n ():
-            target_url ():
-            collect_type ():
-            json_data_key ():
+            driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver.
+            username (str): The username of the user.
+            n (int): The number of users to collect.
+            target_url_format (str): The target URL format to search for.
+            collect_type (str): The type of data to collect.
+            initial_load_data_btn_xpath (str): The xpath of the initial load data button.
         """
-        self.driver = driver
-        self.username = username
         if n <= 0:
             raise ValueError(f"The number of {collect_type} to collect "
                              f"must be a positive integer.")
+        super().__init__(driver, username)
         self.n = n
         self.url = url
         self.target_url_format = target_url_format
         self.collect_type = collect_type
         self.json_data_list = []
         self.remaining = n
-        self.user_id = None
         self.json_requests = []
         self.initial_load_data_btn_xpath = initial_load_data_btn_xpath
 
-    def get_user_id(self):
-        json_requests = filter_requests(self.driver.requests,
-                                        JsonResponseContentType.application_json)
-
-        if not json_requests:
-            raise ValueError(f"User '{self.username}' not found.")
-
-        user_data = get_user_data(json_requests, self.username)
-        self.user_id = extract_id(user_data)
-        return user_data["is_private"]
-
-    def initial_load_data(self):
+    def initial_load_data(self) -> None:
         """Initial load data."""
         followers_btn = self.driver.find_element(By.XPATH, self.initial_load_data_btn_xpath)
         followers_btn.click()
@@ -206,25 +261,25 @@ class CollectUsersBase:
 
     def get_request_query_dict(self) -> Dict[str, Any]:
         """Get request query dict."""
-        pass
+        raise NotImplementedError
 
-    def get_target_url(self):
-        """Get target URL."""
+    def get_target_url(self) -> str:
+        """Get target URL.
+
+        Returns:
+            str: The target URL.
+        """
         query_dict = self.get_request_query_dict()
         query_str = urlencode(query_dict, quote_via=quote)
         target_url = self.target_url_format.format(user_id=self.user_id,
                                                    query_str=query_str)
         return target_url
 
-    def get_users_data(self):
+    def get_users_data(self) -> bool:
         """Get posts data.
 
-        Args:
-            json_requests ():
-            after ():
-
         Returns:
-
+            bool: True if the posts data is found, False otherwise.
         """
         target_url = self.get_target_url()
         idx = search_request(self.json_requests, target_url,
@@ -239,7 +294,7 @@ class CollectUsersBase:
         self.remaining -= len(json_data["users"])
         return True
 
-    def loading_action(self):
+    def loading_action(self) -> None:
         """Loading action."""
         followers_bottom = self.driver.find_element(By.XPATH, "//div[@class='_aano']//div[@role='progressbar']")
         self.driver.execute_script("return arguments[0].scrollIntoView(true);", followers_bottom)
@@ -247,21 +302,14 @@ class CollectUsersBase:
         self.json_requests += filter_requests(self.driver.requests)
         del self.driver.requests
 
-    def create_users_list(self, key: str = "users"):
+    def create_users_list(self, key: str = "users") -> List[UserProfile]:
         """Create a list of users from the given json data list.
 
         Args:
-            json_data_list (List[Dict[str, Any]]): The list of json data.
             key (str): The key to extract from the json data. Default is "users".
 
         Returns:
             List[UserProfile]: The list of users.
-
-        Examples:
-            >>> create_users_list([{"user": {"pk": 123, "username": "username", "full_name": "fullname",
-            ... "profile_pic_url": "https://example.com", "is_private": False, "is_verified": True}}], "user")
-            [UserProfile(id=123, username="username", fullname="fullname", profile_pic_url="https://example.com",
-            is_private=False, is_verified=True)]
         """
         users = []
         for json_data in self.json_data_list:
@@ -275,16 +323,11 @@ class CollectUsersBase:
                 users.append(user)
         return users
 
-    def collect(self):
-        """Collect posts.
-
-        Args:
-            url ():
-            primary_key ():
-            secondary_key ():
+    def collect(self) -> Json:
+        """Collect users.
 
         Returns:
-
+            Json: The collected users in json format.
         """
         self.driver.get(self.url)
         time.sleep(random.SystemRandom().randint(4, 6))

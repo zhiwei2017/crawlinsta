@@ -8,33 +8,19 @@ from selenium.webdriver.common.by import By
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union
 from ..schemas import UserInfo
-from ..utils import search_request, get_json_data, filter_requests, get_user_data
+from ..utils import search_request, get_json_data, filter_requests
 from ..decorators import driver_implicit_wait
-from ..data_extraction import extract_id
 from ..constants import INSTAGRAM_DOMAIN, GRAPHQL_QUERY_PATH, FOLLOWING_DOC_ID, JsonResponseContentType
+from .base import UserIDRequiredCollect
 
 logger = logging.getLogger("crawlinsta")
 
 
-class CollectUserInfo:
+class CollectUserInfo(UserIDRequiredCollect):
     def __init__(self, driver: Union[Chrome, Edge, Firefox, Safari, Remote], username: str):
-        self.driver = driver
-        self.username = username
-        self.user_id = None
-        self.user_data = None
+        super().__init__(driver, username)
         self.json_requests = []
         self.url = f"{INSTAGRAM_DOMAIN}/{username}/"
-
-    def get_user_id(self):
-        self.json_requests += filter_requests(self.driver.requests,
-                                              JsonResponseContentType.application_json)
-
-        if not self.json_requests:
-            raise ValueError(f"User '{self.username}' not found.")
-
-        self.user_data = get_user_data(self.json_requests, self.username)
-        self.user_id = extract_id(self.user_data)
-        return self.user_data["is_private"]
 
     def load_following_hashtags(self):
         following_btn_xpath = f"//a[@href='/{self.username}/following/'][@role='link']"
@@ -54,7 +40,7 @@ class CollectUserInfo:
         variables = dict(id=self.user_id)
         query_dict = dict(doc_id=FOLLOWING_DOC_ID, variables=json.dumps(variables, separators=(',', ':')))
         target_url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}/?{urlencode(query_dict, quote_via=quote)}"
-        idx = search_request(self.json_requests, target_url)
+        idx = search_request(self.json_requests, target_url, JsonResponseContentType.application_json)
         if idx is None:
             logger.warning(f"Following hashtags number not found for user '{self.username}'.")
             return 0

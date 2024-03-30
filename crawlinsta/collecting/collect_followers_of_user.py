@@ -21,7 +21,7 @@ class CollectFollowersOfUser(CollectUsersBase):
         json_data_list (List[Dict[str, Any]]): The list of json data.
         remaining (int): The remaining number of users to collect.
         json_requests (List[Dict[str, Any]]): The list of json requests.
-        initial_load_data_btn_xpath (str): The xpath of the initial load data button.
+        fetch_data_btn_xpath (str): The xpath of the initial load data button.
     """
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
@@ -37,9 +37,8 @@ class CollectFollowersOfUser(CollectUsersBase):
         target_url_format = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/" + "{user_id}/followers/?{query_str}"
         collect_type = "followers"
         initial_load_data_btn_xpath = f"//a[@href='/{username}/followers/'][@role='link']"
-        url = f'{INSTAGRAM_DOMAIN}/{username}/'
-        super().__init__(driver, username, n, url, target_url_format,
-                         collect_type, initial_load_data_btn_xpath)
+        super().__init__(driver, username, n, f'{INSTAGRAM_DOMAIN}/{username}/',
+                         target_url_format, collect_type, initial_load_data_btn_xpath)
 
     def get_request_query_dict(self) -> Dict[str, Any]:
         """Get request query dict.

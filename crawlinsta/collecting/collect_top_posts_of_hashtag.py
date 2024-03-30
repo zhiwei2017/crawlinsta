@@ -9,28 +9,41 @@ from ..utils import search_request, get_json_data, filter_requests
 from ..decorators import driver_implicit_wait
 from ..data_extraction import extract_post, extract_id
 from ..constants import INSTAGRAM_DOMAIN, API_VERSION
+from .base import CollectBase
 
 logger = logging.getLogger("crawlinsta")
 
 
-class CollectTopPostsOfHashtag:
+class CollectTopPostsOfHashtag(CollectBase):
     def __init__(self, driver: Union[Chrome, Edge, Firefox, Safari, Remote], hashtag: str):
-        self.driver = driver
+        super().__init__(driver, f'{INSTAGRAM_DOMAIN}/explore/tags/{hashtag}')
         self.hashtag = hashtag
         self.json_requests = []
-        self.url = f'{INSTAGRAM_DOMAIN}/explore/tags/{hashtag}'
+        self.hashtag_data = None
 
-    def get_hashtag_data(self):
+    def fetch_data(self) -> None:
+        self.json_requests += filter_requests(self.driver.requests)
+        del self.driver.requests
+
+        if not self.json_requests:
+            raise ValueError(f"Hashtag '{self.hashtag}' not found.")
+
+    def extract_data(self):
         target_url = f'{INSTAGRAM_DOMAIN}/{API_VERSION}/tags/web_info/?tag_name={self.hashtag}'
         idx = search_request(self.json_requests, target_url)
         if idx is None:
-            return None
+            return False
         request = self.json_requests.pop(idx)
-        return get_json_data(request.response)
+        json_data = get_json_data(request.response)
+        self.hashtag_data = json_data
+        return True
 
-    def get_post_list(self, hashtag_data):
+    def generate_result(self, empty_result=False):
+        if empty_result:
+            return Hashtag(id=None,
+                           name=self.hashtag).model_dump(mode="json")  # type: ignore
         posts = []
-        for section in hashtag_data["data"]["top"]["sections"]:
+        for section in self.hashtag_data["data"]["top"]["sections"]:
             if section["layout_type"] == "one_by_two_left":
                 items = section["layout_content"].get("fill_items", [])
                 items += section["layout_content"].get("one_by_two_item", dict()).get("clips", dict()).get("items", [])
@@ -40,34 +53,27 @@ class CollectTopPostsOfHashtag:
             for item in items:
                 post = extract_post(item["media"])
                 posts.append(post)
-        return posts
-
-    def collect(self):
-        self.driver.get(self.url)
-        time.sleep(random.SystemRandom().randint(4, 6))
-
-        self.json_requests += filter_requests(self.driver.requests)
-        del self.driver.requests
-
-        if not self.json_requests:
-            raise ValueError(f"Hashtag '{self.hashtag}' not found.")
-
-        hashtag_data = self.get_hashtag_data()
-        if hashtag_data is None:
-            logger.warning(f"No data found for hashtag '{self.hashtag}'.")
-            return Hashtag(id=None, name=self.hashtag).model_dump(mode="json")  # type: ignore
-
-        posts = self.get_post_list(hashtag_data)
-
-        tag = Hashtag(id=extract_id(hashtag_data["data"]),
-                      name=hashtag_data["data"]["name"],
-                      post_count=hashtag_data["data"]["media_count"],
-                      profile_pic_url=hashtag_data["data"]["profile_pic_url"],
-                      is_trending=hashtag_data["data"]["is_trending"],
-                      related_tags=hashtag_data["data"]["related_tags"],
-                      subtitle=hashtag_data["data"]["subtitle"],
+        tag = Hashtag(id=extract_id(self.hashtag_data["data"]),
+                      name=self.hashtag_data["data"]["name"],
+                      post_count=self.hashtag_data["data"]["media_count"],
+                      profile_pic_url=self.hashtag_data["data"]["profile_pic_url"],
+                      is_trending=self.hashtag_data["data"]["is_trending"],
+                      related_tags=self.hashtag_data["data"]["related_tags"],
+                      subtitle=self.hashtag_data["data"]["subtitle"],
                       posts=posts)
         return tag.model_dump(mode="json")
+
+    def collect(self):
+        self.load_webpage()
+
+        self.fetch_data()
+
+        status = self.extract_data()
+        if not status:
+            logger.warning(f"No data found for hashtag '{self.hashtag}'.")
+            return self.generate_result(empty_result=True)
+
+        return self.generate_result(empty_result=False)
 
 
 @driver_implicit_wait(10)

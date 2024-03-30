@@ -3,10 +3,8 @@ from urllib.parse import parse_qs
 from pydantic import Json
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union
-from ..utils import filter_requests, get_user_data
 from ..decorators import driver_implicit_wait
-from ..data_extraction import extract_id
-from ..constants import INSTAGRAM_DOMAIN, JsonResponseContentType
+from ..constants import INSTAGRAM_DOMAIN
 from .collect_posts_of_user import CollectPostsBase
 
 

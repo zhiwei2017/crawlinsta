@@ -31,12 +31,12 @@ class GetFriendshipStatus(UserIDRequiredCollect):
             collect_type ():
             json_data_key ():
         """
-        super().__init__(driver, username)
+        super().__init__(driver, username, f'{INSTAGRAM_DOMAIN}/{username}/')
         self.searching_username = searching_username
         self.json_requests = []
         self.json_data = None
 
-    def get_users_data(self):
+    def extract_data(self):
         """Get posts data.
 
         Args:
@@ -59,7 +59,7 @@ class GetFriendshipStatus(UserIDRequiredCollect):
         self.json_data = get_json_data(request.response)
         return True
 
-    def loading_action(self):
+    def fetch_data(self):
         """Loading action."""
         following_btn = self.driver.find_element(By.XPATH, f"//a[@href='/{self.username}/following/'][@role='link']")
         following_btn.click()
@@ -86,8 +86,7 @@ class GetFriendshipStatus(UserIDRequiredCollect):
         Returns:
 
         """
-        self.driver.get(f'{INSTAGRAM_DOMAIN}/{self.username}/')
-        time.sleep(random.SystemRandom().randint(4, 6))
+        self.load_webpage()
 
         # get the media id for later requests filtering
         is_private_account = self.get_user_id()
@@ -97,9 +96,8 @@ class GetFriendshipStatus(UserIDRequiredCollect):
             logger.warning(f"User '{self.username}' has a private account.")
             return False
 
-        self.loading_action()
-
-        status = self.get_users_data()
+        self.fetch_data()
+        status = self.extract_data()
         if not status:
             logger.warning(f"Searching request for user '{self.searching_username}' in "
                            f"followings of user '{self.username}' not found.")

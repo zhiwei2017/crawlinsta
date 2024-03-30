@@ -11,19 +11,17 @@ from ..utils import search_request, get_json_data, filter_requests
 from ..decorators import driver_implicit_wait
 from ..data_extraction import extract_post, extract_music_info, extract_sound_info
 from ..constants import INSTAGRAM_DOMAIN, API_VERSION, JsonResponseContentType
+from .base import CollectBase
 
 logger = logging.getLogger("crawlinsta")
 
 
-class CollectPostsByMusicId:
+class CollectPostsByMusicId(CollectBase):
     """Base class for collecting posts."""
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  music_id: str,
-                 n: int,
-                 url,
-                 target_url: str,
-                 collect_type: str):
+                 n: int):
         """Initialize CollectPostsBase.
 
         Args:
@@ -34,15 +32,13 @@ class CollectPostsByMusicId:
             collect_type ():
             json_data_key ():
         """
-        self.driver = driver
-        self.music_id = music_id
         if n <= 0:
-            raise ValueError(f"The number of {collect_type} to collect "
+            raise ValueError(f"The number of posts to collect "
                              f"must be a positive integer.")
+        super().__init__(driver, f'{INSTAGRAM_DOMAIN}/reels/audio/{music_id}/')
+        self.music_id = music_id
         self.n = n
-        self.url = url
-        self.target_url = target_url
-        self.collect_type = collect_type
+        self.target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/clips/music/"
         self.json_data_list = []
         self.remaining = n
         self.json_requests = []
@@ -55,16 +51,22 @@ class CollectPostsByMusicId:
             return False
         return True
 
-    def get_posts_data(self, max_id=""):
-        """Get posts data.
+    def fetch_data(self) -> None:
+        """Fetch data."""
+        self.json_requests += filter_requests(self.driver.requests,
+                                              JsonResponseContentType.application_json)
+        del self.driver.requests
 
-        Args:
-            json_requests ():
-            after ():
+        if not self.json_requests:
+            raise ValueError(f"Music id '{self.music_id}' not found.")
+
+    def extract_data(self):
+        """Get posts data.
 
         Returns:
 
         """
+        max_id = self.json_data_list[-1]["paging_info"]['max_id'] if self.json_data_list else ""
         idx = search_request(self.json_requests, self.target_url,
                              JsonResponseContentType.application_json,
                              self.check_request_data, max_id)
@@ -77,7 +79,15 @@ class CollectPostsByMusicId:
         self.remaining -= len(json_data["items"])
         return True
 
-    def loading_action(self):
+    def continue_fetching(self) -> bool:
+        """Check if there are more posts to fetch.
+
+        Returns:
+            bool: True if there are more posts to fetch, False otherwise.
+        """
+        return self.json_data_list[-1]['paging_info']["more_available"] and self.remaining > 0
+
+    def fetching_more_data(self):
         """Loading action."""
         footer = self.driver.find_element(By.XPATH, "//footer")
         self.driver.execute_script("return arguments[0].scrollIntoView(true);", footer)
@@ -87,25 +97,31 @@ class CollectPostsByMusicId:
                                               JsonResponseContentType.application_json)
         del self.driver.requests
 
-    def create_post_list(self):
-        """Create post list.
+    def generate_result(self, empty_result=False) -> Json:
+        """Generate result.
 
         Args:
-            primary_key ():
-            secondary_key ():
+            empty_result ():
 
         Returns:
 
         """
+        if empty_result:
+            return MusicPosts(posts=[],
+                              music=Music(id=self.music_id),
+                              count=0).model_dump(mode="json")  # type: ignore
+
         posts = []
         for result in self.json_data_list:
             for item in result['items']:
                 item_dict = item["media"]
                 post = extract_post(item_dict)
                 posts.append(post)
-        return posts
+        posts = posts[:self.n]
 
-    def get_music_info(self, metadata, media_count):
+        metadata = self.json_data_list[0]["metadata"]
+        media_count = self.json_data_list[0]["media_count"]
+
         if metadata.get("music_info"):
             music_basic = extract_music_info(metadata["music_info"])
         else:
@@ -113,45 +129,33 @@ class CollectPostsByMusicId:
         music = Music(**music_basic.model_dump(),
                       clips_count=media_count["clips_count"],
                       photos_count=media_count["photos_count"])
-        return music
+        return MusicPosts(posts=posts,
+                          music=music,
+                          count=len(posts)).model_dump(mode="json")  # type: ignore
 
     def collect(self):
         """Collect posts.
 
-        Args:
-            url ():
-            primary_key ():
-            secondary_key ():
-
         Returns:
 
         """
-        self.driver.get(self.url)
-        time.sleep(random.SystemRandom().randint(4, 6))
+        self.load_webpage()
 
-        self.json_requests += filter_requests(self.driver.requests,
-                                              JsonResponseContentType.application_json)
-        del self.driver.requests
-
-        if not self.json_requests:
-            raise ValueError(f"Music id '{self.music_id}' not found.")
+        self.fetch_data()
 
         # get first 12 documents
-        status = self.get_posts_data()
+        status = self.extract_data()
         if not status:
             logger.warning(f"No data found for music id '{self.music_id}'.")
-            return MusicPosts(posts=[], music=Music(id=self.music_id), count=0).model_dump(mode="json")  # type: ignore
+            return self.generate_result(empty_result=True)  # type: ignore
 
-        while self.json_data_list[-1]['paging_info']["more_available"] and self.remaining > 0:
-            self.loading_action()
-            status = self.get_posts_data(max_id=self.json_data_list[-1]["paging_info"]['max_id'])
+        while self.continue_fetching():
+            self.fetching_more_data()
+            status = self.extract_data()
             if not status:
                 break
 
-        posts = self.create_post_list()[:self.n]
-        music = self.get_music_info(self.json_data_list[0]["metadata"],
-                                    self.json_data_list[0]["media_count"])
-        return MusicPosts(posts=posts, music=music, count=len(posts)).model_dump(mode="json")
+        return self.generate_result(empty_result=False)
 
 
 @driver_implicit_wait(10)
@@ -235,5 +239,4 @@ def collect_posts_by_music_id(driver: Union[Chrome, Edge, Firefox, Safari, Remot
           "count": 100
         }
     """
-    return CollectPostsByMusicId(driver, music_id, n, f'{INSTAGRAM_DOMAIN}/reels/audio/{music_id}/',
-                                 f"{INSTAGRAM_DOMAIN}/{API_VERSION}/clips/music/", "posts").collect()
+    return CollectPostsByMusicId(driver, music_id, n).collect()

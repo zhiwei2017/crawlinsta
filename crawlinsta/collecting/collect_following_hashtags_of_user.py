@@ -22,26 +22,19 @@ class CollectFollowingHashtagsOfUser(UserIDRequiredCollect):
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  username: str,
-                 n: int,
-                 url,
-                 collect_type: str):
+                 n: int):
         """Initialize CollectPostsBase.
 
         Args:
             driver ():
             username ():
             n ():
-            target_url ():
-            collect_type ():
-            json_data_key ():
         """
         if n <= 0:
-            raise ValueError(f"The number of {collect_type} to collect "
+            raise ValueError(f"The number of following hashtags to collect "
                              f"must be a positive integer.")
-        super().__init__(driver, username)
+        super().__init__(driver, username, f'{INSTAGRAM_DOMAIN}/{username}/')
         self.n = n
-        self.url = url
-        self.collect_type = collect_type
         self.json_data_list = []
         self.json_requests = []
 
@@ -52,7 +45,7 @@ class CollectFollowingHashtagsOfUser(UserIDRequiredCollect):
         target_url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}/?{urlencode(query_dict, quote_via=quote)}"
         return target_url
 
-    def get_posts_data(self):
+    def extract_data(self):
         """Get posts data.
 
         Args:
@@ -73,7 +66,7 @@ class CollectFollowingHashtagsOfUser(UserIDRequiredCollect):
         self.json_data_list.append(json_data)
         return True
 
-    def loading_action(self):
+    def fetch_data(self):
         """Loading action."""
         following_btn_xpath = f"//a[@href='/{self.username}/following/'][@role='link']"
         following_btn = self.driver.find_element(By.XPATH, following_btn_xpath)
@@ -88,7 +81,7 @@ class CollectFollowingHashtagsOfUser(UserIDRequiredCollect):
                                               JsonResponseContentType.application_json)
         del self.driver.requests
 
-    def create_hashtag_list(self):
+    def generate_result(self, empty_result=False):
         """Create post list.
 
         Args:
@@ -98,6 +91,8 @@ class CollectFollowingHashtagsOfUser(UserIDRequiredCollect):
         Returns:
 
         """
+        if empty_result:
+            return HashtagBasicInfos(hashtags=[], count=0).model_dump(mode="json")
         hashtags = []
         for json_data in self.json_data_list:
             for item in json_data["data"]['user']['edge_following_hashtag']['edges']:
@@ -106,7 +101,8 @@ class CollectFollowingHashtagsOfUser(UserIDRequiredCollect):
                                            post_count=item["node"]["media_count"],
                                            profile_pic_url=item["node"]["profile_pic_url"])
                 hashtags.append(hashtag)
-        return hashtags
+        hashtags = hashtags[:self.n]
+        return HashtagBasicInfos(hashtags=hashtags, count=len(hashtags)).model_dump(mode="json")
 
     def collect(self):
         """Collect posts.
@@ -119,25 +115,23 @@ class CollectFollowingHashtagsOfUser(UserIDRequiredCollect):
         Returns:
 
         """
-        self.driver.get(self.url)
-        time.sleep(random.SystemRandom().randint(4, 6))
+        self.load_webpage()
 
         is_private_account = self.get_user_id()
         del self.driver.requests
 
         if is_private_account:
             logger.warning(f"User '{self.username}' has a private account.")
-            return HashtagBasicInfos(hashtags=[], count=0).model_dump(mode="json")
+            return self.generate_result(empty_result=True)
 
-        self.loading_action()
+        self.fetch_data()
 
-        status = self.get_posts_data()
+        status = self.extract_data()
         if not status:
             logger.warning(f"No following hashtags found for user '{self.username}'.")
-            return HashtagBasicInfos(hashtags=[], count=0).model_dump(mode="json")
+            return self.generate_result(empty_result=True)
 
-        hashtags = self.create_hashtag_list()[:self.n]
-        return HashtagBasicInfos(hashtags=hashtags, count=len(hashtags)).model_dump(mode="json")
+        return self.generate_result(empty_result=False)
 
 
 @driver_implicit_wait(10)
@@ -183,7 +177,5 @@ def collect_following_hashtags_of_user(driver: Union[Chrome, Edge, Firefox, Safa
           "count": 100
         }
     """
-    return CollectFollowingHashtagsOfUser(driver, username, n,
-                                          f'{INSTAGRAM_DOMAIN}/{username}/',
-                                          "following hashtags").collect()
+    return CollectFollowingHashtagsOfUser(driver, username, n).collect()
 

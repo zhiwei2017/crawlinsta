@@ -14,11 +14,12 @@ from ..utils import search_request, get_json_data, filter_requests, find_bracket
 from ..decorators import driver_implicit_wait
 from ..data_extraction import extract_id
 from ..constants import INSTAGRAM_DOMAIN, GRAPHQL_QUERY_PATH, JsonResponseContentType
+from .base import CollectPostInfoBase
 
 logger = logging.getLogger("crawlinsta")
 
 
-class CollectCommentOfPost:
+class CollectCommentOfPost(CollectPostInfoBase):
     """Base class for collecting comments of a post.
 
     Attributes:
@@ -36,45 +37,24 @@ class CollectCommentOfPost:
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  post_code: str,
-                 n: int,
-                 url: str,
-                 target_url: str,
-                 collect_type: str):
+                 n: int):
         """Initialize CollectCommentOfPost.
 
         Args:
             driver (Union[Chrome, Edge, Firefox, Safari, Remote]):
             post_code (str): The code of the post.
             n (int): The number of comments to collect.
-            url (str): The URL of the post.
-            target_url (str): The target URL to search for.
             collect_type (str): The type of data to collect.
 
         Raises:
             ValueError: If the number of comments to collect is not a positive integer.
         """
-        self.driver = driver
-        self.post_code = post_code
-        if n <= 0:
-            raise ValueError(f"The number of {collect_type} to collect "
-                             f"must be a positive integer.")
-        self.n = n
-        self.url = url
-        self.target_url = target_url
-        self.collect_type = collect_type
-        self.json_data_list = []
-        self.json_requests = []
-        self.remaining = n
-        self.post_id = None
-
-    def get_post_id(self) -> None:
-        """Get the post id."""
-        meta_tag_xpath = "//meta[@property='al:ios:url']"
-        meta_tag = self.driver.find_element(By.XPATH, meta_tag_xpath)
-        post_ids = re.findall("\d+", meta_tag.get_attribute("content"))  # noqa
-        if not post_ids:
-            return
-        self.post_id = post_ids[0]
+        super().__init__(driver,
+                         post_code,
+                         n,
+                         "comments",
+                         f"{INSTAGRAM_DOMAIN}/p/{post_code}/")
+        self.target_url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}"
 
     def check_request_data(self, request: Request) -> bool:
         """Check the request data.
@@ -121,7 +101,13 @@ class CollectCommentOfPost:
         json_data = json.loads(data_str[start:stop + 1])
         return json_data
 
-    def get_comments_data(self) -> bool:
+    def fetch_data(self) -> None:
+        """Fetching data."""
+        self.json_requests = filter_requests(self.driver.requests,
+                                             JsonResponseContentType.application_json)
+        del self.driver.requests
+
+    def extract_data(self) -> bool:
         """Get comments data.
 
         Returns:
@@ -140,7 +126,15 @@ class CollectCommentOfPost:
         self.remaining -= len(json_data["edges"])
         return True
 
-    def loading_action(self) -> None:
+    def continue_fetching(self) -> bool:
+        """Check if the fetching should continue.
+
+        Returns:
+            bool: True if the fetching should continue, otherwise False.
+        """
+        return self.json_data_list[-1]["page_info"]['has_next_page'] and self.remaining > 0
+
+    def fetch_more_data(self) -> None:
         """Loading action."""
         xpath = '//div[@class="x78zum5 xdt5ytf x1iyjqo2"]/div[@class="x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 ' \
                 'x5pf9jr xo71vjh x1uhb9sk x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh ' \
@@ -153,12 +147,14 @@ class CollectCommentOfPost:
                                               JsonResponseContentType.application_json)
         del self.driver.requests
 
-    def create_comment_list(self) -> List[Comment]:
+    def generate_result(self, empty_result=False) -> Json:
         """Create comment list.
 
         Returns:
-            List[Comment]: The list of comments.
+            Json: The collected comments in json format.
         """
+        if empty_result:
+            return Comments(comments=[], count=0).model_dump(mode="json")
         comments = []
         for json_data in self.json_data_list:
             for item in json_data["edges"]:
@@ -177,7 +173,8 @@ class CollectCommentOfPost:
                                   is_liked_by_post_owner=comment_dict.get("has_liked_comment", False),
                                   comment_like_count=comment_dict.get("comment_like_count", 0))
                 comments.append(comment)
-        return comments
+        comments = comments[:self.n]
+        return Comments(comments=comments, count=len(comments)).model_dump(mode="json")
 
     def collect(self) -> Json:
         """Collect comments.
@@ -185,14 +182,13 @@ class CollectCommentOfPost:
         Returns:
             Json: The collected comments in json format.
         """
-        self.driver.get(self.url)
-        time.sleep(random.SystemRandom().randint(4, 6))
+        self.load_webpage()
 
         # get the media id for later requests filtering
         self.get_post_id()
         if not self.post_id:
             logger.warning(f"No post id found for post '{self.post_code}'.")
-            return Comments(comments=[], count=0).model_dump(mode="json")
+            return self.generate_result(True)
 
         cached_data = self.find_cached_data()
 
@@ -200,25 +196,21 @@ class CollectCommentOfPost:
             self.json_data_list.append(cached_data)
             self.remaining -= len(cached_data["edges"])
         else:
-            self.json_requests = filter_requests(self.driver.requests,
-                                                 JsonResponseContentType.application_json)
-            del self.driver.requests
+            self.fetch_data()
 
-            status = self.get_comments_data()
+            status = self.extract_data()
             if not status:
                 logger.warning(f"No comments found for post '{self.post_code}'.")
-                return Comments(comments=[], count=0).model_dump(mode="json")
+                return self.generate_result(True)
 
-        while self.json_data_list[-1]["page_info"]['has_next_page'] and self.remaining > 0:
-            self.loading_action()
+        while self.continue_fetching():
+            self.fetch_more_data()
 
-            status = self.get_comments_data()
+            status = self.extract_data()
             if not status:
                 break
 
-        comments = self.create_comment_list()
-        comments = comments[:self.n]
-        return Comments(comments=comments, count=len(comments)).model_dump(mode="json")
+        return self.generate_result(False)
 
 
 @driver_implicit_wait(10)
@@ -272,7 +264,4 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
           "count": 100
         }
     """
-    return CollectCommentOfPost(driver, post_code, n,
-                                f"{INSTAGRAM_DOMAIN}/p/{post_code}/",
-                                f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}",
-                                "comments").collect()
+    return CollectCommentOfPost(driver, post_code, n).collect()

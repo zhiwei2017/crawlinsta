@@ -15,10 +15,9 @@ class CollectFollowingsOfUser(CollectUsersBase):
                  username: str,
                  n: int = 100):
         target_url_format = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/" + "{user_id}/following/?{query_str}"
-        collect_type = "followings"
-        initial_load_data_btn_xpath = f"//a[@href='/{username}/following/'][@role='link']"
+        fetch_data_btn_xpath = f"//a[@href='/{username}/following/'][@role='link']"
         url = f'{INSTAGRAM_DOMAIN}/{username}/'
-        super().__init__(driver, username, n, url, target_url_format, collect_type, initial_load_data_btn_xpath)
+        super().__init__(driver, username, n, url, target_url_format, "followings", fetch_data_btn_xpath)
 
     def get_request_query_dict(self) -> Dict[str, Any]:
         """Get request query dict."""

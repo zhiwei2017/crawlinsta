@@ -15,21 +15,24 @@ from ..utils import search_request, get_json_data, filter_requests
 from ..decorators import driver_implicit_wait
 from ..data_extraction import extract_id
 from ..constants import INSTAGRAM_DOMAIN, JsonResponseContentType
+from .base import CollectBase
 
 logger = logging.getLogger("crawlinsta")
 
 
-class SearchWithKeyword:
+class SearchWithKeyword(CollectBase):
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  keyword: str,
                  pers: bool):
-        self.driver = driver
+        super().__init__(driver, INSTAGRAM_DOMAIN)
         self.keyword = keyword
         self.pers = pers
-        self.url = INSTAGRAM_DOMAIN
-        self.data_key = "xdt_api__v1__fbsearch__topsearch_connection" if pers \
-            else "xdt_api__v1__fbsearch__non_profiled_serp"
+        self.data_key = "xdt_api__v1__fbsearch__"
+        if pers:
+            self.data_key += "topsearch_connection"
+        else:
+            self.data_key += "non_profiled_serp"
         self.json_requests = []
         self.json_data = None
 
@@ -44,7 +47,7 @@ class SearchWithKeyword:
             return False
         return True
 
-    def get_search_result_data(self):
+    def extract_data(self):
         """Get posts data.
 
         Args:
@@ -67,7 +70,7 @@ class SearchWithKeyword:
         self.json_data = json_data["data"][self.data_key]
         return True
 
-    def loading_action(self):
+    def fetch_data(self):
         """Loading action."""
         search_btn = self.driver.find_element(By.XPATH, '//a[@href="#"][@role="link"]')
         search_btn.click()
@@ -91,7 +94,12 @@ class SearchWithKeyword:
         self.json_requests = filter_requests(self.driver.requests, JsonResponseContentType.text_javascript)
         del self.driver.requests
 
-    def create_searching_result(self):
+    def generate_result(self, empty_result=False):
+        if empty_result:
+            return SearchingResult(hashtags=[],
+                                   users=[],
+                                   places=[],
+                                   personalised=self.pers).model_dump(mode="json")
         hashtags = []
         places = []
         if self.pers:
@@ -137,7 +145,7 @@ class SearchWithKeyword:
                                            users=users,
                                            places=places,
                                            personalised=self.pers)
-        return searching_result
+        return searching_result.model_dump(mode="json")
 
     def collect(self):
         """Collect posts.
@@ -150,19 +158,14 @@ class SearchWithKeyword:
         Returns:
 
         """
-        self.driver.get(self.url)
-        time.sleep(random.SystemRandom().randint(4, 6))
+        self.load_webpage()
 
-        self.loading_action()
-        status = self.get_search_result_data()
+        self.fetch_data()
+        status = self.extract_data()
         if not status:
             logger.warning(f"No search results found for keyword '{self.keyword}'.")
-            return SearchingResult(hashtags=[],
-                                   users=[],
-                                   places=[],
-                                   personalised=self.pers).model_dump(mode="json")
-        searching_result = self.create_searching_result()
-        return searching_result.model_dump(mode="json")
+            return self.generate_result(empty_result=True)
+        return self.generate_result(empty_result=False)
 
 
 @driver_implicit_wait(10)

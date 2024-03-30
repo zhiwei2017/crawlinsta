@@ -18,9 +18,8 @@ logger = logging.getLogger("crawlinsta")
 
 class CollectUserInfo(UserIDRequiredCollect):
     def __init__(self, driver: Union[Chrome, Edge, Firefox, Safari, Remote], username: str):
-        super().__init__(driver, username)
+        super().__init__(driver, username, f"{INSTAGRAM_DOMAIN}/{username}/")
         self.json_requests = []
-        self.url = f"{INSTAGRAM_DOMAIN}/{username}/"
 
     def load_following_hashtags(self):
         following_btn_xpath = f"//a[@href='/{self.username}/following/'][@role='link']"
@@ -49,14 +48,13 @@ class CollectUserInfo(UserIDRequiredCollect):
         return json_data["data"]['user']['edge_following_hashtag']['count']
 
     def collect(self):
-        self.driver.get(self.url)
-        time.sleep(random.SystemRandom().randint(4, 6))
+        self.load_webpage()
 
         is_private_account = self.get_user_id()
-        del self.driver.requests
 
         following_hashtags_number = 0
         if not is_private_account:
+            del self.driver.requests
             self.load_following_hashtags()
             following_hashtags_number = self.get_following_hashtags_number()
 

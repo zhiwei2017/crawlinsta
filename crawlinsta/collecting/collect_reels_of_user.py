@@ -1,6 +1,7 @@
 import json
 from urllib.parse import parse_qs
 from pydantic import Json
+from seleniumwire.request import Request
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union
 from ..decorators import driver_implicit_wait
@@ -9,10 +10,28 @@ from .collect_posts_of_user import CollectPostsBase
 
 
 class CollectReelsOfUser(CollectPostsBase):
+    """Class for collecting reels of the given user.
+
+    Attributes:
+        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium
+         driver for controlling the browser to perform certain actions.
+        username (str): name of the user.
+        n (int): maximum number of reels, which should be collected. By default,
+         it's 100. If it's set to 0, collect all reels.
+    """
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  username: str,
-                 n: int = 100):
+                 n: int = 100) -> None:
+        """Constructor method.
+
+        Args:
+            driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium
+             driver for controlling the browser to perform certain actions.
+            username (str): name of the user.
+            n (int): maximum number of reels, which should be collected. By default,
+             it's 100. If it's set to 0, collect all reels.
+        """
         target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
         collect_type = "reels"
         json_data_key = "xdt_api__v1__clips__user__connection_v2"
@@ -20,7 +39,16 @@ class CollectReelsOfUser(CollectPostsBase):
         super().__init__(driver, username, n, url, target_url, collect_type,
                          json_data_key, ("node", "media"))
 
-    def check_request_data(self, request, after=""):
+    def check_request_data(self, request: Request, after: str = "") -> bool:
+        """Check if the request data is valid.
+
+        Args:
+            request (Request): request object.
+            after (str): cursor for the next page.
+
+        Returns:
+            bool: True if the request data is valid, False otherwise.
+        """
         request_data = parse_qs(request.body.decode())
         variables = json.loads(request_data.get("variables", ["{}"])[0])
         if request_data.get("av", [''])[0] != "17841461911219001":

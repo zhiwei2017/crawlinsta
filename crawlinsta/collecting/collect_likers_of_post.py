@@ -16,10 +16,28 @@ logger = logging.getLogger("crawlinsta")
 
 
 class CollectLikersOfPost(CollectPostInfoBase):
+    """A class used to collect the users, who likes a given post.
+
+    Attributes:
+        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium
+         driver for controlling the browser to perform certain actions.
+        post_code (str): post code, used for generating post directly accessible url.
+        n (int): maximum number of likers, which should be collected. By default,
+         it's 100. If it's set to 0, collect all likers.
+    """
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  post_code: str,
-                 n: int = 100):
+                 n: int = 100) -> None:
+        """Constructs all the necessary attributes for the CollectLikersOfPost object.
+
+        Args:
+            driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium
+             driver for controlling the browser to perform certain actions.
+            post_code (str): post code, used for generating post directly accessible url.
+            n (int): maximum number of likers, which should be collected. By default,
+             it's 100. If it's set to 0, collect all likers.
+        """
         super().__init__(driver,
                          post_code,
                          n,
@@ -27,6 +45,7 @@ class CollectLikersOfPost(CollectPostInfoBase):
                          f"{INSTAGRAM_DOMAIN}/p/{post_code}/")
 
     def fetch_data(self) -> None:
+        """Fetch the data by clicking the likes button of the post."""
         likes_btn_xpath = f"//a[@href='/p/{self.post_code}/liked_by/'][@role='link']"
         likes_btn = self.driver.find_element(By.XPATH, likes_btn_xpath)
         likes_btn.click()
@@ -36,6 +55,11 @@ class CollectLikersOfPost(CollectPostInfoBase):
         del self.driver.requests
 
     def extract_data(self) -> bool:
+        """Extract the data from the requests.
+
+        Returns:
+            bool: True if the data is extracted successfully, False otherwise.
+        """
         target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/media/{self.post_id}/likers/"
         idx = search_request(self.json_requests,
                              target_url,
@@ -50,6 +74,14 @@ class CollectLikersOfPost(CollectPostInfoBase):
         return True
 
     def generate_result(self, empty_result=False) -> Json:
+        """Generate the result in json format.
+
+        Args:
+            empty_result (bool): True if no likers found, False otherwise.
+
+        Returns:
+            Json: all likers' user information of the given post in json format.
+        """
         if empty_result:
             return Users(users=[], count=0).model_dump(mode="json")
 

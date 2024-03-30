@@ -17,11 +17,29 @@ logger = logging.getLogger("crawlinsta")
 
 
 class CollectUserInfo(UserIDRequiredCollect):
-    def __init__(self, driver: Union[Chrome, Edge, Firefox, Safari, Remote], username: str):
+    """A class to collect user information.
+
+    Attributes:
+        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium
+         driver for controlling the browser to perform certain actions.
+        username (str): name of the user.
+        json_requests (list): list of json requests.
+    """
+    def __init__(self,
+                 driver: Union[Chrome, Edge, Firefox, Safari, Remote],
+                 username: str) -> None:
+        """Constructs all the necessary attributes for the CollectUserInfo object.
+
+        Args:
+            driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium
+             driver for controlling the browser to perform certain actions.
+            username (str): name of the user.
+        """
         super().__init__(driver, username, f"{INSTAGRAM_DOMAIN}/{username}/")
         self.json_requests = []
 
-    def load_following_hashtags(self):
+    def load_following_hashtags(self) -> None:
+        """Load the following hashtags of the user."""
         following_btn_xpath = f"//a[@href='/{self.username}/following/'][@role='link']"
         following_btn = self.driver.find_element(By.XPATH, following_btn_xpath)
         following_btn.click()
@@ -35,7 +53,12 @@ class CollectUserInfo(UserIDRequiredCollect):
         self.json_requests += filter_requests(self.driver.requests)
         del self.driver.requests
 
-    def get_following_hashtags_number(self):
+    def get_following_hashtags_number(self) -> int:
+        """Get the number of following hashtags of the user.
+
+        Returns:
+            int: number of following hashtags.
+        """
         variables = dict(id=self.user_id)
         query_dict = dict(doc_id=FOLLOWING_DOC_ID, variables=json.dumps(variables, separators=(',', ':')))
         target_url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}/?{urlencode(query_dict, quote_via=quote)}"
@@ -47,7 +70,13 @@ class CollectUserInfo(UserIDRequiredCollect):
         json_data = get_json_data(request.response)
         return json_data["data"]['user']['edge_following_hashtag']['count']
 
-    def collect(self):
+    def collect(self) -> Json:
+        """Collect user information through `username`, including `user_id`, `username`,
+        `profile_pic_url`, `biography`, `post_count`, `follower_count`, `following_count`.
+
+        Returns:
+            Json: user information in json format.
+        """
         self.load_webpage()
 
         is_private_account = self.get_user_id()

@@ -1,6 +1,7 @@
 import json
 from urllib.parse import parse_qs
 from pydantic import Json
+from seleniumwire.request import Request
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union
 from ..decorators import driver_implicit_wait
@@ -9,10 +10,28 @@ from .base import CollectPostsBase
 
 
 class CollectPostsOfUser(CollectPostsBase):
+    """Collect all visible posts of the given user.
+
+    Attributes:
+        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
+         driver for controlling the browser to perform certain actions.
+        username (str): name of the user.
+        n (int): maximum number of posts, which should be collected. By default,
+         it's 100. If it's set to 0, collect all posts.
+    """
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  username: str,
-                 n: int = 100):
+                 n: int = 100) -> None:
+        """Initializes the CollectPostsOfUser class.
+
+        Args:
+            driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
+             driver for controlling the browser to perform certain actions.
+            username (str): name of the user.
+            n (int): maximum number of posts, which should be collected. By default,
+             it's 100. If it's set to 0, collect all posts.
+        """
         target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
         collect_type = "posts"
         json_data_key = "xdt_api__v1__feed__user_timeline_graphql_connection"
@@ -20,10 +39,24 @@ class CollectPostsOfUser(CollectPostsBase):
         super().__init__(driver, username, n, url, target_url, collect_type,
                          json_data_key, ("node", ))
 
-    def get_user_id(self):
+    def get_user_id(self) -> bool:
+        """Get the user id of the given user.
+
+        Returns:
+            bool: True if the user id is found, False otherwise.
+        """
         return False
 
-    def check_request_data(self, request, after=""):
+    def check_request_data(self, request: Request, after: str = "") -> bool:
+        """Check if the request data is valid.
+
+        Args:
+            request (seleniumwire.request.Request): request object.
+            after (str): cursor for the next page.
+
+        Returns:
+            bool: True if the request data is valid, False otherwise.
+        """
         request_data = parse_qs(request.body.decode())
         variables = json.loads(request_data.get("variables", ["{}"])[0])
         if request_data.get("av", [''])[0] != "17841461911219001":

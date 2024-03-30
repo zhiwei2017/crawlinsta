@@ -4,6 +4,7 @@ import time
 from urllib.parse import parse_qs
 from pydantic import Json
 from selenium.webdriver.common.by import By
+from seleniumwire.request import Request
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union
 from ..schemas import MusicPosts, Music
@@ -17,7 +18,13 @@ logger = logging.getLogger("crawlinsta")
 
 
 class CollectPostsByMusicId(CollectBase):
-    """Base class for collecting posts."""
+    """Collect posts containing the given music_id.
+
+    Attributes:
+        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium driver.
+        music_id (str): id of the music.
+        n (int): maximum number of posts to collect.
+    """
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  music_id: str,
@@ -25,12 +32,9 @@ class CollectPostsByMusicId(CollectBase):
         """Initialize CollectPostsBase.
 
         Args:
-            driver ():
-            username ():
-            n ():
-            target_url ():
-            collect_type ():
-            json_data_key ():
+            driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium driver.
+            music_id (str): id of the music.
+            n (int): maximum number of posts to collect.
         """
         if n <= 0:
             raise ValueError(f"The number of posts to collect "
@@ -43,7 +47,16 @@ class CollectPostsByMusicId(CollectBase):
         self.remaining = n
         self.json_requests = []
 
-    def check_request_data(self, request, max_id=""):
+    def check_request_data(self, request: Request, max_id: str = "") -> bool:
+        """Check if the request data is valid.
+
+        Args:
+            request (Request): request.
+            max_id (str): max id.
+
+        Returns:
+            bool: True if the request data is valid, False otherwise.
+        """
         request_data = parse_qs(request.body.decode())
         if request_data.get("max_id", [""])[0] != max_id:
             return False
@@ -52,7 +65,11 @@ class CollectPostsByMusicId(CollectBase):
         return True
 
     def fetch_data(self) -> None:
-        """Fetch data."""
+        """Fetch data.
+
+        Raises:
+            ValueError: if the music id is not found.
+        """
         self.json_requests += filter_requests(self.driver.requests,
                                               JsonResponseContentType.application_json)
         del self.driver.requests
@@ -60,11 +77,11 @@ class CollectPostsByMusicId(CollectBase):
         if not self.json_requests:
             raise ValueError(f"Music id '{self.music_id}' not found.")
 
-    def extract_data(self):
+    def extract_data(self) -> bool:
         """Get posts data.
 
         Returns:
-
+            bool: True if the data is extracted successfully, False otherwise.
         """
         max_id = self.json_data_list[-1]["paging_info"]['max_id'] if self.json_data_list else ""
         idx = search_request(self.json_requests, self.target_url,
@@ -98,13 +115,13 @@ class CollectPostsByMusicId(CollectBase):
         del self.driver.requests
 
     def generate_result(self, empty_result=False) -> Json:
-        """Generate result.
+        """Generate result containing the posts.
 
         Args:
-            empty_result ():
+            empty_result (bool): True if the result is empty, False otherwise.
 
         Returns:
-
+            Json: a list of posts containing the music.
         """
         if empty_result:
             return MusicPosts(posts=[],
@@ -133,11 +150,11 @@ class CollectPostsByMusicId(CollectBase):
                           music=music,
                           count=len(posts)).model_dump(mode="json")  # type: ignore
 
-    def collect(self):
-        """Collect posts.
+    def collect(self) -> Json:
+        """Collect posts containing the given music_id.
 
         Returns:
-
+            Json: a list of posts containing the music.
         """
         self.load_webpage()
 

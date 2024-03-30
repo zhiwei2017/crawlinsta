@@ -15,20 +15,47 @@ logger = logging.getLogger("crawlinsta")
 
 
 class CollectTopPostsOfHashtag(CollectBase):
-    def __init__(self, driver: Union[Chrome, Edge, Firefox, Safari, Remote], hashtag: str):
+    """A class to collect top posts of a given hashtag.
+
+    Attributes:
+        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium
+         driver for controlling the browser to perform certain actions.
+        hashtag (str): hashtag.
+        json_requests (list): list of json requests.
+        hashtag_data (dict): hashtag data.
+    """
+    def __init__(self, driver: Union[Chrome, Edge, Firefox, Safari, Remote],
+                 hashtag: str) -> None:
+        """Constructs all the necessary attributes for the CollectTopPostsOfHashtag object.
+
+        Args:
+            driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium
+             driver for controlling the browser to perform certain actions.
+            hashtag (str): hashtag.
+        """
         super().__init__(driver, f'{INSTAGRAM_DOMAIN}/explore/tags/{hashtag}')
         self.hashtag = hashtag
         self.json_requests = []
         self.hashtag_data = None
 
     def fetch_data(self) -> None:
+        """Fetch data from the requests.
+
+        Raises:
+            ValueError: if the hashtag is not found.
+        """
         self.json_requests += filter_requests(self.driver.requests)
         del self.driver.requests
 
         if not self.json_requests:
             raise ValueError(f"Hashtag '{self.hashtag}' not found.")
 
-    def extract_data(self):
+    def extract_data(self) -> bool:
+        """Extract data from the fetched requests.
+
+        Returns:
+            bool: True if data is found, False otherwise.
+        """
         target_url = f'{INSTAGRAM_DOMAIN}/{API_VERSION}/tags/web_info/?tag_name={self.hashtag}'
         idx = search_request(self.json_requests, target_url)
         if idx is None:
@@ -38,7 +65,15 @@ class CollectTopPostsOfHashtag(CollectBase):
         self.hashtag_data = json_data
         return True
 
-    def generate_result(self, empty_result=False):
+    def generate_result(self, empty_result: bool = False) -> Json:
+        """Generate the result in a json format.
+
+        Args:
+            empty_result (bool, optional): if True, return an empty result. Defaults to False.
+
+        Returns:
+            Json: Hashtag information in a json format.
+        """
         if empty_result:
             return Hashtag(id=None,
                            name=self.hashtag).model_dump(mode="json")  # type: ignore
@@ -63,7 +98,12 @@ class CollectTopPostsOfHashtag(CollectBase):
                       posts=posts)
         return tag.model_dump(mode="json")
 
-    def collect(self):
+    def collect(self) -> Json:
+        """Collect top posts of a given hashtag.
+
+        Returns:
+            Json: Hashtag information in a json format.
+        """
         self.load_webpage()
 
         self.fetch_data()

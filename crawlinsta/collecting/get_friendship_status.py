@@ -16,35 +16,39 @@ logger = logging.getLogger("crawlinsta")
 
 
 class GetFriendshipStatus(UserIDRequiredCollect):
-    """Base class for collecting posts."""
+    """Base class for collecting posts.
+
+    Attributes:
+        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium
+         driver for controlling the browser to perform certain actions.
+        username (str): username of the user.
+        searching_username (str): username of the user to search for.
+        json_requests (list): list of json requests.
+        json_data (dict): json data.
+    """
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  username: str,
-                 searching_username: str):
+                 searching_username: str) -> None:
         """Initialize CollectPostsBase.
 
         Args:
-            driver ():
-            username ():
-            n ():
-            target_url ():
-            collect_type ():
-            json_data_key ():
+            driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium
+             driver for controlling the browser to perform certain actions.
+            username (str): username of the user.
+            searching_username (str): username of the user to search for.
         """
         super().__init__(driver, username, f'{INSTAGRAM_DOMAIN}/{username}/')
         self.searching_username = searching_username
         self.json_requests = []
         self.json_data = None
 
-    def extract_data(self):
-        """Get posts data.
-
-        Args:
-            json_requests ():
-            after ():
+    def extract_data(self) -> bool:
+        """Extracting data from the json requests.
 
         Returns:
-
+            bool: True if the user is found in the followings of the user with
+            `username`, False otherwise.
         """
         query_dict = dict(query=self.searching_username)
         query_str = urlencode(query_dict, quote_via=quote)
@@ -59,7 +63,7 @@ class GetFriendshipStatus(UserIDRequiredCollect):
         self.json_data = get_json_data(request.response)
         return True
 
-    def fetch_data(self):
+    def fetch_data(self) -> None:
         """Loading action."""
         following_btn = self.driver.find_element(By.XPATH, f"//a[@href='/{self.username}/following/'][@role='link']")
         following_btn.click()
@@ -75,16 +79,12 @@ class GetFriendshipStatus(UserIDRequiredCollect):
                                              JsonResponseContentType.application_json)
         del self.driver.requests
 
-    def collect(self):
-        """Collect posts.
-
-        Args:
-            url ():
-            primary_key ():
-            secondary_key ():
+    def collect(self) -> bool:
+        """Collect the friendship status between the user with `username` and the user with `searching_username`.
 
         Returns:
-
+            bool: True if the user with `searching_username` is found in the followings of the user with `username`,
+            False otherwise.
         """
         self.load_webpage()
 

@@ -20,7 +20,9 @@ class CollectBase:
     """Base class for collecting data.
 
     Attributes:
-        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver."""
+        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver.
+        url (str): The URL to load.
+    """
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  url: str) -> None:
@@ -28,16 +30,13 @@ class CollectBase:
 
         Args:
             driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver.
+            url (str): The URL to load.
         """
         self.driver = driver
         self.url = url
 
     def load_webpage(self) -> None:
-        """Load webpage.
-
-        Args:
-            url (str): The URL to load.
-        """
+        """Load webpage."""
         self.driver.get(self.url)
         time.sleep(random.SystemRandom().randint(4, 6))
 
@@ -58,7 +57,11 @@ class CollectBase:
         pass
 
     def extract_data(self) -> bool:
-        """Fetching more data."""
+        """Extract data.
+
+        Returns:
+            bool: True if the data is found, False otherwise.
+        """
         return True
 
     def generate_result(self, empty_result=False) -> Json:
@@ -85,7 +88,9 @@ class UserIDRequiredCollect(CollectBase):
         driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver.
         username (str): The username of the user.
         user_id (Optional[int]): The user id.
-        user_data (Optional[Dict[str, Any]]): The user data dictionary."""
+        user_data (Optional[Dict[str, Any]]): The user data dictionary.
+        url (str): The URL to load.
+    """
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  username: str,
@@ -95,6 +100,7 @@ class UserIDRequiredCollect(CollectBase):
         Args:
             driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver.
             username (str): The username of the user.
+            url (str): The URL to load.
         """
         super().__init__(driver, url)
         self.username = username
@@ -127,6 +133,7 @@ class CollectPostsBase(UserIDRequiredCollect):
     Attributes:
         driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver.
         username (str): The username of the user.
+        url (str): The URL to load.
         n (int): The number of posts to collect.
         target_url (str): The target URL to search for.
         collect_type (str): The type of data to collect.
@@ -151,6 +158,7 @@ class CollectPostsBase(UserIDRequiredCollect):
             driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver.
             username (str): The username of the user.
             n (int): The number of posts to collect.
+            url (str): The URL to load.
             target_url (str): The target URL to search for.
             collect_type (str): The type of data to collect.
             json_data_key (str): The key to extract the json data from.
@@ -182,7 +190,11 @@ class CollectPostsBase(UserIDRequiredCollect):
         raise NotImplementedError
 
     def fetch_data(self) -> None:
-        """Fetching data."""
+        """Fetching data.
+
+        Raises:
+            ValueError: If the user is not found.
+        """
 
         self.json_requests += filter_requests(self.driver.requests,
                                               JsonResponseContentType.text_javascript)
@@ -193,9 +205,6 @@ class CollectPostsBase(UserIDRequiredCollect):
 
     def extract_data(self) -> bool:
         """Get posts data.
-
-        Args:
-            after (str): The after cursor in request body.
 
         Returns:
             bool: True if the posts data is found, False otherwise.
@@ -233,6 +242,9 @@ class CollectPostsBase(UserIDRequiredCollect):
 
     def generate_result(self, empty_result: bool = False) -> Json:
         """Create post list.
+
+        Args:
+            empty_result (bool): True if the result is empty, False otherwise.
 
         Returns:
             List[Dict[str, Any]]: The list of posts.
@@ -291,6 +303,7 @@ class CollectUsersBase(UserIDRequiredCollect):
         driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver.
         username (str): The username of the user.
         n (int): The number of users to collect.
+        url (str): The URL to load.
         target_url_format (str): The target URL format to search for.
         collect_type (str): The type of data to collect.
         json_data_list (List[Dict[str, Any]]): The list of json data.
@@ -313,9 +326,13 @@ class CollectUsersBase(UserIDRequiredCollect):
             driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver.
             username (str): The username of the user.
             n (int): The number of users to collect.
+            url (str): The URL to load.
             target_url_format (str): The target URL format to search for.
             collect_type (str): The type of data to collect.
             fetch_data_btn_xpath (str): The xpath of the initial load data button.
+
+        Raises:
+            ValueError: If the number of users to collect is not a positive integer.
         """
         if n <= 0:
             raise ValueError(f"The number of {collect_type} to collect "
@@ -444,12 +461,37 @@ class CollectUsersBase(UserIDRequiredCollect):
 
 
 class CollectPostInfoBase(CollectBase):
+    """Base class for collecting post information.
+
+    Attributes:
+        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver.
+        post_code (str): The post code.
+        n (int): The number of posts to collect.
+        collect_type (str): The type of data to collect.
+        url (str): The URL to load.
+        json_data_list (List[Dict[str, Any]]): The list of json data.
+        json_requests (List[Dict[str, Any]]): The list of json requests.
+        remaining (int): The remaining number of posts to collect.
+        post_id (Optional[str]): The post id.
+    """
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  post_code: str,
                  n: int,
                  collect_type: str,
                  url: str) -> None:
+        """Initialize CollectPostInfoBase.
+
+        Args:
+            driver (Union[Chrome, Edge, Firefox, Safari, Remote]): The selenium web driver.
+            post_code (str): The post code.
+            n (int): The number of posts to collect.
+            collect_type (str): The type of data to collect.
+            url (str): The URL to load.
+
+        Raises:
+            ValueError: If the number of posts to collect is not a positive integer.
+        """
         if n <= 0:
             raise ValueError(f"The number of {collect_type} to collect "
                              f"must be a positive integer.")

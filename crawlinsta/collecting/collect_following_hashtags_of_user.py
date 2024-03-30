@@ -18,17 +18,30 @@ logger = logging.getLogger("crawlinsta")
 
 
 class CollectFollowingHashtagsOfUser(UserIDRequiredCollect):
-    """Base class for collecting posts."""
+    """Base class for collecting posts.
+
+    Attributes:
+        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium
+         driver for controlling the browser to perform certain actions.
+        username (str): name of the user.
+        n (int): maximum number of followings, which should be collected.
+         By default, it's 100. If it's set to 0, collect all followings.
+    """
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  username: str,
-                 n: int):
+                 n: int) -> None:
         """Initialize CollectPostsBase.
 
         Args:
-            driver ():
-            username ():
-            n ():
+            driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
+             driver for controlling the browser to perform certain actions.
+            username (str): name of the user.
+            n (int): maximum number of followings, which should be collected.
+             By default, it's 100. If it's set to 0, collect all followings.
+
+        Raises:
+            ValueError: if the number of following hashtags to collect is not a positive integer.
         """
         if n <= 0:
             raise ValueError(f"The number of following hashtags to collect "
@@ -38,22 +51,23 @@ class CollectFollowingHashtagsOfUser(UserIDRequiredCollect):
         self.json_data_list = []
         self.json_requests = []
 
-    def get_target_url(self):
+    def get_target_url(self) -> str:
+        """Get the target url.
+
+        Returns:
+            str: target url.
+        """
         variables = dict(id=self.user_id)
         query_dict = dict(doc_id=FOLLOWING_DOC_ID,
                           variables=json.dumps(variables, separators=(',', ':')))
         target_url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}/?{urlencode(query_dict, quote_via=quote)}"
         return target_url
 
-    def extract_data(self):
+    def extract_data(self) -> bool:
         """Get posts data.
 
-        Args:
-            json_requests ():
-            after ():
-
         Returns:
-
+            bool: True if the data is extracted successfully, otherwise False.
         """
         target_url = self.get_target_url()
         idx = search_request(self.json_requests, target_url,
@@ -66,7 +80,7 @@ class CollectFollowingHashtagsOfUser(UserIDRequiredCollect):
         self.json_data_list.append(json_data)
         return True
 
-    def fetch_data(self):
+    def fetch_data(self) -> None:
         """Loading action."""
         following_btn_xpath = f"//a[@href='/{self.username}/following/'][@role='link']"
         following_btn = self.driver.find_element(By.XPATH, following_btn_xpath)
@@ -81,15 +95,15 @@ class CollectFollowingHashtagsOfUser(UserIDRequiredCollect):
                                               JsonResponseContentType.application_json)
         del self.driver.requests
 
-    def generate_result(self, empty_result=False):
+    def generate_result(self, empty_result=False) -> Json:
         """Create post list.
 
         Args:
-            primary_key ():
-            secondary_key ():
+            empty_result (bool): True if the result is empty, otherwise False.
 
         Returns:
-
+            Json: all visible followings hashtags' information of the given user in
+            json format.
         """
         if empty_result:
             return HashtagBasicInfos(hashtags=[], count=0).model_dump(mode="json")
@@ -104,16 +118,12 @@ class CollectFollowingHashtagsOfUser(UserIDRequiredCollect):
         hashtags = hashtags[:self.n]
         return HashtagBasicInfos(hashtags=hashtags, count=len(hashtags)).model_dump(mode="json")
 
-    def collect(self):
-        """Collect posts.
-
-        Args:
-            url ():
-            primary_key ():
-            secondary_key ():
+    def collect(self) -> Json:
+        """Collect posts data of the given user.
 
         Returns:
-
+            Json: all visible followings hashtags' information of the given user in
+            json format.
         """
         self.load_webpage()
 

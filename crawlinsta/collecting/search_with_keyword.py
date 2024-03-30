@@ -5,6 +5,7 @@ import time
 from urllib.parse import parse_qs
 from pydantic import Json
 from selenium.webdriver.common.by import By
+from seleniumwire.request import Request
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union
 from ..schemas import (
@@ -21,10 +22,29 @@ logger = logging.getLogger("crawlinsta")
 
 
 class SearchWithKeyword(CollectBase):
+    """Search with keyword.
+
+    Attributes:
+        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium
+         driver for controlling the browser to perform certain actions.
+        keyword (str): keyword for searching.
+        pers (bool): indicating whether results should be personalized or not.
+        data_key (str): key for extracting data from json data.
+        json_requests (List[Request]): list of requests.
+        json_data (dict): json data.
+    """
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  keyword: str,
-                 pers: bool):
+                 pers: bool) -> None:
+        """Initialize SearchWithKeyword class.
+
+        Args:
+            driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium
+             driver for controlling the browser to perform certain actions.
+            keyword (str): keyword for searching.
+            pers (bool): indicating whether results should be personalized or not.
+        """
         super().__init__(driver, INSTAGRAM_DOMAIN)
         self.keyword = keyword
         self.pers = pers
@@ -36,7 +56,15 @@ class SearchWithKeyword(CollectBase):
         self.json_requests = []
         self.json_data = None
 
-    def check_request_data(self, request):
+    def check_request_data(self, request: Request) -> bool:
+        """Check request data.
+
+        Args:
+            request (Request): request object.
+
+        Returns:
+            bool: True if request data is valid, False otherwise.
+        """
         request_data = parse_qs(request.body.decode())
         variables = json.loads(request_data.get("variables", ["{}"])[0])
         if not variables:
@@ -47,15 +75,11 @@ class SearchWithKeyword(CollectBase):
             return False
         return True
 
-    def extract_data(self):
-        """Get posts data.
-
-        Args:
-            json_requests ():
-            after ():
+    def extract_data(self) -> bool:
+        """Extract data from json data and store it in json_data attribute.
 
         Returns:
-
+            bool: True if data is extracted successfully, False otherwise.
         """
         target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
         idx = search_request(self.json_requests, target_url,
@@ -70,7 +94,7 @@ class SearchWithKeyword(CollectBase):
         self.json_data = json_data["data"][self.data_key]
         return True
 
-    def fetch_data(self):
+    def fetch_data(self) -> None:
         """Loading action."""
         search_btn = self.driver.find_element(By.XPATH, '//a[@href="#"][@role="link"]')
         search_btn.click()
@@ -94,7 +118,15 @@ class SearchWithKeyword(CollectBase):
         self.json_requests = filter_requests(self.driver.requests, JsonResponseContentType.text_javascript)
         del self.driver.requests
 
-    def generate_result(self, empty_result=False):
+    def generate_result(self, empty_result: bool = False) -> Json:
+        """Generate result.
+
+        Args:
+            empty_result (bool): indicating whether result is empty or not.
+
+        Returns:
+            Json: searching result.
+        """
         if empty_result:
             return SearchingResult(hashtags=[],
                                    users=[],
@@ -147,16 +179,11 @@ class SearchWithKeyword(CollectBase):
                                            personalised=self.pers)
         return searching_result.model_dump(mode="json")
 
-    def collect(self):
-        """Collect posts.
-
-        Args:
-            url ():
-            primary_key ():
-            secondary_key ():
+    def collect(self) -> Json:
+        """Collect data from the webpage.
 
         Returns:
-
+            Json: searching result.
         """
         self.load_webpage()
 

@@ -10,17 +10,39 @@ logger = logging.getLogger("crawlinsta")
 
 
 class CollectFollowingsOfUser(CollectUsersBase):
+    """Collect followings of the given user.
+
+    Attributes:
+        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
+         driver for controlling the browser to perform certain actions.
+        username (str): name of the user.
+        n (int): maximum number of followings, which should be collected. By default,
+         it's 100. If it's set to 0, collect all followings.
+    """
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  username: str,
-                 n: int = 100):
+                 n: int = 100) -> None:
+        """Initialize the CollectFollowingsOfUser object.
+
+        Args:
+            driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
+             driver for controlling the browser to perform certain actions.
+            username (str): name of the user.
+            n (int): maximum number of followings, which should be collected. By default,
+             it's 100. If it's set to 0, collect all followings.
+        """
         target_url_format = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/friendships/" + "{user_id}/following/?{query_str}"
         fetch_data_btn_xpath = f"//a[@href='/{username}/following/'][@role='link']"
         url = f'{INSTAGRAM_DOMAIN}/{username}/'
         super().__init__(driver, username, n, url, target_url_format, "followings", fetch_data_btn_xpath)
 
     def get_request_query_dict(self) -> Dict[str, Any]:
-        """Get request query dict."""
+        """Get request query dict.
+
+        Returns:
+            Dict[str, Any]: request query dict.
+        """
         if not self.json_data_list:
             return dict(count=12)
         return dict(count=12, max_id=self.json_data_list[-1]['next_max_id'])

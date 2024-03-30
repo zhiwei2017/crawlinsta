@@ -37,17 +37,13 @@ class CollectCommentOfPost(CollectPostInfoBase):
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  post_code: str,
-                 n: int):
+                 n: int) -> None:
         """Initialize CollectCommentOfPost.
 
         Args:
             driver (Union[Chrome, Edge, Firefox, Safari, Remote]):
             post_code (str): The code of the post.
             n (int): The number of comments to collect.
-            collect_type (str): The type of data to collect.
-
-        Raises:
-            ValueError: If the number of comments to collect is not a positive integer.
         """
         super().__init__(driver,
                          post_code,
@@ -148,10 +144,13 @@ class CollectCommentOfPost(CollectPostInfoBase):
         del self.driver.requests
 
     def generate_result(self, empty_result=False) -> Json:
-        """Create comment list.
+        """Generate the result in json format for the collected comments.
+
+        Args:
+            empty_result (bool): If True, return an empty result.
 
         Returns:
-            Json: The collected comments in json format.
+            Json: The generated result in json format.
         """
         if empty_result:
             return Comments(comments=[], count=0).model_dump(mode="json")
@@ -177,7 +176,7 @@ class CollectCommentOfPost(CollectPostInfoBase):
         return Comments(comments=comments, count=len(comments)).model_dump(mode="json")
 
     def collect(self) -> Json:
-        """Collect comments.
+        """Collect comments of a post.
 
         Returns:
             Json: The collected comments in json format.

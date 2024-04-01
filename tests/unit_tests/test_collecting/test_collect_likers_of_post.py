@@ -1,7 +1,7 @@
 import json
 import pytest
 from unittest import mock
-from crawlinsta.collecting.collect_likers_of_post import collect_likers_of_post
+from crawlinsta.collecting.likers_of_post import collect_likers_of_post
 from crawlinsta.constants import INSTAGRAM_DOMAIN, API_VERSION, JsonResponseContentType
 from .base_mocked_driver import BaseMockedDriver
 
@@ -59,8 +59,8 @@ def test_collect_likers_of_post_fail_on_wrong_n(n):
 
 
 @mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.collect_likers_of_post.search_request", return_value=None)
-@mock.patch("crawlinsta.collecting.collect_likers_of_post.logger")
+@mock.patch("crawlinsta.collecting.likers_of_post.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.likers_of_post.logger")
 def test_collect_likers_of_post_no_likers(mocked_logger, mocked_search_request, mocked_sleep):
     result = collect_likers_of_post(MockedDriver(), "C2P19gPrUw5", 30)
     assert result == {"users": [], "count": 0}

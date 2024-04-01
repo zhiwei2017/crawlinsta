@@ -2,7 +2,7 @@ import json
 import pytest
 from unittest import mock
 from urllib.parse import urlencode, quote
-from crawlinsta.collecting.collect_posts_of_user import collect_posts_of_user
+from crawlinsta.collecting.posts_of_user import collect_posts_of_user
 from crawlinsta.constants import INSTAGRAM_DOMAIN, JsonResponseContentType
 from .base_mocked_driver import BaseMockedDriver
 

@@ -6,7 +6,7 @@ from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union
 from ..decorators import driver_implicit_wait
 from ..constants import INSTAGRAM_DOMAIN
-from .collect_posts_of_user import CollectPostsBase
+from .base import CollectPostsBase
 
 
 class CollectReelsOfUser(CollectPostsBase):

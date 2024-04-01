@@ -1,7 +1,7 @@
 import json
 import pytest
 from unittest import mock
-from crawlinsta.collecting.collect_user_info import collect_user_info
+from crawlinsta.collecting.user_info import collect_user_info
 from crawlinsta.constants import (
     INSTAGRAM_DOMAIN, API_VERSION, GRAPHQL_QUERY_PATH, JsonResponseContentType
 )
@@ -104,8 +104,8 @@ def test_collect_user_info_private(mocked_sleep):
 
 
 @mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.collect_user_info.logger")
-@mock.patch("crawlinsta.collecting.collect_user_info.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.user_info.logger")
+@mock.patch("crawlinsta.collecting.user_info.search_request", return_value=None)
 def test_collect_user_info_private(mocked_search_request, mocked_logger, mocked_sleep):
     result = collect_user_info(MockedDriver(), "nasa")
     assert result == {

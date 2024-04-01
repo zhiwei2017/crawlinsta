@@ -3,7 +3,7 @@ import pytest
 from lxml import html
 from unittest import mock
 from urllib.parse import urlencode, quote
-from crawlinsta.collecting.collect_comments_of_post import collect_comments_of_post
+from crawlinsta.collecting.comments_of_post import collect_comments_of_post
 from crawlinsta.constants import (
     INSTAGRAM_DOMAIN, GRAPHQL_QUERY_PATH, JsonResponseContentType
 )
@@ -135,7 +135,7 @@ def test_collect_comments_of_post_fail_on_wrong_n(n):
 
 
 @mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.collect_comments_of_post.logger")
+@mock.patch("crawlinsta.collecting.comments_of_post.logger")
 def test_collect_comments_of_post_on_no_post_id_found(mocked_logger, mocked_sleep):
     result = collect_comments_of_post(MockedDriverLoaded(""), "C10MvewSSYl", 10)
     assert result == {'comments': [], 'count': 0}
@@ -143,8 +143,8 @@ def test_collect_comments_of_post_on_no_post_id_found(mocked_logger, mocked_slee
 
 
 @mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.collect_comments_of_post.search_request", return_value=None)
-@mock.patch("crawlinsta.collecting.collect_comments_of_post.logger")
+@mock.patch("crawlinsta.collecting.comments_of_post.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.comments_of_post.logger")
 def test_collect_comments_of_post_load_no_request_found(mocked_logger, mocked_search_request, mocked_sleep):
     result = collect_comments_of_post(MockedDriverLoaded(), "C10MvewSSYl", 100)
     assert result == {'comments': [], 'count': 0}

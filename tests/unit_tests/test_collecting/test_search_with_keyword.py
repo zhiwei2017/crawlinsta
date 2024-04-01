@@ -1,7 +1,7 @@
 import json
 from unittest import mock
 from urllib.parse import urlencode, quote
-from crawlinsta.collecting.search_with_keyword import search_with_keyword
+from crawlinsta.collecting.keyword_search import search_with_keyword
 from crawlinsta.constants import INSTAGRAM_DOMAIN, JsonResponseContentType
 from .base_mocked_driver import BaseMockedDriver
 
@@ -67,8 +67,8 @@ def test_search_with_keyword_not_pers(mocked_sleep):
 
 
 @mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.search_with_keyword.search_request", return_value=None)
-@mock.patch("crawlinsta.collecting.search_with_keyword.logger")
+@mock.patch("crawlinsta.collecting.keyword_search.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.keyword_search.logger")
 def test_search_with_keyword_pers_no_request_found(mocked_logger, mocked_search_request, mocked_sleep):
     keyword = "shanghai"
     driver = MockedDriver(keyword=keyword)

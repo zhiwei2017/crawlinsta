@@ -2,7 +2,7 @@ import json
 import pytest
 from unittest import mock
 from urllib.parse import urlencode, quote
-from crawlinsta.collecting.collect_following_hashtags_of_user import collect_following_hashtags_of_user
+from crawlinsta.collecting.following_hashtags_of_user import collect_following_hashtags_of_user
 from crawlinsta.constants import (
     INSTAGRAM_DOMAIN, API_VERSION, FOLLOWING_DOC_ID, GRAPHQL_QUERY_PATH, JsonResponseContentType
 )
@@ -71,8 +71,8 @@ def test_collect_following_hashtags_of_user_no_request(mocked_sleep):
 
 
 @mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.collect_following_hashtags_of_user.search_request", return_value=None)
-@mock.patch("crawlinsta.collecting.collect_following_hashtags_of_user.logger")
+@mock.patch("crawlinsta.collecting.following_hashtags_of_user.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.following_hashtags_of_user.logger")
 def test_collect_following_hashtags_of_user_no_followers(mocked_logger, mocked_search_request, mocked_sleep):
     result = collect_following_hashtags_of_user(MockedDriver(), "anasaiaofficial", 30)
     assert result == {"hashtags": [], "count": 0}

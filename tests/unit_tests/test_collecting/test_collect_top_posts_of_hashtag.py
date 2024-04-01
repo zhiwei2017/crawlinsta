@@ -1,6 +1,6 @@
 import json
 from unittest import mock
-from crawlinsta.collecting.collect_top_posts_of_hashtag import collect_top_posts_of_hashtag
+from crawlinsta.collecting.top_posts_of_hashtag import collect_top_posts_of_hashtag
 from crawlinsta.constants import INSTAGRAM_DOMAIN, API_VERSION, JsonResponseContentType
 from .base_mocked_driver import BaseMockedDriver
 
@@ -33,8 +33,8 @@ def test_collect_top_posts_of_hashtag(mocked_sleep):
 
 
 @mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.collect_top_posts_of_hashtag.search_request", return_value=None)
-@mock.patch("crawlinsta.collecting.collect_top_posts_of_hashtag.logger")
+@mock.patch("crawlinsta.collecting.top_posts_of_hashtag.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.top_posts_of_hashtag.logger")
 def test_collect_top_posts_of_hashtag_no_data_found(mocked_logger, mocked_search_request, mocked_sleep):
     result = collect_top_posts_of_hashtag(MockedDriver(), "asiangames2023")
     assert result == {"id": None, "name": "asiangames2023", "posts": [], "post_count": 0,

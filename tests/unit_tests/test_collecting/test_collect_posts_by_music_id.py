@@ -2,7 +2,7 @@ import json
 import pytest
 from unittest import mock
 from urllib.parse import urlencode, quote
-from crawlinsta.collecting.collect_posts_by_music_id import collect_posts_by_music_id
+from crawlinsta.collecting.posts_by_music_id import collect_posts_by_music_id
 from crawlinsta.constants import INSTAGRAM_DOMAIN, API_VERSION, JsonResponseContentType
 from .base_mocked_driver import BaseMockedDriver
 
@@ -88,8 +88,8 @@ def test_collect_posts_by_music_id_fail_no_request(mocked_sleep):
                            "tests/resources/posts_by_music_id/music_result.json",
                            "1053780911670375")])
 @mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.collect_posts_by_music_id.search_request", return_value=None)
-@mock.patch("crawlinsta.collecting.collect_posts_by_music_id.logger")
+@mock.patch("crawlinsta.collecting.posts_by_music_id.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.posts_by_music_id.logger")
 def test_collect_posts_by_music_id_no_data(mocked_logger, mocked_search_requests, mocked_sleep, data_files, max_id, result_file, music_id):
     result = collect_posts_by_music_id(MockedDriver(data_files, max_id), music_id, 20)
     assert result == {'count': 0,

@@ -9,9 +9,9 @@ from selenium.webdriver.common.by import By
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union, List, Dict, Any, Tuple
 from ..schemas import Posts, Users, UserProfile
-from ..utils import search_request, get_json_data, filter_requests, get_user_data
+from ..utils import search_request, get_json_data, filter_requests
 from ..data_extraction import extract_post, extract_id
-from ..constants import JsonResponseContentType
+from ..constants import JsonResponseContentType, INSTAGRAM_DOMAIN, API_VERSION
 
 logger = logging.getLogger("crawlinsta")
 
@@ -121,8 +121,13 @@ class UserIDRequiredCollect(CollectBase):
 
         if not json_requests:
             raise ValueError(f"User '{self.username}' not found.")
-
-        self.user_data = get_user_data(json_requests, self.username)
+        target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username={self.username}"
+        idx = search_request(json_requests, target_url, JsonResponseContentType.application_json)
+        if idx is None:
+            raise ValueError(f"User '{self.username}' not found.")
+        request = json_requests.pop(idx)  # type: ignore
+        json_data = get_json_data(request.response)
+        self.user_data = json_data["data"]['user']
         self.user_id = extract_id(self.user_data)
         return self.user_data["is_private"]
 

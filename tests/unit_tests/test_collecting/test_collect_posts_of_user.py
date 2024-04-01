@@ -97,9 +97,9 @@ def test_collect_posts_of_user_no_request(mocked_sleep):
 
 
 @mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
-@mock.patch("crawlinsta.collecting.base.search_request", return_value=None)
+@mock.patch("crawlinsta.collecting.base.CollectPostsBase.extract_data", return_value=False)
 @mock.patch("crawlinsta.collecting.base.logger")
-def test_collect_posts_of_user_no_posts(mocked_logger, mocked_search_request, mocked_sleep):
+def test_collect_posts_of_user_no_posts(mocked_logger, mocked_extract_data, mocked_sleep):
     result = collect_posts_of_user(MockedDriver(), "anasaiaofficial", 30)
     assert result == {"posts": [], "count": 0}
     mocked_logger.warning.assert_called_once_with("No posts found for user 'anasaiaofficial'.")

@@ -1,7 +1,7 @@
 import pytest
 from crawlinsta.utils import (
     filter_requests, search_request, get_json_data, get_media_type,
-    get_user_data, find_brackets
+    find_brackets
 )
 from crawlinsta.constants import JsonResponseContentType, INSTAGRAM_DOMAIN, API_VERSION
 from seleniumwire.request import Request, Response
@@ -115,34 +115,6 @@ def test_get_media_type_success():
 
     result = get_media_type(8, "album")
     assert result == "Album"
-
-
-def test_get_user_data():
-    url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username=1234"
-    request1 = Request(method="GET", url=f"{url}/2/", headers=[])
-
-    request2 = Request(method="GET", url=url, headers=[])
-
-    response3 = Response(status_code=200, reason="ok", headers=[('Content-Type',
-                                                                 "application/xform; charset=utf-8")])
-    request3 = Request(method="GET", url=url, headers=[])
-    request3.response = response3
-
-    response4 = Response(status_code=200, reason="ok", headers=[('Content-Type',
-                                                                 "application/json; charset=utf-8")],
-                         body=b'{"data": {"user": "dummy"}}')
-    request4 = Request(method="GET", url=url, headers=[])
-    request4.response = response4
-
-    response5 = Response(status_code=200, reason="ok", headers=[])
-    request5 = Request(method="GET", url=url, headers=[])
-    request5.response = response5
-
-    requests = [request1, request2, request3, request4, request5]
-
-    result = get_user_data(requests, "1234")
-
-    assert result == "dummy"
 
 
 def test_find_brackets():

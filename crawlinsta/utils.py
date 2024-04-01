@@ -155,31 +155,6 @@ def get_media_type(media_type: int, product_type: str) -> str:
             raise ValueError("Invalid media_type")
 
 
-def get_user_data(requests: List[Request], username: str) -> Dict[str, Any]:
-    """Get the user data from the requests.
-
-    Args:
-        requests (:obj:`list` of :obj:`seleniumwire.request.Request`): The list of requests.
-        username (str): The username of the user.
-
-    Returns:
-        str: The user data from the requests. If the user is not found, returns None.
-
-    Examples:
-        >>> from crawlinsta import webdriver
-        >>> driver = webdriver.Chrome()
-        >>> driver.get("https://www.instagram.com")
-        >>> from crawlinsta.utils import get_user_data
-        >>> user_data = get_user_data(driver.requests, "instagram")
-    """
-    json_requests = filter_requests(requests)
-    target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username={username}"
-    idx = search_request(json_requests, target_url)
-    request = json_requests.pop(idx)  # type: ignore
-    json_data = get_json_data(request.response)
-    return json_data["data"]['user']
-
-
 def find_brackets(text: str) -> List[Tuple[int, int]]:
     """Find the brackets in the text.
 

@@ -1,7 +1,6 @@
 import json
 import logging
 import random
-import re
 import time
 from urllib.parse import parse_qs
 from pydantic import Json
@@ -162,7 +161,7 @@ class CollectCommentOfPost(CollectPostInfoBase):
                 comment = Comment(id=extract_id(comment_dict),
                                   user=UserBasicInfo(id=extract_id(comment_dict["user"]),
                                                      username=comment_dict["user"]["username"]),
-                                  post_id=self.post_id,
+                                  post_id=self.post_id,  # type: ignore
                                   created_at_utc=comment_dict.get("created_at_utc", default_created_at_timestamp),
                                   status=comment_dict.get("status"),
                                   share_enabled=comment_dict.get("share_enabled"),

@@ -5,8 +5,9 @@ import time
 from urllib.parse import quote, urlencode
 from pydantic import Json
 from selenium.webdriver.common.by import By
+from seleniumwire.request import Request
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
-from typing import Union
+from typing import Union, List
 from ..schemas import UserInfo
 from ..utils import search_request, get_json_data, filter_requests
 from ..decorators import driver_implicit_wait
@@ -36,7 +37,7 @@ class CollectUserInfo(UserIDRequiredCollect):
             username (str): name of the user.
         """
         super().__init__(driver, username, f"{INSTAGRAM_DOMAIN}/{username}/")
-        self.json_requests = []
+        self.json_requests: List[Request] = []
 
     def load_following_hashtags(self) -> None:
         """Load the following hashtags of the user."""
@@ -88,16 +89,16 @@ class CollectUserInfo(UserIDRequiredCollect):
             following_hashtags_number = self.get_following_hashtags_number()
 
         result = UserInfo(id=self.user_id,
-                          username=self.user_data["username"],
-                          fullname=self.user_data["full_name"],
-                          profile_pic_url=self.user_data["profile_pic_url"],
-                          is_private=self.user_data["is_private"],
-                          is_verified=self.user_data["is_verified"],
-                          follower_count=self.user_data["edge_followed_by"]["count"],
-                          following_count=self.user_data["edge_follow"]["count"],
+                          username=self.user_data["username"],  # type: ignore
+                          fullname=self.user_data["full_name"],  # type: ignore
+                          profile_pic_url=self.user_data["profile_pic_url"],  # type: ignore
+                          is_private=self.user_data["is_private"],  # type: ignore
+                          is_verified=self.user_data["is_verified"],  # type: ignore
+                          follower_count=self.user_data["edge_followed_by"]["count"],  # type: ignore
+                          following_count=self.user_data["edge_follow"]["count"],  # type: ignore
                           following_tag_count=following_hashtags_number,
-                          post_count=self.user_data["edge_owner_to_timeline_media"]["count"],
-                          biography=self.user_data["biography"])
+                          post_count=self.user_data["edge_owner_to_timeline_media"]["count"],  # type: ignore
+                          biography=self.user_data["biography"])  # type: ignore
         return result.model_dump(mode="json")
 
 

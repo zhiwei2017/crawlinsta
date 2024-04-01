@@ -1,10 +1,9 @@
 import json
 import logging
-from pydantic import Json
 from seleniumwire.utils import decode
 from seleniumwire.request import Request, Response
 from typing import List, Callable, Optional, Dict, Any, Tuple, Union
-from .constants import INSTAGRAM_DOMAIN, API_VERSION, JsonResponseContentType
+from .constants import JsonResponseContentType
 
 
 logger = logging.getLogger("crawlinsta")

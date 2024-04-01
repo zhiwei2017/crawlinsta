@@ -5,8 +5,9 @@ import time
 from urllib.parse import quote, urlencode
 from pydantic import Json
 from selenium.webdriver.common.by import By
+from seleniumwire.request import Request
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
-from typing import Union
+from typing import Union, List, Dict, Any
 from ..schemas import HashtagBasicInfo, HashtagBasicInfos
 from ..utils import search_request, get_json_data, filter_requests
 from ..decorators import driver_implicit_wait
@@ -44,12 +45,12 @@ class CollectFollowingHashtagsOfUser(UserIDRequiredCollect):
             ValueError: if the number of following hashtags to collect is not a positive integer.
         """
         if n <= 0:
-            raise ValueError(f"The number of following hashtags to collect "
-                             f"must be a positive integer.")
+            raise ValueError("The number of following hashtags to collect "
+                             "must be a positive integer.")
         super().__init__(driver, username, f'{INSTAGRAM_DOMAIN}/{username}/')
         self.n = n
-        self.json_data_list = []
-        self.json_requests = []
+        self.json_data_list: List[Dict[str, Any]] = []
+        self.json_requests: List[Request] = []
 
     def get_target_url(self) -> str:
         """Get the target url.
@@ -188,4 +189,3 @@ def collect_following_hashtags_of_user(driver: Union[Chrome, Edge, Firefox, Safa
         }
     """
     return CollectFollowingHashtagsOfUser(driver, username, n).collect()
-

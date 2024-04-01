@@ -1,9 +1,8 @@
 import logging
-import random
-import time
 from pydantic import Json
+from seleniumwire.request import Request
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
-from typing import Union
+from typing import Union, Dict, Any, List
 from ..schemas import Hashtag
 from ..utils import search_request, get_json_data, filter_requests
 from ..decorators import driver_implicit_wait
@@ -35,8 +34,8 @@ class CollectTopPostsOfHashtag(CollectBase):
         """
         super().__init__(driver, f'{INSTAGRAM_DOMAIN}/explore/tags/{hashtag}')
         self.hashtag = hashtag
-        self.json_requests = []
-        self.hashtag_data = None
+        self.json_requests: List[Request] = []
+        self.hashtag_data: Union[Dict[str, Any], None] = None
 
     def fetch_data(self) -> None:
         """Fetch data from the requests.
@@ -78,7 +77,7 @@ class CollectTopPostsOfHashtag(CollectBase):
             return Hashtag(id=None,
                            name=self.hashtag).model_dump(mode="json")  # type: ignore
         posts = []
-        for section in self.hashtag_data["data"]["top"]["sections"]:
+        for section in self.hashtag_data["data"]["top"]["sections"]:  # type: ignore
             if section["layout_type"] == "one_by_two_left":
                 items = section["layout_content"].get("fill_items", [])
                 items += section["layout_content"].get("one_by_two_item", dict()).get("clips", dict()).get("items", [])
@@ -88,13 +87,13 @@ class CollectTopPostsOfHashtag(CollectBase):
             for item in items:
                 post = extract_post(item["media"])
                 posts.append(post)
-        tag = Hashtag(id=extract_id(self.hashtag_data["data"]),
-                      name=self.hashtag_data["data"]["name"],
-                      post_count=self.hashtag_data["data"]["media_count"],
-                      profile_pic_url=self.hashtag_data["data"]["profile_pic_url"],
-                      is_trending=self.hashtag_data["data"]["is_trending"],
-                      related_tags=self.hashtag_data["data"]["related_tags"],
-                      subtitle=self.hashtag_data["data"]["subtitle"],
+        tag = Hashtag(id=extract_id(self.hashtag_data["data"]),  # type: ignore
+                      name=self.hashtag_data["data"]["name"],  # type: ignore
+                      post_count=self.hashtag_data["data"]["media_count"],  # type: ignore
+                      profile_pic_url=self.hashtag_data["data"]["profile_pic_url"],  # type: ignore
+                      is_trending=self.hashtag_data["data"]["is_trending"],  # type: ignore
+                      related_tags=self.hashtag_data["data"]["related_tags"],  # type: ignore
+                      subtitle=self.hashtag_data["data"]["subtitle"],  # type: ignore
                       posts=posts)
         return tag.model_dump(mode="json")
 

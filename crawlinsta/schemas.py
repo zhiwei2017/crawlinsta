@@ -409,9 +409,9 @@ class Post(PostBasicInfo):
 
 class Posts(PreferDefaultsModel):
     """Aggregate a list of posts into a field to easily render as a JSON response. """
-    posts: Union[List[Post], List[PostBasicInfo]] = Field([],
-                                                          description="A list of posts.",
-                                                          examples=[])
+    posts: Union[List[Post], List[PostBasicInfo], List] = Field([],
+                                                                description="A list of posts.",
+                                                                examples=[])
     count: int = Field(0,
                        description="Number of posts contained.",
                        examples=[100])

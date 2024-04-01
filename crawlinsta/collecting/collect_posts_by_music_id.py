@@ -6,7 +6,7 @@ from pydantic import Json
 from selenium.webdriver.common.by import By
 from seleniumwire.request import Request
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
-from typing import Union
+from typing import Union, List, Dict, Any
 from ..schemas import MusicPosts, Music
 from ..utils import search_request, get_json_data, filter_requests
 from ..decorators import driver_implicit_wait
@@ -37,15 +37,15 @@ class CollectPostsByMusicId(CollectBase):
             n (int): maximum number of posts to collect.
         """
         if n <= 0:
-            raise ValueError(f"The number of posts to collect "
-                             f"must be a positive integer.")
+            raise ValueError("The number of posts to collect "
+                             "must be a positive integer.")
         super().__init__(driver, f'{INSTAGRAM_DOMAIN}/reels/audio/{music_id}/')
         self.music_id = music_id
         self.n = n
         self.target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/clips/music/"
-        self.json_data_list = []
+        self.json_data_list: List[Dict[str, Any]] = []
         self.remaining = n
-        self.json_requests = []
+        self.json_requests: List[Request] = []
 
     def check_request_data(self, request: Request, max_id: str = "") -> bool:
         """Check if the request data is valid.
@@ -125,7 +125,7 @@ class CollectPostsByMusicId(CollectBase):
         """
         if empty_result:
             return MusicPosts(posts=[],
-                              music=Music(id=self.music_id),
+                              music=Music(id=self.music_id),  # type: ignore
                               count=0).model_dump(mode="json")  # type: ignore
 
         posts = []

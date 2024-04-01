@@ -7,7 +7,7 @@ from urllib.parse import quote, urlencode
 from seleniumwire.request import Request
 from selenium.webdriver.common.by import By
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
-from typing import Union, List, Dict, Any, Tuple
+from typing import Union, List, Dict, Any, Sequence
 from ..schemas import Posts, Users, UserProfile
 from ..utils import search_request, get_json_data, filter_requests
 from ..data_extraction import extract_post, extract_id
@@ -104,8 +104,8 @@ class UserIDRequiredCollect(CollectBase):
         """
         super().__init__(driver, url)
         self.username = username
-        self.user_id = None
-        self.user_data = None
+        self.user_id: Union[str, None] = None
+        self.user_data: Union[Dict[str, Any], None] = None
 
     def get_user_id(self) -> bool:
         """Get user id.
@@ -128,8 +128,8 @@ class UserIDRequiredCollect(CollectBase):
         request = json_requests.pop(idx)  # type: ignore
         json_data = get_json_data(request.response)
         self.user_data = json_data["data"]['user']
-        self.user_id = extract_id(self.user_data)
-        return self.user_data["is_private"]
+        self.user_id = extract_id(json_data["data"]['user'])  # type: ignore
+        return self.user_data["is_private"]  # type: ignore
 
 
 class CollectPostsBase(UserIDRequiredCollect):
@@ -146,7 +146,7 @@ class CollectPostsBase(UserIDRequiredCollect):
         json_data_list (List[Dict[str, Any]]): The list of json data.
         remaining (int): The remaining number of posts to collect.
         json_requests (List[Dict[str, Any]]): The list of json requests.
-        access_keys (Tuple[str]): The keys to access the post data.
+        access_keys (Sequence[str]): The keys to access the post data.
     """
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
@@ -156,7 +156,7 @@ class CollectPostsBase(UserIDRequiredCollect):
                  target_url: str,
                  collect_type: str,
                  json_data_key: str,
-                 access_keys: Tuple[str] = ("node", )) -> None:
+                 access_keys: Sequence[str] = ("node", )) -> None:
         """Initialize CollectPostsBase.
 
         Args:
@@ -167,7 +167,7 @@ class CollectPostsBase(UserIDRequiredCollect):
             target_url (str): The target URL to search for.
             collect_type (str): The type of data to collect.
             json_data_key (str): The key to extract the json data from.
-            access_keys (Tuple[str]): The keys to access the post data.
+            access_keys (Sequence[str]): The keys to access the post data.
         """
         if n <= 0:
             raise ValueError(f"The number of {collect_type} to collect "
@@ -177,9 +177,9 @@ class CollectPostsBase(UserIDRequiredCollect):
         self.target_url = target_url
         self.collect_type = collect_type
         self.json_data_key = json_data_key
-        self.json_data_list = []
+        self.json_data_list: List[Dict[str, Any]] = []
         self.remaining = n
-        self.json_requests = []
+        self.json_requests: List[Request] = []
         self.access_keys = access_keys
 
     def check_request_data(self, request: Request, after: str = "") -> bool:
@@ -346,9 +346,9 @@ class CollectUsersBase(UserIDRequiredCollect):
         self.n = n
         self.target_url_format = target_url_format
         self.collect_type = collect_type
-        self.json_data_list = []
+        self.json_data_list: List[Dict[str, Any]] = []
         self.remaining = n
-        self.json_requests = []
+        self.json_requests: List[Request] = []
         self.fetch_data_btn_xpath = fetch_data_btn_xpath
 
     def fetch_data(self) -> None:
@@ -504,9 +504,9 @@ class CollectPostInfoBase(CollectBase):
         self.n = n
         self.post_code = post_code
         self.collect_type = collect_type
-        self.json_data_list = []
-        self.json_requests = []
+        self.json_data_list: List[Dict[str, Any]] = []
         self.remaining = n
+        self.json_requests: List[Request] = []
         self.post_id = None
 
     def get_post_id(self) -> None:

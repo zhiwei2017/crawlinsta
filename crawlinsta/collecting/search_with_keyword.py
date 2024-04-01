@@ -7,7 +7,7 @@ from pydantic import Json
 from selenium.webdriver.common.by import By
 from seleniumwire.request import Request
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
-from typing import Union
+from typing import Union, List, Dict, Any
 from ..schemas import (
     UserProfile, HashtagBasicInfo, SearchingResultHashtag, SearchingResultUser,
     LocationBasicInfo, Place, SearchingResultPlace, SearchingResult
@@ -53,8 +53,8 @@ class SearchWithKeyword(CollectBase):
             self.data_key += "topsearch_connection"
         else:
             self.data_key += "non_profiled_serp"
-        self.json_requests = []
-        self.json_data = None
+        self.json_requests: List[Request] = []
+        self.json_data: Union[Dict[str, Any], None] = None
 
     def check_request_data(self, request: Request) -> bool:
         """Check request data.
@@ -135,7 +135,7 @@ class SearchWithKeyword(CollectBase):
         hashtags = []
         places = []
         if self.pers:
-            for hashtag_dict in self.json_data.get("hashtags", []):
+            for hashtag_dict in self.json_data.get("hashtags", []):  # type: ignore
                 hashtag_info_dict = hashtag_dict["hashtag"]
                 hashtag_basic_info = HashtagBasicInfo(id=extract_id(hashtag_info_dict),
                                                       name=hashtag_info_dict["name"],
@@ -145,7 +145,7 @@ class SearchWithKeyword(CollectBase):
                                                  hashtag=hashtag_basic_info)
                 hashtags.append(hashtag)
 
-            for place_info in self.json_data.get("places", []):
+            for place_info in self.json_data.get("places", []):  # type: ignore
                 place = SearchingResultPlace(position=place_info["position"],
                                              place=Place(
                                                  location=LocationBasicInfo(
@@ -156,7 +156,7 @@ class SearchWithKeyword(CollectBase):
                 places.append(place)
 
         users = []
-        for i, user_info in enumerate(self.json_data.get("users", [])):
+        for i, user_info in enumerate(self.json_data.get("users", [])):  # type: ignore
             if self.pers:
                 position = user_info["position"]
                 user_info_dict = user_info["user"]

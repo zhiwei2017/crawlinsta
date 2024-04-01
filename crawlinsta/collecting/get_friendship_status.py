@@ -4,8 +4,9 @@ import time
 from urllib.parse import quote, urlencode
 from pydantic import Json
 from selenium.webdriver.common.by import By
+from seleniumwire.request import Request
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
-from typing import Union
+from typing import Union, List, Dict, Any
 from ..schemas import FriendshipStatus
 from ..utils import search_request, get_json_data, filter_requests
 from ..decorators import driver_implicit_wait
@@ -40,8 +41,8 @@ class GetFriendshipStatus(UserIDRequiredCollect):
         """
         super().__init__(driver, username, f'{INSTAGRAM_DOMAIN}/{username}/')
         self.searching_username = searching_username
-        self.json_requests = []
-        self.json_data = None
+        self.json_requests: List[Request] = []
+        self.json_data: Union[Dict[str, Any], None] = None
 
     def extract_data(self) -> bool:
         """Extracting data from the json requests.
@@ -103,7 +104,7 @@ class GetFriendshipStatus(UserIDRequiredCollect):
                            f"followings of user '{self.username}' not found.")
             return False
 
-        for user_info in self.json_data["users"]:
+        for user_info in self.json_data["users"]:  # type: ignore
             if user_info["username"] != self.searching_username:
                 continue
             return True

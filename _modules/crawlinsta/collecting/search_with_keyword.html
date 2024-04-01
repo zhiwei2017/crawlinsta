@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crawlinsta.collecting.search_with_keyword &mdash; Instagram Crawler 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/autodoc_pydantic.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=2389946f"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Instagram Crawler
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_about.html">Crawlinsta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../02_source.html">Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../03_authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../04_contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Instagram Crawler</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">crawlinsta.collecting.search_with_keyword</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for crawlinsta.collecting.search_with_keyword</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">parse_qs</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Json</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="kn">import</span> <span class="n">By</span>
+<span class="kn">from</span> <span class="nn">seleniumwire.request</span> <span class="kn">import</span> <span class="n">Request</span>
+<span class="kn">from</span> <span class="nn">seleniumwire.webdriver</span> <span class="kn">import</span> <span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">..schemas</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">UserProfile</span><span class="p">,</span> <span class="n">HashtagBasicInfo</span><span class="p">,</span> <span class="n">SearchingResultHashtag</span><span class="p">,</span> <span class="n">SearchingResultUser</span><span class="p">,</span>
+    <span class="n">LocationBasicInfo</span><span class="p">,</span> <span class="n">Place</span><span class="p">,</span> <span class="n">SearchingResultPlace</span><span class="p">,</span> <span class="n">SearchingResult</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">search_request</span><span class="p">,</span> <span class="n">get_json_data</span><span class="p">,</span> <span class="n">filter_requests</span>
+<span class="kn">from</span> <span class="nn">..decorators</span> <span class="kn">import</span> <span class="n">driver_implicit_wait</span>
+<span class="kn">from</span> <span class="nn">..data_extraction</span> <span class="kn">import</span> <span class="n">extract_id</span>
+<span class="kn">from</span> <span class="nn">..constants</span> <span class="kn">import</span> <span class="n">INSTAGRAM_DOMAIN</span><span class="p">,</span> <span class="n">JsonResponseContentType</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">CollectBase</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;crawlinsta&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">SearchWithKeyword</span><span class="p">(</span><span class="n">CollectBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Search with keyword.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium</span>
+<span class="sd">         driver for controlling the browser to perform certain actions.</span>
+<span class="sd">        keyword (str): keyword for searching.</span>
+<span class="sd">        pers (bool): indicating whether results should be personalized or not.</span>
+<span class="sd">        data_key (str): key for extracting data from json data.</span>
+<span class="sd">        json_requests (List[Request]): list of requests.</span>
+<span class="sd">        json_data (dict): json data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">driver</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span><span class="p">],</span>
+                 <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">pers</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize SearchWithKeyword class.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium</span>
+<span class="sd">             driver for controlling the browser to perform certain actions.</span>
+<span class="sd">            keyword (str): keyword for searching.</span>
+<span class="sd">            pers (bool): indicating whether results should be personalized or not.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">INSTAGRAM_DOMAIN</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyword</span> <span class="o">=</span> <span class="n">keyword</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pers</span> <span class="o">=</span> <span class="n">pers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_key</span> <span class="o">=</span> <span class="s2">&quot;xdt_api__v1__fbsearch__&quot;</span>
+        <span class="k">if</span> <span class="n">pers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_key</span> <span class="o">+=</span> <span class="s2">&quot;topsearch_connection&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_key</span> <span class="o">+=</span> <span class="s2">&quot;non_profiled_serp&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_requests</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_data</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">check_request_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check request data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (Request): request object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if request data is valid, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request_data</span> <span class="o">=</span> <span class="n">parse_qs</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;variables&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">variables</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">pers</span> <span class="ow">and</span> <span class="n">variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">))[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">keyword</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">pers</span> <span class="ow">and</span> <span class="n">variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">keyword</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">extract_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract data from json data and store it in json_data attribute.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if data is extracted successfully, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">target_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/api/graphql&quot;</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">,</span>
+                             <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">text_javascript</span><span class="p">,</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">check_request_data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_data</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">data_key</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">fetch_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loading action.&quot;&quot;&quot;</span>
+        <span class="n">search_btn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s1">&#39;//a[@href=&quot;#&quot;][@role=&quot;link&quot;]&#39;</span><span class="p">)</span>
+        <span class="n">search_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">SystemRandom</span><span class="p">()</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
+
+        <span class="n">search_input_box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span>
+            <span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s1">&#39;//input[@aria-label=&quot;Search input&quot;][@placeholder=&quot;Search&quot;][@type=&quot;text&quot;]&#39;</span><span class="p">)</span>
+        <span class="n">search_input_box</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keyword</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">SystemRandom</span><span class="p">()</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">pers</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
+            <span class="n">not_pers_btn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span>
+                <span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span>
+                <span class="s1">&#39;//div[@aria-label=&quot;Not personalised&quot;][@role=&quot;button&quot;][@tabindex=&quot;0&quot;]//span[text()=&quot;Not personalised&quot;]&#39;</span><span class="p">)</span>
+            <span class="n">not_pers_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">SystemRandom</span><span class="p">()</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_requests</span> <span class="o">=</span> <span class="n">filter_requests</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span><span class="p">,</span> <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">text_javascript</span><span class="p">)</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
+
+    <span class="k">def</span> <span class="nf">generate_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">empty_result</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate result.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            empty_result (bool): indicating whether result is empty or not.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Json: searching result.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">empty_result</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SearchingResult</span><span class="p">(</span><span class="n">hashtags</span><span class="o">=</span><span class="p">[],</span>
+                                   <span class="n">users</span><span class="o">=</span><span class="p">[],</span>
+                                   <span class="n">places</span><span class="o">=</span><span class="p">[],</span>
+                                   <span class="n">personalised</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pers</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+        <span class="n">hashtags</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">places</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pers</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">hashtag_dict</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hashtags&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+                <span class="n">hashtag_info_dict</span> <span class="o">=</span> <span class="n">hashtag_dict</span><span class="p">[</span><span class="s2">&quot;hashtag&quot;</span><span class="p">]</span>
+                <span class="n">hashtag_basic_info</span> <span class="o">=</span> <span class="n">HashtagBasicInfo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">extract_id</span><span class="p">(</span><span class="n">hashtag_info_dict</span><span class="p">),</span>
+                                                      <span class="n">name</span><span class="o">=</span><span class="n">hashtag_info_dict</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+                                                      <span class="n">post_count</span><span class="o">=</span><span class="n">hashtag_info_dict</span><span class="p">[</span><span class="s2">&quot;media_count&quot;</span><span class="p">],</span>
+                                                      <span class="n">profile_pic_url</span><span class="o">=</span><span class="n">hashtag_info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;profile_pic_url&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+                <span class="n">hashtag</span> <span class="o">=</span> <span class="n">SearchingResultHashtag</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">hashtag_dict</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">],</span>
+                                                 <span class="n">hashtag</span><span class="o">=</span><span class="n">hashtag_basic_info</span><span class="p">)</span>
+                <span class="n">hashtags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hashtag</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">place_info</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;places&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+                <span class="n">place</span> <span class="o">=</span> <span class="n">SearchingResultPlace</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">place_info</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">],</span>
+                                             <span class="n">place</span><span class="o">=</span><span class="n">Place</span><span class="p">(</span>
+                                                 <span class="n">location</span><span class="o">=</span><span class="n">LocationBasicInfo</span><span class="p">(</span>
+                                                     <span class="nb">id</span><span class="o">=</span><span class="n">extract_id</span><span class="p">(</span><span class="n">place_info</span><span class="p">[</span><span class="s2">&quot;place&quot;</span><span class="p">][</span><span class="s2">&quot;location&quot;</span><span class="p">]),</span>
+                                                     <span class="n">name</span><span class="o">=</span><span class="n">place_info</span><span class="p">[</span><span class="s2">&quot;place&quot;</span><span class="p">][</span><span class="s2">&quot;location&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]),</span>
+                                                 <span class="n">subtitle</span><span class="o">=</span><span class="n">place_info</span><span class="p">[</span><span class="s2">&quot;place&quot;</span><span class="p">][</span><span class="s2">&quot;subtitle&quot;</span><span class="p">],</span>
+                                                 <span class="n">title</span><span class="o">=</span><span class="n">place_info</span><span class="p">[</span><span class="s2">&quot;place&quot;</span><span class="p">][</span><span class="s2">&quot;title&quot;</span><span class="p">]))</span>
+                <span class="n">places</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">place</span><span class="p">)</span>
+
+        <span class="n">users</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">user_info</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;users&quot;</span><span class="p">,</span> <span class="p">[])):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pers</span><span class="p">:</span>
+                <span class="n">position</span> <span class="o">=</span> <span class="n">user_info</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span>
+                <span class="n">user_info_dict</span> <span class="o">=</span> <span class="n">user_info</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">position</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="n">user_info_dict</span> <span class="o">=</span> <span class="n">user_info</span>
+
+            <span class="n">user</span> <span class="o">=</span> <span class="n">SearchingResultUser</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span>
+                                       <span class="n">user</span><span class="o">=</span><span class="n">UserProfile</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">extract_id</span><span class="p">(</span><span class="n">user_info_dict</span><span class="p">),</span>
+                                                        <span class="n">username</span><span class="o">=</span><span class="n">user_info_dict</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">],</span>
+                                                        <span class="n">fullname</span><span class="o">=</span><span class="n">user_info_dict</span><span class="p">[</span><span class="s2">&quot;full_name&quot;</span><span class="p">],</span>
+                                                        <span class="n">profile_pic_url</span><span class="o">=</span><span class="n">user_info_dict</span><span class="p">[</span><span class="s2">&quot;profile_pic_url&quot;</span><span class="p">],</span>
+                                                        <span class="n">is_verified</span><span class="o">=</span><span class="n">user_info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_verified&quot;</span><span class="p">),</span>
+                                                        <span class="n">is_private</span><span class="o">=</span><span class="n">user_info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_private&quot;</span><span class="p">)))</span>
+            <span class="n">users</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="n">searching_result</span> <span class="o">=</span> <span class="n">SearchingResult</span><span class="p">(</span><span class="n">hashtags</span><span class="o">=</span><span class="n">hashtags</span><span class="p">,</span>
+                                           <span class="n">users</span><span class="o">=</span><span class="n">users</span><span class="p">,</span>
+                                           <span class="n">places</span><span class="o">=</span><span class="n">places</span><span class="p">,</span>
+                                           <span class="n">personalised</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pers</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">searching_result</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Collect data from the webpage.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Json: searching result.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_webpage</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">()</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_data</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">status</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No search results found for keyword &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">keyword</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_result</span><span class="p">(</span><span class="n">empty_result</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_result</span><span class="p">(</span><span class="n">empty_result</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="search_with_keyword"><a class="viewcode-back" href="../../../02_source.html#crawlinsta.collecting.search_with_keyword">[docs]</a><span class="nd">@driver_implicit_wait</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">search_with_keyword</span><span class="p">(</span><span class="n">driver</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span><span class="p">],</span>
+                        <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                        <span class="n">pers</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Search hashtags or users with given keyword.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium</span>
+<span class="sd">         driver for controlling the browser to perform certain actions.</span>
+<span class="sd">        keyword (str): keyword for searching.</span>
+<span class="sd">        pers (bool): indicating whether results should be personalized or not.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Json: found users/hashtags.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta import webdriver</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta.login import login, login_with_cookies</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta.collecting import search_with_keyword</span>
+<span class="sd">        &gt;&gt;&gt; driver = webdriver.Chrome(&#39;path_to_chromedriver&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; # if you already used once the login function, you can use the</span>
+<span class="sd">        &gt;&gt;&gt; # login_with_cookies function to login with the cookie file.</span>
+<span class="sd">        &gt;&gt;&gt; login(driver, &quot;your_username&quot;, &quot;your_password&quot;)  # or login_with_cookies(driver)</span>
+<span class="sd">        &gt;&gt;&gt; search_with_keyword(driver, &quot;shanghai&quot;, True)</span>
+<span class="sd">        {</span>
+<span class="sd">          &quot;hashtags&quot;: [</span>
+<span class="sd">            {</span>
+<span class="sd">              &quot;position&quot;: 1,</span>
+<span class="sd">              &quot;hashtag&quot;: {</span>
+<span class="sd">                &quot;id&quot;: &quot;17841563224118980&quot;,</span>
+<span class="sd">                &quot;name&quot;: &quot;shanghai&quot;,</span>
+<span class="sd">                &quot;post_count&quot;: 11302316,</span>
+<span class="sd">                &quot;profile_pic_url&quot;: &quot;&quot;</span>
+<span class="sd">              }</span>
+<span class="sd">            }</span>
+<span class="sd">          ],</span>
+<span class="sd">          &quot;users&quot;: [</span>
+<span class="sd">            {</span>
+<span class="sd">              &quot;position&quot;: 0,</span>
+<span class="sd">              &quot;user&quot;: {</span>
+<span class="sd">                &quot;id&quot;: &quot;7594441262&quot;,</span>
+<span class="sd">                &quot;username&quot;: &quot;shanghai.explore&quot;,</span>
+<span class="sd">                &quot;fullname&quot;: &quot;Shanghai 🇨🇳 Travel | Hotels | Food | Tips&quot;,</span>
+<span class="sd">                &quot;profile_pic_url&quot;: &quot;https://scontent.cdninstagram.com/v13b&quot;,</span>
+<span class="sd">                &quot;is_private&quot;: null,</span>
+<span class="sd">                &quot;is_verified&quot;: true</span>
+<span class="sd">              }</span>
+<span class="sd">            }</span>
+<span class="sd">          ],</span>
+<span class="sd">          &quot;places&quot;: [</span>
+<span class="sd">            {</span>
+<span class="sd">              &quot;position&quot;: 2,</span>
+<span class="sd">              &quot;place&quot;: {</span>
+<span class="sd">                &quot;location&quot;: {</span>
+<span class="sd">                  &quot;id&quot;: &quot;106324046073002&quot;,</span>
+<span class="sd">                  &quot;name&quot;: &quot;Shanghai, China&quot;</span>
+<span class="sd">                },</span>
+<span class="sd">                &quot;subtitle&quot;: &quot;&quot;,</span>
+<span class="sd">                &quot;title&quot;: &quot;Shanghai, China&quot;</span>
+<span class="sd">              }</span>
+<span class="sd">            }</span>
+<span class="sd">          ],</span>
+<span class="sd">          &quot;personalised&quot;: true</span>
+<span class="sd">        }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">SearchWithKeyword</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">pers</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Zhiwei Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

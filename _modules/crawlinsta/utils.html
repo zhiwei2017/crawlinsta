@@ -166,7 +166,7 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="get_json_data"><a class="viewcode-back" href="../../02_source.html#crawlinsta.utils.get_json_data">[docs]</a><span class="k">def</span> <span class="nf">get_json_data</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="n">Response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<div class="viewcode-block" id="get_json_data"><a class="viewcode-back" href="../../02_source.html#crawlinsta.utils.get_json_data">[docs]</a><span class="k">def</span> <span class="nf">get_json_data</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="n">Response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the json data from the response.</span>
 
 <span class="sd">    Args:</span>
@@ -230,31 +230,6 @@
             <span class="k">return</span> <span class="s2">&quot;Album&quot;</span>
         <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid media_type&quot;</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="get_user_data"><a class="viewcode-back" href="../../02_source.html#crawlinsta.utils.get_user_data">[docs]</a><span class="k">def</span> <span class="nf">get_user_data</span><span class="p">(</span><span class="n">requests</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Request</span><span class="p">],</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the user data from the requests.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        requests (:obj:`list` of :obj:`seleniumwire.request.Request`): The list of requests.</span>
-<span class="sd">        username (str): The username of the user.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        str: The user data from the requests. If the user is not found, returns None.</span>
-
-<span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; from crawlinsta import webdriver</span>
-<span class="sd">        &gt;&gt;&gt; driver = webdriver.Chrome()</span>
-<span class="sd">        &gt;&gt;&gt; driver.get(&quot;https://www.instagram.com&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; from crawlinsta.utils import get_user_data</span>
-<span class="sd">        &gt;&gt;&gt; user_data = get_user_data(driver.requests, &quot;instagram&quot;)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">json_requests</span> <span class="o">=</span> <span class="n">filter_requests</span><span class="p">(</span><span class="n">requests</span><span class="p">)</span>
-    <span class="n">target_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">API_VERSION</span><span class="si">}</span><span class="s2">/users/web_profile_info/?username=</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">)</span>
-    <span class="n">request</span> <span class="o">=</span> <span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-    <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s1">&#39;user&#39;</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="find_brackets"><a class="viewcode-back" href="../../02_source.html#crawlinsta.utils.find_brackets">[docs]</a><span class="k">def</span> <span class="nf">find_brackets</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crawlinsta.collecting.collect_likers_of_post &mdash; Instagram Crawler 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/autodoc_pydantic.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=2389946f"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Instagram Crawler
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_about.html">Crawlinsta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../02_source.html">Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../03_authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../04_contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Instagram Crawler</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">crawlinsta.collecting.collect_likers_of_post</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for crawlinsta.collecting.collect_likers_of_post</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Json</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="kn">import</span> <span class="n">By</span>
+<span class="kn">from</span> <span class="nn">seleniumwire.webdriver</span> <span class="kn">import</span> <span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">..schemas</span> <span class="kn">import</span> <span class="n">Users</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">search_request</span><span class="p">,</span> <span class="n">get_json_data</span><span class="p">,</span> <span class="n">filter_requests</span>
+<span class="kn">from</span> <span class="nn">..decorators</span> <span class="kn">import</span> <span class="n">driver_implicit_wait</span>
+<span class="kn">from</span> <span class="nn">..data_extraction</span> <span class="kn">import</span> <span class="n">create_users_list</span>
+<span class="kn">from</span> <span class="nn">..constants</span> <span class="kn">import</span> <span class="n">INSTAGRAM_DOMAIN</span><span class="p">,</span> <span class="n">API_VERSION</span><span class="p">,</span> <span class="n">JsonResponseContentType</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">CollectPostInfoBase</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;crawlinsta&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">CollectLikersOfPost</span><span class="p">(</span><span class="n">CollectPostInfoBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class used to collect the users, who likes a given post.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium</span>
+<span class="sd">         driver for controlling the browser to perform certain actions.</span>
+<span class="sd">        post_code (str): post code, used for generating post directly accessible url.</span>
+<span class="sd">        n (int): maximum number of likers, which should be collected. By default,</span>
+<span class="sd">         it&#39;s 100. If it&#39;s set to 0, collect all likers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">driver</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span><span class="p">],</span>
+                 <span class="n">post_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructs all the necessary attributes for the CollectLikersOfPost object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium</span>
+<span class="sd">             driver for controlling the browser to perform certain actions.</span>
+<span class="sd">            post_code (str): post code, used for generating post directly accessible url.</span>
+<span class="sd">            n (int): maximum number of likers, which should be collected. By default,</span>
+<span class="sd">             it&#39;s 100. If it&#39;s set to 0, collect all likers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span>
+                         <span class="n">post_code</span><span class="p">,</span>
+                         <span class="n">n</span><span class="p">,</span>
+                         <span class="s2">&quot;likers&quot;</span><span class="p">,</span>
+                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/p/</span><span class="si">{</span><span class="n">post_code</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">fetch_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the data by clicking the likes button of the post.&quot;&quot;&quot;</span>
+        <span class="n">likes_btn_xpath</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;//a[@href=&#39;/p/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">post_code</span><span class="si">}</span><span class="s2">/liked_by/&#39;][@role=&#39;link&#39;]&quot;</span>
+        <span class="n">likes_btn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="n">likes_btn_xpath</span><span class="p">)</span>
+        <span class="n">likes_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">SystemRandom</span><span class="p">()</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_requests</span> <span class="o">+=</span> <span class="n">filter_requests</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span><span class="p">)</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
+
+    <span class="k">def</span> <span class="nf">extract_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract the data from the requests.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the data is extracted successfully, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">target_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">API_VERSION</span><span class="si">}</span><span class="s2">/media/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">post_id</span><span class="si">}</span><span class="s2">/likers/&quot;</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json_requests</span><span class="p">,</span>
+                             <span class="n">target_url</span><span class="p">,</span>
+                             <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">application_json</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_data_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">generate_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">empty_result</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the result in json format.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            empty_result (bool): True if no likers found, False otherwise.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Json: all likers&#39; user information of the given post in json format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">empty_result</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Users</span><span class="p">(</span><span class="n">users</span><span class="o">=</span><span class="p">[],</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+
+        <span class="n">likers</span> <span class="o">=</span> <span class="n">create_users_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json_data_list</span><span class="p">,</span> <span class="s2">&quot;users&quot;</span><span class="p">)[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">Users</span><span class="p">(</span><span class="n">users</span><span class="o">=</span><span class="n">likers</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">likers</span><span class="p">))</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Collect the users, who likes a given post.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Json: all likers&#39; user information of the given post in json format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_webpage</span><span class="p">()</span>
+
+        <span class="c1"># get the media id for later requests filtering</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_post_id</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_id</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No post id found for post &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">post_code</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_result</span><span class="p">(</span><span class="n">empty_result</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">()</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_data</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">status</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No likers found for post &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">post_code</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_result</span><span class="p">(</span><span class="n">empty_result</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_result</span><span class="p">(</span><span class="n">empty_result</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="collect_likers_of_post"><a class="viewcode-back" href="../../../02_source.html#crawlinsta.collecting.collect_likers_of_post">[docs]</a><span class="nd">@driver_implicit_wait</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">collect_likers_of_post</span><span class="p">(</span><span class="n">driver</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span><span class="p">],</span>
+                           <span class="n">post_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                           <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect the users, who likes a given post.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium</span>
+<span class="sd">         driver for controlling the browser to perform certain actions.</span>
+<span class="sd">        post_code (str): post code, used for generating post directly accessible url.</span>
+<span class="sd">        n (int): maximum number of likers, which should be collected. By default,</span>
+<span class="sd">         it&#39;s 100. If it&#39;s set to 0, collect all likers.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Json: all likers&#39; user information of the given post in json format.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: if the number of likers to collect is not a positive integer.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta import webdriver</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta.login import login, login_with_cookies</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta.collecting import collect_likers_of_post</span>
+<span class="sd">        &gt;&gt;&gt; driver = webdriver.Chrome(&#39;path_to_chromedriver&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; # if you already used once the login function, you can use the</span>
+<span class="sd">        &gt;&gt;&gt; # login_with_cookies function to login with the cookie file.</span>
+<span class="sd">        &gt;&gt;&gt; login(driver, &quot;your_username&quot;, &quot;your_password&quot;)  # or login_with_cookies(driver)</span>
+<span class="sd">        &gt;&gt;&gt; collect_likers_of_post(driver, &quot;WGDBS3D&quot;, 100)</span>
+<span class="sd">        {</span>
+<span class="sd">          &quot;users&quot;: [</span>
+<span class="sd">            {</span>
+<span class="sd">              &quot;id&quot;: &quot;528817151&quot;,</span>
+<span class="sd">              &quot;username&quot;: &quot;nasa&quot;,</span>
+<span class="sd">              &quot;fullname&quot;: &quot;NASA&quot;,</span>
+<span class="sd">              &quot;is_private&quot;: false,</span>
+<span class="sd">              &quot;is_verified&quot;: true,</span>
+<span class="sd">              &quot;profile_pic_url&quot;: &quot;https://dummy.pic.com&quot;,</span>
+<span class="sd">            },</span>
+<span class="sd">            ...</span>
+<span class="sd">            ],</span>
+<span class="sd">          &quot;count&quot;: 100</span>
+<span class="sd">        }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">CollectLikersOfPost</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">post_code</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Zhiwei Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

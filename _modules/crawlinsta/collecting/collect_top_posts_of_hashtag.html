@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crawlinsta.collecting.collect_top_posts_of_hashtag &mdash; Instagram Crawler 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/autodoc_pydantic.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=2389946f"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Instagram Crawler
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_about.html">Crawlinsta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../02_source.html">Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../03_authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../04_contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Instagram Crawler</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">crawlinsta.collecting.collect_top_posts_of_hashtag</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for crawlinsta.collecting.collect_top_posts_of_hashtag</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Json</span>
+<span class="kn">from</span> <span class="nn">seleniumwire.webdriver</span> <span class="kn">import</span> <span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">..schemas</span> <span class="kn">import</span> <span class="n">Hashtag</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">search_request</span><span class="p">,</span> <span class="n">get_json_data</span><span class="p">,</span> <span class="n">filter_requests</span>
+<span class="kn">from</span> <span class="nn">..decorators</span> <span class="kn">import</span> <span class="n">driver_implicit_wait</span>
+<span class="kn">from</span> <span class="nn">..data_extraction</span> <span class="kn">import</span> <span class="n">extract_post</span><span class="p">,</span> <span class="n">extract_id</span>
+<span class="kn">from</span> <span class="nn">..constants</span> <span class="kn">import</span> <span class="n">INSTAGRAM_DOMAIN</span><span class="p">,</span> <span class="n">API_VERSION</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">CollectBase</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;crawlinsta&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">CollectTopPostsOfHashtag</span><span class="p">(</span><span class="n">CollectBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class to collect top posts of a given hashtag.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium</span>
+<span class="sd">         driver for controlling the browser to perform certain actions.</span>
+<span class="sd">        hashtag (str): hashtag.</span>
+<span class="sd">        json_requests (list): list of json requests.</span>
+<span class="sd">        hashtag_data (dict): hashtag data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">driver</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span><span class="p">],</span>
+                 <span class="n">hashtag</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructs all the necessary attributes for the CollectTopPostsOfHashtag object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium</span>
+<span class="sd">             driver for controlling the browser to perform certain actions.</span>
+<span class="sd">            hashtag (str): hashtag.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s1">/explore/tags/</span><span class="si">{</span><span class="n">hashtag</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hashtag</span> <span class="o">=</span> <span class="n">hashtag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_requests</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hashtag_data</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">fetch_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch data from the requests.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if the hashtag is not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_requests</span> <span class="o">+=</span> <span class="n">filter_requests</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span><span class="p">)</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_requests</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hashtag &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hashtag</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">extract_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract data from the fetched requests.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if data is found, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">target_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">API_VERSION</span><span class="si">}</span><span class="s1">/tags/web_info/?tag_name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hashtag</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json_requests</span><span class="p">,</span> <span class="n">target_url</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="n">get_json_data</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hashtag_data</span> <span class="o">=</span> <span class="n">json_data</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">generate_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">empty_result</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the result in a json format.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            empty_result (bool, optional): if True, return an empty result. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Json: Hashtag information in a json format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">empty_result</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Hashtag</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hashtag</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="n">posts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hashtag_data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;top&quot;</span><span class="p">][</span><span class="s2">&quot;sections&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">section</span><span class="p">[</span><span class="s2">&quot;layout_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;one_by_two_left&quot;</span><span class="p">:</span>
+                <span class="n">items</span> <span class="o">=</span> <span class="n">section</span><span class="p">[</span><span class="s2">&quot;layout_content&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fill_items&quot;</span><span class="p">,</span> <span class="p">[])</span>
+                <span class="n">items</span> <span class="o">+=</span> <span class="n">section</span><span class="p">[</span><span class="s2">&quot;layout_content&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;one_by_two_item&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;clips&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">,</span> <span class="p">[])</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">items</span> <span class="o">=</span> <span class="n">section</span><span class="p">[</span><span class="s2">&quot;layout_content&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;medias&quot;</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+                <span class="n">post</span> <span class="o">=</span> <span class="n">extract_post</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;media&quot;</span><span class="p">])</span>
+                <span class="n">posts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">post</span><span class="p">)</span>
+        <span class="n">tag</span> <span class="o">=</span> <span class="n">Hashtag</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">extract_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hashtag_data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]),</span>
+                      <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hashtag_data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+                      <span class="n">post_count</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hashtag_data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;media_count&quot;</span><span class="p">],</span>
+                      <span class="n">profile_pic_url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hashtag_data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;profile_pic_url&quot;</span><span class="p">],</span>
+                      <span class="n">is_trending</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hashtag_data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;is_trending&quot;</span><span class="p">],</span>
+                      <span class="n">related_tags</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hashtag_data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;related_tags&quot;</span><span class="p">],</span>
+                      <span class="n">subtitle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hashtag_data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;subtitle&quot;</span><span class="p">],</span>
+                      <span class="n">posts</span><span class="o">=</span><span class="n">posts</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tag</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Collect top posts of a given hashtag.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Json: Hashtag information in a json format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_webpage</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">()</span>
+
+        <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_data</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">status</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No data found for hashtag &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hashtag</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_result</span><span class="p">(</span><span class="n">empty_result</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_result</span><span class="p">(</span><span class="n">empty_result</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="collect_top_posts_of_hashtag"><a class="viewcode-back" href="../../../02_source.html#crawlinsta.collecting.collect_top_posts_of_hashtag">[docs]</a><span class="nd">@driver_implicit_wait</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">collect_top_posts_of_hashtag</span><span class="p">(</span><span class="n">driver</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span><span class="p">],</span>
+                                 <span class="n">hashtag</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect top posts of a given hashtag.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium</span>
+<span class="sd">         driver for controlling the browser to perform certain actions.</span>
+<span class="sd">        hashtag (str): hashtag.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Json: Hashtag information in a json format.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: if the hashtag is not found.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta import webdriver</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta.login import login, login_with_cookies</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta.collecting import collect_top_posts_of_hashtag</span>
+<span class="sd">        &gt;&gt;&gt; driver = webdriver.Chrome(&#39;path_to_chromedriver&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; # if you already used once the login function, you can use the</span>
+<span class="sd">        &gt;&gt;&gt; # login_with_cookies function to login with the cookie file.</span>
+<span class="sd">        &gt;&gt;&gt; login(driver, &quot;your_username&quot;, &quot;your_password&quot;)  # or login_with_cookies(driver)</span>
+<span class="sd">        &gt;&gt;&gt; collect_top_posts_of_hashtag(driver, &quot;shanghai&quot;, True)</span>
+<span class="sd">        {</span>
+<span class="sd">          &quot;top_posts&quot;: [</span>
+<span class="sd">            {</span>
+<span class="sd">              &quot;like_count&quot;: 817982,</span>
+<span class="sd">              &quot;comment_count&quot;: 3000,</span>
+<span class="sd">              &quot;id&quot;: &quot;3215769692664507668&quot;,</span>
+<span class="sd">              &quot;code&quot;: &quot;CygtX9ivC0U&quot;,</span>
+<span class="sd">              &quot;user&quot;: {</span>
+<span class="sd">                &quot;id&quot;: &quot;50269116275&quot;,</span>
+<span class="sd">                &quot;username&quot;: &quot;dummy_instagram_username&quot;,</span>
+<span class="sd">                &quot;fullname&quot;: &quot;&quot;,</span>
+<span class="sd">                &quot;profile_pic_url&quot;: &quot;https://scontent.cdninstagram.com/v&quot;,</span>
+<span class="sd">                &quot;is_private&quot;: false,</span>
+<span class="sd">                &quot;is_verified&quot;: false</span>
+<span class="sd">              },</span>
+<span class="sd">              &quot;taken_at&quot;: 1697569769,</span>
+<span class="sd">              &quot;media_type&quot;: &quot;Reel&quot;,</span>
+<span class="sd">              &quot;caption&quot;: {</span>
+<span class="sd">                &quot;id&quot;: &quot;17985380039262083&quot;,</span>
+<span class="sd">                &quot;text&quot;: &quot;I know what she’s gonna say before she even has the chance 😂#shanghai&quot;,</span>
+<span class="sd">                &quot;created_at_utc&quot;: null</span>
+<span class="sd">              },</span>
+<span class="sd">              &quot;accessibility_caption&quot;: &quot;&quot;,</span>
+<span class="sd">              &quot;original_width&quot;: 1080,</span>
+<span class="sd">              &quot;original_height&quot;: 1920,</span>
+<span class="sd">              &quot;urls&quot;: [</span>
+<span class="sd">                &quot;https://scontent.cdninstagram.com/o1&quot;</span>
+<span class="sd">              ],</span>
+<span class="sd">              &quot;has_shared_to_fb&quot;: false,</span>
+<span class="sd">              &quot;usertags&quot;: [],</span>
+<span class="sd">              &quot;location&quot;: null,</span>
+<span class="sd">              &quot;music&quot;: {</span>
+<span class="sd">                &quot;id&quot;: &quot;2614441095386924&quot;,</span>
+<span class="sd">                &quot;is_trending_in_clips&quot;: false,</span>
+<span class="sd">                &quot;artist&quot;: {</span>
+<span class="sd">                  &quot;id&quot;: &quot;50269116275&quot;,</span>
+<span class="sd">                  &quot;username&quot;: &quot;dummy_instagram_username&quot;,</span>
+<span class="sd">                  &quot;fullname&quot;: &quot;&quot;,</span>
+<span class="sd">                  &quot;profile_pic_url&quot;: &quot;&quot;,</span>
+<span class="sd">                  &quot;is_private&quot;: null,</span>
+<span class="sd">                  &quot;is_verified&quot;: null</span>
+<span class="sd">                },</span>
+<span class="sd">                &quot;title&quot;: &quot;Original audio&quot;,</span>
+<span class="sd">                &quot;duration_in_ms&quot;: null,</span>
+<span class="sd">                &quot;url&quot;: null</span>
+<span class="sd">              }</span>
+<span class="sd">            },</span>
+<span class="sd">            ...</span>
+<span class="sd">            ],</span>
+<span class="sd">          &quot;count&quot;: 100</span>
+<span class="sd">        }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">CollectTopPostsOfHashtag</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">hashtag</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Zhiwei Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

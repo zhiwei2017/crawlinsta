@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crawlinsta.collecting.collect_posts_of_user &mdash; Instagram Crawler 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/autodoc_pydantic.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=2389946f"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Instagram Crawler
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_about.html">Crawlinsta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../02_source.html">Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../03_authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../04_contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Instagram Crawler</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">crawlinsta.collecting.collect_posts_of_user</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for crawlinsta.collecting.collect_posts_of_user</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">parse_qs</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Json</span>
+<span class="kn">from</span> <span class="nn">seleniumwire.request</span> <span class="kn">import</span> <span class="n">Request</span>
+<span class="kn">from</span> <span class="nn">seleniumwire.webdriver</span> <span class="kn">import</span> <span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">..decorators</span> <span class="kn">import</span> <span class="n">driver_implicit_wait</span>
+<span class="kn">from</span> <span class="nn">..constants</span> <span class="kn">import</span> <span class="n">INSTAGRAM_DOMAIN</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">CollectPostsBase</span>
+
+
+<span class="k">class</span> <span class="nc">CollectPostsOfUser</span><span class="p">(</span><span class="n">CollectPostsBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect all visible posts of the given user.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium</span>
+<span class="sd">         driver for controlling the browser to perform certain actions.</span>
+<span class="sd">        username (str): name of the user.</span>
+<span class="sd">        n (int): maximum number of posts, which should be collected. By default,</span>
+<span class="sd">         it&#39;s 100. If it&#39;s set to 0, collect all posts.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">driver</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span><span class="p">],</span>
+                 <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the CollectPostsOfUser class.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            driver (selenium.webdriver.remote.webdriver.WebDriver): selenium</span>
+<span class="sd">             driver for controlling the browser to perform certain actions.</span>
+<span class="sd">            username (str): name of the user.</span>
+<span class="sd">            n (int): maximum number of posts, which should be collected. By default,</span>
+<span class="sd">             it&#39;s 100. If it&#39;s set to 0, collect all posts.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">target_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/api/graphql&quot;</span>
+        <span class="n">collect_type</span> <span class="o">=</span> <span class="s2">&quot;posts&quot;</span>
+        <span class="n">json_data_key</span> <span class="o">=</span> <span class="s2">&quot;xdt_api__v1__feed__user_timeline_graphql_connection&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s1">/&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">target_url</span><span class="p">,</span> <span class="n">collect_type</span><span class="p">,</span>
+                         <span class="n">json_data_key</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">get_user_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the user id of the given user.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the user id is found, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">check_request_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">,</span> <span class="n">after</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the request data is valid.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (seleniumwire.request.Request): request object.</span>
+<span class="sd">            after (str): cursor for the next page.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the request data is valid, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request_data</span> <span class="o">=</span> <span class="n">parse_qs</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;variables&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">request_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;av&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;17841461911219001&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">variables</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;after&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">after</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+
+<div class="viewcode-block" id="collect_posts_of_user"><a class="viewcode-back" href="../../../02_source.html#crawlinsta.collecting.collect_posts_of_user">[docs]</a><span class="nd">@driver_implicit_wait</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">collect_posts_of_user</span><span class="p">(</span><span class="n">driver</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span><span class="p">],</span>
+                          <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                          <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect n posts of the given user. If n is set to 0, collect all posts.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium</span>
+<span class="sd">         driver for controlling the browser to perform certain actions.</span>
+<span class="sd">        username (str): name of the user.</span>
+<span class="sd">        n (int): maximum number of posts, which should be collected. By default,</span>
+<span class="sd">         it&#39;s 100. If it&#39;s set to 0, collect all posts.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Json: all visible post of the given user in json format.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: if the number of posts to collect is not a positive integer.</span>
+<span class="sd">        ValueError: if the user with the given username is not found.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta import webdriver</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta.login import login, login_with_cookies</span>
+<span class="sd">        &gt;&gt;&gt; from crawlinsta.collecting import collect_posts_of_user</span>
+<span class="sd">        &gt;&gt;&gt; driver = webdriver.Chrome(&#39;path_to_chromedriver&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; # if you already used once the login function, you can use the</span>
+<span class="sd">        &gt;&gt;&gt; # login_with_cookies function to login with the cookie file.</span>
+<span class="sd">        &gt;&gt;&gt; login(driver, &quot;your_username&quot;, &quot;your_password&quot;)  # or login_with_cookies(driver)</span>
+<span class="sd">        &gt;&gt;&gt; collect_posts_of_user(driver, &quot;dummy_instagram_username&quot;, 100)</span>
+<span class="sd">        {</span>
+<span class="sd">          &quot;posts&quot;: [</span>
+<span class="sd">            {</span>
+<span class="sd">              &quot;like_count&quot;: 817982,</span>
+<span class="sd">              &quot;comment_count&quot;: 3000,</span>
+<span class="sd">              &quot;id&quot;: &quot;3215769692664507668&quot;,</span>
+<span class="sd">              &quot;code&quot;: &quot;CygtX9ivC0U&quot;,</span>
+<span class="sd">              &quot;user&quot;: {</span>
+<span class="sd">                &quot;id&quot;: &quot;50269116275&quot;,</span>
+<span class="sd">                &quot;username&quot;: &quot;dummy_instagram_username&quot;,</span>
+<span class="sd">                &quot;fullname&quot;: &quot;&quot;,</span>
+<span class="sd">                &quot;profile_pic_url&quot;: &quot;https://scontent.cdninstagram.com/v&quot;,</span>
+<span class="sd">                &quot;is_private&quot;: false,</span>
+<span class="sd">                &quot;is_verified&quot;: false</span>
+<span class="sd">              },</span>
+<span class="sd">              &quot;taken_at&quot;: 1697569769,</span>
+<span class="sd">              &quot;media_type&quot;: &quot;Photo&quot;,</span>
+<span class="sd">              &quot;caption&quot;: {</span>
+<span class="sd">                &quot;id&quot;: &quot;17985380039262083&quot;,</span>
+<span class="sd">                &quot;text&quot;: &quot;I know what she’s gonna say before she even has the chance 😂&quot;,</span>
+<span class="sd">                &quot;created_at_utc&quot;: null</span>
+<span class="sd">              },</span>
+<span class="sd">              &quot;accessibility_caption&quot;: &quot;&quot;,</span>
+<span class="sd">              &quot;original_width&quot;: 1080,</span>
+<span class="sd">              &quot;original_height&quot;: 1920,</span>
+<span class="sd">              &quot;urls&quot;: [</span>
+<span class="sd">                &quot;https://scontent.cdninstagram.com/o1&quot;</span>
+<span class="sd">              ],</span>
+<span class="sd">              &quot;has_shared_to_fb&quot;: false,</span>
+<span class="sd">              &quot;usertags&quot;: [],</span>
+<span class="sd">              &quot;location&quot;: null,</span>
+<span class="sd">              &quot;music&quot;: {</span>
+<span class="sd">                &quot;id&quot;: &quot;2614441095386924&quot;,</span>
+<span class="sd">                &quot;is_trending_in_clips&quot;: false,</span>
+<span class="sd">                &quot;artist&quot;: {</span>
+<span class="sd">                  &quot;id&quot;: &quot;50269116275&quot;,</span>
+<span class="sd">                  &quot;username&quot;: &quot;dummy_instagram_username&quot;,</span>
+<span class="sd">                  &quot;fullname&quot;: &quot;&quot;,</span>
+<span class="sd">                  &quot;profile_pic_url&quot;: &quot;&quot;,</span>
+<span class="sd">                  &quot;is_private&quot;: null,</span>
+<span class="sd">                  &quot;is_verified&quot;: null</span>
+<span class="sd">                },</span>
+<span class="sd">                &quot;title&quot;: &quot;Original audio&quot;,</span>
+<span class="sd">                &quot;duration_in_ms&quot;: null,</span>
+<span class="sd">                &quot;url&quot;: null</span>
+<span class="sd">              }</span>
+<span class="sd">            },</span>
+<span class="sd">            ...</span>
+<span class="sd">            ],</span>
+<span class="sd">          &quot;count&quot;: 100</span>
+<span class="sd">        }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">CollectPostsOfUser</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Zhiwei Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

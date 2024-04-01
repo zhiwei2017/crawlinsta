@@ -46,7 +46,7 @@ class MockedDriver(BaseMockedDriver):
         return mock.Mock()
 
 
-@mock.patch("crawlinsta.collecting.search_with_keyword.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_search_with_keyword_pers(mocked_sleep):
     keyword = "shanghai"
     driver = MockedDriver(keyword=keyword)
@@ -56,7 +56,7 @@ def test_search_with_keyword_pers(mocked_sleep):
     assert result == expected
 
 
-@mock.patch("crawlinsta.collecting.search_with_keyword.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_search_with_keyword_not_pers(mocked_sleep):
     keyword = "shanghai"
     driver = MockedDriver(keyword=keyword)
@@ -66,7 +66,7 @@ def test_search_with_keyword_not_pers(mocked_sleep):
     assert result == expected
 
 
-@mock.patch("crawlinsta.collecting.search_with_keyword.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 @mock.patch("crawlinsta.collecting.search_with_keyword.search_request", return_value=None)
 @mock.patch("crawlinsta.collecting.search_with_keyword.logger")
 def test_search_with_keyword_pers_no_request_found(mocked_logger, mocked_search_request, mocked_sleep):

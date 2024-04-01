@@ -48,7 +48,7 @@ class MockedDriver(BaseMockedDriver):
         return mock.Mock()
 
 
-@mock.patch("crawlinsta.collecting.collect_following_hashtags_of_user.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_collect_following_hashtags_of_user(mocked_sleep):
     result = collect_following_hashtags_of_user(MockedDriver(), "angibieneck", 200)
     with open("tests/resources/following_hashtags/result.json", "r") as file:
@@ -63,14 +63,14 @@ def test_collect_following_hashtags_of_user_fail(n):
     assert str(exc_info.value) == "The number of following hashtags to collect must be a positive integer."
 
 
-@mock.patch("crawlinsta.collecting.collect_following_hashtags_of_user.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_collect_following_hashtags_of_user_no_request(mocked_sleep):
     with pytest.raises(ValueError) as exc_info:
         collect_following_hashtags_of_user(BaseMockedDriver(), "anasaiaofficial")
     assert str(exc_info.value) == "User 'anasaiaofficial' not found."
 
 
-@mock.patch("crawlinsta.collecting.collect_following_hashtags_of_user.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 @mock.patch("crawlinsta.collecting.collect_following_hashtags_of_user.search_request", return_value=None)
 @mock.patch("crawlinsta.collecting.collect_following_hashtags_of_user.logger")
 def test_collect_following_hashtags_of_user_no_followers(mocked_logger, mocked_search_request, mocked_sleep):
@@ -97,7 +97,7 @@ class MockedDriverPrivate(MockedDriver):
         self.requests = [request]
 
 
-@mock.patch("crawlinsta.collecting.collect_following_hashtags_of_user.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_collect_following_hashtags_of_user_private(mocked_sleep):
     result = collect_following_hashtags_of_user(MockedDriverPrivate(), "angibieneck", 200)
     assert result == {"hashtags": [], "count": 0}

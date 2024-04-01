@@ -24,7 +24,7 @@ class MockedDriver(BaseMockedDriver):
         self.requests = [request]
 
 
-@mock.patch("crawlinsta.collecting.collect_top_posts_of_hashtag.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_collect_top_posts_of_hashtag(mocked_sleep):
     result = collect_top_posts_of_hashtag(MockedDriver(), "asiangames2023")
     with open("tests/resources/top_posts_of_hashtag/result.json", "r") as file:
@@ -32,7 +32,7 @@ def test_collect_top_posts_of_hashtag(mocked_sleep):
     assert result == expected
 
 
-@mock.patch("crawlinsta.collecting.collect_top_posts_of_hashtag.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 @mock.patch("crawlinsta.collecting.collect_top_posts_of_hashtag.search_request", return_value=None)
 @mock.patch("crawlinsta.collecting.collect_top_posts_of_hashtag.logger")
 def test_collect_top_posts_of_hashtag_no_data_found(mocked_logger, mocked_search_request, mocked_sleep):

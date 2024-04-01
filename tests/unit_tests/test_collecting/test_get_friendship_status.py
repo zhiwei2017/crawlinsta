@@ -47,7 +47,7 @@ class MockedDriver(BaseMockedDriver):
 @pytest.mark.parametrize("username1, username2, user_id1, user_id2",
                          [("nasa", "astro_frankrubio", "528817151", "54688074404"),
                           ("regina_steinhauer", "nasa", "2057642850", "528817151")])
-@mock.patch("crawlinsta.collecting.get_friendship_status.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_get_friendship_status(mocked_sleep, username1, username2, user_id1, user_id2):
     user_dict = {
         username1: {
@@ -73,7 +73,7 @@ def test_get_friendship_status(mocked_sleep, username1, username2, user_id1, use
 @pytest.mark.parametrize("username1, username2, user_id1, user_id2",
                          [("nasa", "astro_frankrubio", "528817151", "54688074404"),
                           ("regina_steinhauer", "nasa", "2057642850", "528817151")])
-@mock.patch("crawlinsta.collecting.get_friendship_status.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 @mock.patch("crawlinsta.collecting.get_friendship_status.search_request", return_value=None)
 @mock.patch("crawlinsta.collecting.get_friendship_status.logger")
 def test_get_friendship_status_no_request_found(mocked_logger, mocked_search_request, mocked_sleep, username1, username2, user_id1, user_id2):
@@ -140,7 +140,7 @@ class MockedDriverPrivate(MockedDriver):
 @pytest.mark.parametrize("username1, username2, user_id1, user_id2",
                          [("nasa", "astro_frankrubio", "528817151", "54688074404"),
                           ("regina_steinhauer", "nasa", "2057642850", "528817151")])
-@mock.patch("crawlinsta.collecting.get_friendship_status.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_get_friendship_status_private_account(mocked_sleep, username1, username2, user_id1, user_id2):
     user_dict = {
         username1: {
@@ -161,7 +161,7 @@ def test_get_friendship_status_private_account(mocked_sleep, username1, username
     assert result == {"following": False, "followed_by": False}
 
 
-@mock.patch("crawlinsta.collecting.get_friendship_status.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_collect_posts_of_user_no_request(mocked_sleep):
     with pytest.raises(ValueError) as exc_info:
         get_friendship_status(BaseMockedDriver(), "nasa", "astro_frankrubio")

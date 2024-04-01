@@ -34,7 +34,7 @@ class MockedDriver(BaseMockedDriver):
         return mock.Mock()
 
 
-@mock.patch("crawlinsta.collecting.collect_user_info.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_collect_user_info(mocked_sleep):
     result = collect_user_info(MockedDriver(), "nasa")
     assert result == {
@@ -52,7 +52,7 @@ def test_collect_user_info(mocked_sleep):
     }
 
 
-@mock.patch("crawlinsta.collecting.collect_user_info.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_collect_user_info_fail(mocked_sleep):
     with pytest.raises(ValueError, match="User 'nasa' not found.") as exc:
         collect_user_info(BaseMockedDriver(), "nasa")
@@ -85,7 +85,7 @@ class MockedDriverPrivate(BaseMockedDriver):
         return mock.Mock()
 
 
-@mock.patch("crawlinsta.collecting.collect_user_info.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_collect_user_info_private(mocked_sleep):
     result = collect_user_info(MockedDriverPrivate(), "nasa")
     assert result == {
@@ -103,7 +103,7 @@ def test_collect_user_info_private(mocked_sleep):
     }
 
 
-@mock.patch("crawlinsta.collecting.collect_user_info.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 @mock.patch("crawlinsta.collecting.collect_user_info.logger")
 @mock.patch("crawlinsta.collecting.collect_user_info.search_request", return_value=None)
 def test_collect_user_info_private(mocked_search_request, mocked_logger, mocked_sleep):

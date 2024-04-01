@@ -31,7 +31,7 @@ class MockedDriver(BaseMockedDriver):
         return mocked_element
 
 
-@mock.patch("crawlinsta.collecting.collect_likers_of_post.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_collect_likers_of_post_success(mocked_sleep):
     result = collect_likers_of_post(MockedDriver(), "C2P19gPrUw5", 100)
     with open("tests/resources/likers/result.json", "r") as file:
@@ -45,7 +45,7 @@ class MockedDriverFail(BaseMockedDriver):
         return mocked_element
 
 
-@mock.patch("crawlinsta.collecting.collect_likers_of_post.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_collect_likers_of_post_fail(mocked_sleep):
     result = collect_likers_of_post(MockedDriverFail(), "C2P19gPrUw5", 100)
     assert result == {"users": [], "count": 0}
@@ -58,7 +58,7 @@ def test_collect_likers_of_post_fail_on_wrong_n(n):
     assert str(exc.value) == "The number of likers to collect must be a positive integer."
 
 
-@mock.patch("crawlinsta.collecting.collect_likers_of_post.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 @mock.patch("crawlinsta.collecting.collect_likers_of_post.search_request", return_value=None)
 @mock.patch("crawlinsta.collecting.collect_likers_of_post.logger")
 def test_collect_likers_of_post_no_likers(mocked_logger, mocked_search_request, mocked_sleep):

@@ -49,7 +49,7 @@ class MockedDriverCached(BaseMockedDriver):
         return mocked_element
 
 
-@mock.patch("crawlinsta.collecting.collect_comments_of_post.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_collect_comments_of_post_success_cached(mocked_sleep):
     result = collect_comments_of_post(MockedDriverCached(), "C10MvewSSYl", 100)
     with open("tests/resources/comments/result_cached.json", "r") as file:
@@ -119,7 +119,7 @@ class MockedDriverLoaded(BaseMockedDriver):
         return mocked_element
 
 
-@mock.patch("crawlinsta.collecting.collect_comments_of_post.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 def test_collect_comments_of_post_success_load(mocked_sleep):
     result = collect_comments_of_post(MockedDriverLoaded(), "C10MvewSSYl", 100)
     with open("tests/resources/comments/result_loaded.json", "r") as file:
@@ -134,7 +134,7 @@ def test_collect_comments_of_post_fail_on_wrong_n(n):
     assert str(exc.value) == "The number of comments to collect must be a positive integer."
 
 
-@mock.patch("crawlinsta.collecting.collect_comments_of_post.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 @mock.patch("crawlinsta.collecting.collect_comments_of_post.logger")
 def test_collect_comments_of_post_on_no_post_id_found(mocked_logger, mocked_sleep):
     result = collect_comments_of_post(MockedDriverLoaded(""), "C10MvewSSYl", 10)
@@ -142,7 +142,7 @@ def test_collect_comments_of_post_on_no_post_id_found(mocked_logger, mocked_slee
     mocked_logger.warning.assert_called_once_with("No post id found for post 'C10MvewSSYl'.")
 
 
-@mock.patch("crawlinsta.collecting.collect_comments_of_post.time.sleep", return_value=None)
+@mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 @mock.patch("crawlinsta.collecting.collect_comments_of_post.search_request", return_value=None)
 @mock.patch("crawlinsta.collecting.collect_comments_of_post.logger")
 def test_collect_comments_of_post_load_no_request_found(mocked_logger, mocked_search_request, mocked_sleep):

@@ -78,7 +78,6 @@
 <span></span><span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">parse_qs</span>
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Json</span>
@@ -239,7 +238,7 @@
                 <span class="n">comment</span> <span class="o">=</span> <span class="n">Comment</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">extract_id</span><span class="p">(</span><span class="n">comment_dict</span><span class="p">),</span>
                                   <span class="n">user</span><span class="o">=</span><span class="n">UserBasicInfo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">extract_id</span><span class="p">(</span><span class="n">comment_dict</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]),</span>
                                                      <span class="n">username</span><span class="o">=</span><span class="n">comment_dict</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;username&quot;</span><span class="p">]),</span>
-                                  <span class="n">post_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">post_id</span><span class="p">,</span>
+                                  <span class="n">post_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">post_id</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
                                   <span class="n">created_at_utc</span><span class="o">=</span><span class="n">comment_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;created_at_utc&quot;</span><span class="p">,</span> <span class="n">default_created_at_timestamp</span><span class="p">),</span>
                                   <span class="n">status</span><span class="o">=</span><span class="n">comment_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">),</span>
                                   <span class="n">share_enabled</span><span class="o">=</span><span class="n">comment_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;share_enabled&quot;</span><span class="p">),</span>

@@ -83,7 +83,7 @@
 <span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="kn">import</span> <span class="n">By</span>
 <span class="kn">from</span> <span class="nn">seleniumwire.request</span> <span class="kn">import</span> <span class="n">Request</span>
 <span class="kn">from</span> <span class="nn">seleniumwire.webdriver</span> <span class="kn">import</span> <span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">from</span> <span class="nn">..schemas</span> <span class="kn">import</span> <span class="n">MusicPosts</span><span class="p">,</span> <span class="n">Music</span>
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">search_request</span><span class="p">,</span> <span class="n">get_json_data</span><span class="p">,</span> <span class="n">filter_requests</span>
 <span class="kn">from</span> <span class="nn">..decorators</span> <span class="kn">import</span> <span class="n">driver_implicit_wait</span>
@@ -114,15 +114,15 @@
 <span class="sd">            n (int): maximum number of posts to collect.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The number of posts to collect &quot;</span>
-                             <span class="sa">f</span><span class="s2">&quot;must be a positive integer.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The number of posts to collect &quot;</span>
+                             <span class="s2">&quot;must be a positive integer.&quot;</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s1">/reels/audio/</span><span class="si">{</span><span class="n">music_id</span><span class="si">}</span><span class="s1">/&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">music_id</span> <span class="o">=</span> <span class="n">music_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">target_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">API_VERSION</span><span class="si">}</span><span class="s2">/clips/music/&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">json_data_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_data_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remaining</span> <span class="o">=</span> <span class="n">n</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">json_requests</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_requests</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Request</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">def</span> <span class="nf">check_request_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">,</span> <span class="n">max_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the request data is valid.</span>
@@ -202,7 +202,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">empty_result</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">MusicPosts</span><span class="p">(</span><span class="n">posts</span><span class="o">=</span><span class="p">[],</span>
-                              <span class="n">music</span><span class="o">=</span><span class="n">Music</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">music_id</span><span class="p">),</span>
+                              <span class="n">music</span><span class="o">=</span><span class="n">Music</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">music_id</span><span class="p">),</span>  <span class="c1"># type: ignore</span>
                               <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 
         <span class="n">posts</span> <span class="o">=</span> <span class="p">[]</span>

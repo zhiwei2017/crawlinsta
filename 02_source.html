@@ -3395,6 +3395,10 @@ caption, location width, height etc.</p>
 <span class="w">                  </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/PostBasicInfo&quot;</span>
 <span class="w">               </span><span class="p">},</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
@@ -4224,7 +4228,7 @@ caption, location width, height etc.</p>
 <dt class="field-odd">Fields<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#crawlinsta.schemas.Posts.count" title="crawlinsta.schemas.Posts.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span> <span class="pre">(int)</span></code></a></p></li>
-<li><p><a class="reference internal" href="#crawlinsta.schemas.Posts.posts" title="crawlinsta.schemas.Posts.posts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">posts</span> <span class="pre">(List[crawlinsta.schemas.Post]</span> <span class="pre">|</span> <span class="pre">List[crawlinsta.schemas.PostBasicInfo])</span></code></a></p></li>
+<li><p><a class="reference internal" href="#crawlinsta.schemas.Posts.posts" title="crawlinsta.schemas.Posts.posts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">posts</span> <span class="pre">(List[crawlinsta.schemas.Post]</span> <span class="pre">|</span> <span class="pre">List[crawlinsta.schemas.PostBasicInfo]</span> <span class="pre">|</span> <span class="pre">List)</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -4236,7 +4240,7 @@ caption, location width, height etc.</p>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="crawlinsta.schemas.Posts.posts">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">posts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#crawlinsta.schemas.Post" title="crawlinsta.schemas.Post"><span class="pre">Post</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">PostBasicInfo</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#crawlinsta.schemas.Posts.posts" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">posts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#crawlinsta.schemas.Post" title="crawlinsta.schemas.Post"><span class="pre">Post</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">PostBasicInfo</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#crawlinsta.schemas.Posts.posts" title="Permalink to this definition"></a></dt>
 <dd><p>A list of posts.</p>
 </dd></dl>
 
@@ -4264,6 +4268,10 @@ caption, location width, height etc.</p>
 <span class="w">               </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">                  </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/PostBasicInfo&quot;</span>
 <span class="w">               </span><span class="p">},</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">],</span>

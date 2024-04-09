@@ -20,7 +20,7 @@ class MockedDriver(BaseMockedDriver):
             data = json.load(file)
         request = mock.Mock()
         request.url = url
-        request.body = urlencode(dict(av="17841461911219001", doc_id="7354141574647290", variables=json.dumps({"username": self.username}, separators=(',', ':'))),
+        request.body = urlencode(dict(av="17841461911219001", doc_id="7354141574647290", variables=json.dumps({"username": self.username, "data": {"count": 12}}, separators=(',', ':'))),
                                  quote_via=quote).encode()
         request.response = mock.Mock(headers={"Content-Type": JsonResponseContentType.text_javascript,
                                               'Content-Encoding': 'identity'},
@@ -44,8 +44,8 @@ class MockedDriver(BaseMockedDriver):
 
         request1 = mock.Mock(url=url, response=response)
         request1.body = urlencode(dict(av="17841461911219001", doc_id="7784658434954494",
-                                       variables=json.dumps({"username": self.username, "after": after}, separators=(',', ':'))),
-                                       quote_via=quote).encode()
+                                       variables=json.dumps({"username": self.username, "after": after, "data": {"count": 12}}, separators=(',', ':'))),
+                                  quote_via=quote).encode()
 
         request2 = mock.Mock(url=url, response=response)
         request2.body = urlencode(dict(av="178414619", doc_id="7784658434954494",
@@ -59,17 +59,24 @@ class MockedDriver(BaseMockedDriver):
 
         request4 = mock.Mock(url=url, response=response)
         request4.body = urlencode(dict(av="17841461911219001", doc_id="7784658434954494",
-                                       variables=json.dumps({"username": "dummy", "after": after},
+                                       variables=json.dumps({"username": "dummy", "after": after, "data": {"count": 12}},
                                                             separators=(',', ':'))),
                                   quote_via=quote).encode()
 
         request5 = mock.Mock(url=url, response=response)
         request5.body = urlencode(dict(av="17841461911219001", doc_id="7784658434954494",
-                                       variables=json.dumps({"username": self.username, "after": "dummy"},
+                                       variables=json.dumps({"username": self.username, "after": "dummy", "data": {"count": 12}},
                                                             separators=(',', ':'))),
                                   quote_via=quote).encode()
 
-        self.requests = [request2, request3, request4, request5, request1]
+        request6 = mock.Mock(url=url, response=response)
+        request6.body = urlencode(dict(av="17841461911219001", doc_id="7784658434954494",
+                                       variables=json.dumps(
+                                           {"username": self.username, "after": after},
+                                           separators=(',', ':'))),
+                                  quote_via=quote).encode()
+
+        self.requests = [request2, request3, request4, request5, request6, request1]
         self.call_find_element_number += 1
         return mock.Mock()
 
@@ -102,4 +109,4 @@ def test_collect_posts_of_user_no_request(mocked_sleep):
 def test_collect_posts_of_user_no_posts(mocked_logger, mocked_extract_data, mocked_sleep):
     result = collect_posts_of_user(MockedDriver(), "anasaiaofficial", 30)
     assert result == {"posts": [], "count": 0}
-    mocked_logger.warning.assert_called_once_with("No posts found for user 'anasaiaofficial'.")
+    mocked_logger.warning.assert_called_with("No posts found for user 'anasaiaofficial'.")

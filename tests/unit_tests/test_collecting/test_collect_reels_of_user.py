@@ -30,7 +30,7 @@ class MockedDriver(BaseMockedDriver):
             data2 = json.load(file)
         request2 = mock.Mock()
         request2.url = url2
-        request2.body = urlencode(dict(av="17841461911219001", doc_id="7191572580905225", variables=json.dumps({"data": {"target_user_id": self.user_id}}, separators=(',', ':'))),
+        request2.body = urlencode(dict(av="17841461911219001", doc_id="7191572580905225", variables=json.dumps({"data": {"target_user_id": self.user_id, "page_size": 12}}, separators=(',', ':'))),
                                   quote_via=quote).encode()
         request2.response = mock.Mock(headers={"Content-Type": JsonResponseContentType.text_javascript,
                                                'Content-Encoding': 'identity'},
@@ -48,7 +48,7 @@ class MockedDriver(BaseMockedDriver):
 
         request1 = mock.Mock(url=url, response=response)
         request1.body = urlencode(dict(av="178414619112", doc_id="7631884496822310",
-                                       variables=json.dumps({"data": {"target_user_id": self.user_id}, "after": after},
+                                       variables=json.dumps({"data": {"target_user_id": self.user_id, "page_size": 12}, "after": after},
                                                             separators=(',', ':'))),
                                   quote_via=quote).encode()
 
@@ -58,22 +58,28 @@ class MockedDriver(BaseMockedDriver):
 
         request3 = mock.Mock(url=url, response=response)
         request3.body = urlencode(dict(av="17841461911219001", doc_id="7631884496822310",
-                                       variables=json.dumps({"data": {"target_user_id": "dummy"}, "after": after},
+                                       variables=json.dumps({"data": {"target_user_id": "dummy", "page_size": 12}, "after": after},
                                                             separators=(',', ':'))),
                                   quote_via=quote).encode()
 
         request4 = mock.Mock(url=url, response=response)
         request4.body = urlencode(dict(av="17841461911219001", doc_id="7631884496822310",
-                                       variables=json.dumps({"data": {"target_user_id": self.user_id}, "after": "dummy"},
+                                       variables=json.dumps({"data": {"target_user_id": self.user_id, "page_size": 12}, "after": "dummy"},
+                                                            separators=(',', ':'))),
+                                  quote_via=quote).encode()
+
+        request5 = mock.Mock(url=url, response=response)
+        request5.body = urlencode(dict(av="17841461911219001", doc_id="7631884496822310",
+                                       variables=json.dumps({"data": {"target_user_id": self.user_id}, "after": after},
                                                             separators=(',', ':'))),
                                   quote_via=quote).encode()
 
         request = mock.Mock(url=url, response=response)
         request.body = urlencode(dict(av="17841461911219001", doc_id="7631884496822310",
-                                      variables=json.dumps({"data": {"target_user_id": self.user_id}, "after": after}, separators=(',', ':'))),
+                                      variables=json.dumps({"data": {"target_user_id": self.user_id, "page_size": 12}, "after": after}, separators=(',', ':'))),
                                  quote_via=quote).encode()
 
-        self.requests = [request1, request2, request3, request4, request]
+        self.requests = [request1, request2, request3, request4, request5, request]
         return mock.Mock()
 
 
@@ -104,4 +110,4 @@ def test_collect_reels_of_user_no_request(mocked_sleep):
 def test_collect_reels_of_user_no_posts(mocked_logger, mocked_extract_data, mocked_sleep):
     result = collect_reels_of_user(MockedDriver(), "anasaiaofficial", 30)
     assert result == {"posts": [], "count": 0}
-    mocked_logger.warning.assert_called_once_with("No reels found for user 'anasaiaofficial'.")
+    mocked_logger.warning.assert_called_with("No reels found for user 'anasaiaofficial'.")

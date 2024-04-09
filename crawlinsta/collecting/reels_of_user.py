@@ -5,7 +5,7 @@ from seleniumwire.request import Request
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union
 from ..decorators import driver_implicit_wait
-from ..constants import INSTAGRAM_DOMAIN
+from ..constants import INSTAGRAM_DOMAIN, JsonResponseContentType
 from .base import CollectPostsBase
 
 
@@ -22,7 +22,9 @@ class CollectReelsOfUser(CollectPostsBase):
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  username: str,
-                 n: int = 100) -> None:
+                 n: int = 100,
+                 target_url: str = f"{INSTAGRAM_DOMAIN}/api/graphql",
+                 response_content_type: str = JsonResponseContentType.text_javascript) -> None:
         """Constructor method.
 
         Args:
@@ -32,12 +34,11 @@ class CollectReelsOfUser(CollectPostsBase):
             n (int): maximum number of reels, which should be collected. By default,
              it's 100. If it's set to 0, collect all reels.
         """
-        target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
         collect_type = "reels"
         json_data_key = "xdt_api__v1__clips__user__connection_v2"
         url = f'{INSTAGRAM_DOMAIN}/{username}/reels/'
-        super().__init__(driver, username, n, url, target_url, collect_type,
-                         json_data_key, ("node", "media"))
+        super().__init__(driver, username, n, url, target_url, response_content_type,
+                         collect_type, json_data_key, ("node", "media"))
 
     def check_request_data(self, request: Request, after: str = "") -> bool:
         """Check if the request data is valid.
@@ -56,6 +57,8 @@ class CollectReelsOfUser(CollectPostsBase):
         elif not variables:
             return False
         elif variables.get("data", dict()).get("target_user_id", "") != self.user_id:
+            return False
+        elif variables.get("data", dict()).get("page_size") is None:
             return False
         elif variables.get("after", "") != after:
             return False
@@ -143,4 +146,14 @@ def collect_reels_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
           "count": 100
         }
     """
-    return CollectReelsOfUser(driver, username, n).collect()
+    cr = CollectReelsOfUser(driver, username, n, f"{INSTAGRAM_DOMAIN}/api/graphql",
+                            JsonResponseContentType.text_javascript)
+    result = cr.collect()
+    if result["count"] > 0 or not cr.no_data_found:
+        return result
+    try:
+        return CollectReelsOfUser(driver, username, n,
+                                  f"{INSTAGRAM_DOMAIN}/graphql/query",
+                                  JsonResponseContentType.application_json).collect()
+    except Exception:
+        return result

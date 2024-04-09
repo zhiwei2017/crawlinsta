@@ -154,6 +154,7 @@ class CollectPostsBase(UserIDRequiredCollect):
                  n: int,
                  url: str,
                  target_url: str,
+                 response_content_type: str,
                  collect_type: str,
                  json_data_key: str,
                  access_keys: Sequence[str] = ("node", )) -> None:
@@ -175,12 +176,14 @@ class CollectPostsBase(UserIDRequiredCollect):
         super().__init__(driver, username, url)
         self.n = n
         self.target_url = target_url
+        self.response_content_type = response_content_type
         self.collect_type = collect_type
         self.json_data_key = json_data_key
         self.json_data_list: List[Dict[str, Any]] = []
         self.remaining = n
         self.json_requests: List[Request] = []
         self.access_keys = access_keys
+        self.no_data_found = False
 
     def check_request_data(self, request: Request, after: str = "") -> bool:
         """Check request data.
@@ -202,7 +205,7 @@ class CollectPostsBase(UserIDRequiredCollect):
         """
 
         self.json_requests += filter_requests(self.driver.requests,
-                                              JsonResponseContentType.text_javascript)
+                                              self.response_content_type)
         del self.driver.requests
 
         if not self.json_requests:
@@ -216,7 +219,7 @@ class CollectPostsBase(UserIDRequiredCollect):
         """
         after = self.json_data_list[-1]['page_info']["end_cursor"] if self.json_data_list else ""
         idx = search_request(self.json_requests, self.target_url,
-                             JsonResponseContentType.text_javascript,
+                             self.response_content_type,
                              self.check_request_data, after)
         if idx is None:
             return False
@@ -242,7 +245,7 @@ class CollectPostsBase(UserIDRequiredCollect):
         time.sleep(random.SystemRandom().randint(4, 6))
 
         self.json_requests += filter_requests(self.driver.requests,
-                                              JsonResponseContentType.text_javascript)
+                                              self.response_content_type)
         del self.driver.requests
 
     def generate_result(self, empty_result: bool = False) -> Json:
@@ -289,6 +292,7 @@ class CollectPostsBase(UserIDRequiredCollect):
         # get first 12 documents
         status = self.extract_data()
         if not status:
+            self.no_data_found = True
             logger.warning(f"No {self.collect_type} found for user '{self.username}'.")
             return self.generate_result(empty_result=True)  # type: ignore
 

@@ -5,7 +5,7 @@ from seleniumwire.request import Request
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union
 from ..decorators import driver_implicit_wait
-from ..constants import INSTAGRAM_DOMAIN
+from ..constants import INSTAGRAM_DOMAIN, JsonResponseContentType
 from .base import CollectPostsBase
 
 
@@ -22,7 +22,9 @@ class CollectPostsOfUser(CollectPostsBase):
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  username: str,
-                 n: int = 100) -> None:
+                 n: int = 100,
+                 target_url: str = f"{INSTAGRAM_DOMAIN}/api/graphql",
+                 response_content_type: str = JsonResponseContentType.text_javascript) -> None:
         """Initializes the CollectPostsOfUser class.
 
         Args:
@@ -32,12 +34,11 @@ class CollectPostsOfUser(CollectPostsBase):
             n (int): maximum number of posts, which should be collected. By default,
              it's 100. If it's set to 0, collect all posts.
         """
-        target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
         collect_type = "posts"
         json_data_key = "xdt_api__v1__feed__user_timeline_graphql_connection"
         url = f'{INSTAGRAM_DOMAIN}/{username}/'
-        super().__init__(driver, username, n, url, target_url, collect_type,
-                         json_data_key, ("node", ))
+        super().__init__(driver, username, n, url, target_url, response_content_type,
+                         collect_type, json_data_key, ("node", ))
 
     def get_user_id(self) -> bool:
         """Get the user id of the given user.
@@ -66,6 +67,8 @@ class CollectPostsOfUser(CollectPostsBase):
         elif variables.get("username", "") != self.username:
             return False
         elif variables.get("after", "") != after:
+            return False
+        elif variables.get("data", dict()).get("count") is None:
             return False
         return True
 
@@ -151,4 +154,14 @@ def collect_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
           "count": 100
         }
     """
-    return CollectPostsOfUser(driver, username, n).collect()
+    cp = CollectPostsOfUser(driver, username, n, f"{INSTAGRAM_DOMAIN}/api/graphql",
+                            JsonResponseContentType.text_javascript)
+    result = cp.collect()
+    if result["count"] > 0 or not cp.no_data_found:
+        return result
+    try:
+        return CollectPostsOfUser(driver, username, n,
+                                  f"{INSTAGRAM_DOMAIN}/graphql/query",
+                                  JsonResponseContentType.application_json).collect()
+    except Exception:
+        return result

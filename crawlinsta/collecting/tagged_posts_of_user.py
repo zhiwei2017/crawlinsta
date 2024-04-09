@@ -5,7 +5,7 @@ from seleniumwire.request import Request
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union
 from ..decorators import driver_implicit_wait
-from ..constants import INSTAGRAM_DOMAIN
+from ..constants import INSTAGRAM_DOMAIN, JsonResponseContentType
 from .base import CollectPostsBase
 
 
@@ -22,7 +22,9 @@ class CollectTaggedPostsOfUser(CollectPostsBase):
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  username: str,
-                 n: int = 100) -> None:
+                 n: int = 100,
+                 target_url: str = f"{INSTAGRAM_DOMAIN}/api/graphql",
+                 response_content_type: str = JsonResponseContentType.text_javascript) -> None:
         """Constructor for the CollectTaggedPostsOfUser class.
 
         Args:
@@ -32,12 +34,11 @@ class CollectTaggedPostsOfUser(CollectPostsBase):
             n (int): maximum number of tagged posts, which should be collected. By
              default, it's 100. If it's set to 0, collect all posts.
         """
-        target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
         collect_type = "tagged posts"
         json_data_key = "xdt_api__v1__usertags__user_id__feed_connection"
         url = f'{INSTAGRAM_DOMAIN}/{username}/tagged/'
-        super().__init__(driver, username, n, url, target_url, collect_type,
-                         json_data_key, ("node", ))
+        super().__init__(driver, username, n, url, target_url, response_content_type,
+                         collect_type, json_data_key, ("node", ))
 
     def check_request_data(self, request: Request, after: str = "") -> bool:
         """Check if the request data is valid.
@@ -58,6 +59,8 @@ class CollectTaggedPostsOfUser(CollectPostsBase):
         elif variables.get("user_id", "") != self.user_id:
             return False
         elif variables.get("after", "") != after:
+            return False
+        elif variables.get("count") is None:
             return False
         return True
 
@@ -143,4 +146,15 @@ def collect_tagged_posts_of_user(driver: Union[Chrome, Edge, Firefox, Safari, Re
           "count": 100
         }
     """
-    return CollectTaggedPostsOfUser(driver, username, n).collect()
+    ctp = CollectTaggedPostsOfUser(driver, username, n,
+                                   f"{INSTAGRAM_DOMAIN}/api/graphql",
+                                   JsonResponseContentType.text_javascript)
+    result = ctp.collect()
+    if result["count"] > 0 or not ctp.no_data_found:
+        return result
+    try:
+        return CollectTaggedPostsOfUser(driver, username, n,
+                                        f"{INSTAGRAM_DOMAIN}/graphql/query",
+                                        JsonResponseContentType.application_json).collect()
+    except Exception:
+        return result

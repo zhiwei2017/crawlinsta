@@ -19,6 +19,10 @@ Please install it via::
 
     pip install git+https://github.com/zhiwei2017/crawlinsta.git@master
 
+Prerequisites
++++++++++++++
+Please make sure your instagram account has **English** as the language setting.
+
 How to Use
 ++++++++++
 

@@ -82,7 +82,7 @@
 <span class="kn">from</span> <span class="nn">seleniumwire.webdriver</span> <span class="kn">import</span> <span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">..decorators</span> <span class="kn">import</span> <span class="n">driver_implicit_wait</span>
-<span class="kn">from</span> <span class="nn">..constants</span> <span class="kn">import</span> <span class="n">INSTAGRAM_DOMAIN</span>
+<span class="kn">from</span> <span class="nn">..constants</span> <span class="kn">import</span> <span class="n">INSTAGRAM_DOMAIN</span><span class="p">,</span> <span class="n">JsonResponseContentType</span>
 <span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">CollectPostsBase</span>
 
 
@@ -99,7 +99,9 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">driver</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span><span class="p">],</span>
                  <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+                 <span class="n">target_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/api/graphql&quot;</span><span class="p">,</span>
+                 <span class="n">response_content_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">text_javascript</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the CollectPostsOfUser class.</span>
 
 <span class="sd">        Args:</span>
@@ -109,12 +111,11 @@
 <span class="sd">            n (int): maximum number of posts, which should be collected. By default,</span>
 <span class="sd">             it&#39;s 100. If it&#39;s set to 0, collect all posts.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">target_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/api/graphql&quot;</span>
         <span class="n">collect_type</span> <span class="o">=</span> <span class="s2">&quot;posts&quot;</span>
         <span class="n">json_data_key</span> <span class="o">=</span> <span class="s2">&quot;xdt_api__v1__feed__user_timeline_graphql_connection&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s1">/&#39;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">target_url</span><span class="p">,</span> <span class="n">collect_type</span><span class="p">,</span>
-                         <span class="n">json_data_key</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="p">))</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">target_url</span><span class="p">,</span> <span class="n">response_content_type</span><span class="p">,</span>
+                         <span class="n">collect_type</span><span class="p">,</span> <span class="n">json_data_key</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">get_user_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the user id of the given user.</span>
@@ -143,6 +144,8 @@
         <span class="k">elif</span> <span class="n">variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">elif</span> <span class="n">variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;after&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">after</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span>
 
@@ -228,7 +231,17 @@
 <span class="sd">          &quot;count&quot;: 100</span>
 <span class="sd">        }</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">CollectPostsOfUser</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span></div>
+    <span class="n">cp</span> <span class="o">=</span> <span class="n">CollectPostsOfUser</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/api/graphql&quot;</span><span class="p">,</span>
+                            <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">text_javascript</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">cp</span><span class="o">.</span><span class="n">no_data_found</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">CollectPostsOfUser</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span>
+                                  <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/graphql/query&quot;</span><span class="p">,</span>
+                                  <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">application_json</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">result</span></div>
 </pre></div>
 
            </div>

@@ -111,7 +111,9 @@ class SearchWithKeyword(CollectBase):
             del self.driver.requests
             not_pers_btn = self.driver.find_element(
                 By.XPATH,
-                '//div[@aria-label="Not personalised"][@role="button"][@tabindex="0"]//span[text()="Not personalised"]')
+                '//div[@aria-label="Not personalised" or @aria-label="Nicht personalisiert"]'
+                '[@role="button"][@tabindex="0"]'
+                '//span[text()="Not personalised" or text()="Nicht personalisiert"]')
             not_pers_btn.click()
             time.sleep(random.SystemRandom().randint(6, 8))
 

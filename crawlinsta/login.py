@@ -46,7 +46,8 @@ def login(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     time.sleep(5)
 
     try:
-        decline_optional_cookies_btn_xpath = '//button[@tabindex="0"][text()="Decline optional cookies"]'
+        decline_optional_cookies_btn_xpath = ('//button[@tabindex="0"]'
+                                              '[text()="Decline optional cookies" or text()="Optionale Cookies ablehnen"]')
         decline_optional_cookies_btn = driver.find_element(By.XPATH, decline_optional_cookies_btn_xpath)
         decline_optional_cookies_btn.click()
         time.sleep(3)
@@ -70,7 +71,7 @@ def login(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     joblib.dump(driver.get_cookies(), cookies_path)
 
     try:
-        not_turn_on_notifications_btn_xpath = '//button[@tabindex="0"][text()="Not Now"]'
+        not_turn_on_notifications_btn_xpath = '//button[@tabindex="0"][text()="Not Now" or text()="Jetzt nicht"]'
         not_turn_on_notifications_btn = driver.find_element(By.XPATH, not_turn_on_notifications_btn_xpath)
         not_turn_on_notifications_btn.click()
     except NoSuchElementException:
@@ -99,7 +100,8 @@ def login_with_cookies(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     driver.get('https://www.instagram.com/')
 
     try:
-        decline_optional_cookies_btn_xpath = '//button[@tabindex="0"][text()="Decline optional cookies"]'
+        decline_optional_cookies_btn_xpath = ('//button[@tabindex="0"]'
+                                              '[text()="Decline optional cookies" or text()="Optionale Cookies ablehnen"]')
         decline_optional_cookies_btn = driver.find_element(By.XPATH, decline_optional_cookies_btn_xpath)
         decline_optional_cookies_btn.click()
     except NoSuchElementException:
@@ -112,7 +114,7 @@ def login_with_cookies(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
     time.sleep(5)  # Example: Wait for the page to load after setting cookies
 
     try:
-        not_turn_on_notifications_btn_xpath = '//button[@tabindex="0"][text()="Not Now"]'
+        not_turn_on_notifications_btn_xpath = '//button[@tabindex="0"][text()="Not Now" or text()="Jetzt nicht"]'
         not_turn_on_notifications_btn = driver.find_element(By.XPATH, not_turn_on_notifications_btn_xpath)
         not_turn_on_notifications_btn.click()
     except NoSuchElementException:

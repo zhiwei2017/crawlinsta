@@ -106,8 +106,7 @@ class CollectPostsByMusicId(CollectBase):
 
     def fetching_more_data(self):
         """Loading action."""
-        footer = self.driver.find_element(By.XPATH, "//footer")
-        self.driver.execute_script("return arguments[0].scrollIntoView(true);", footer)
+        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(random.SystemRandom().randint(4, 6))
 
         self.json_requests += filter_requests(self.driver.requests,

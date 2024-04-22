@@ -3,7 +3,6 @@ import random
 import time
 from urllib.parse import parse_qs
 from pydantic import Json
-from selenium.webdriver.common.by import By
 from seleniumwire.request import Request
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
 from typing import Union, List, Dict, Any

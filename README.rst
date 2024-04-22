@@ -21,7 +21,7 @@ Please install it via::
 
 Prerequisites
 +++++++++++++
-Please make sure your instagram account has **English** as the language setting.
+Please make sure your instagram account has **English** or **German** as the language setting.
 
 How to Use
 ++++++++++

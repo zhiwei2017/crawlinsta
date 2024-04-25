@@ -1,0 +1,13 @@
+version: '3.9'
+services:
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: crawlinsta:latest
+    volumes:
+      - .:/home/work
+    ports:
+      - "8888:8888"
+    network_mode: host
+    shm_size: "4g"

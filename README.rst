@@ -674,6 +674,28 @@ Input:
 
     >>> download_media(driver, "dummy_media_url", "dummy")
 
+Work wit Docker Compose
+~~~~~~~~~~~~~~~~~~~~~~~
+
+A `Dockerfile` and a `docker-compose.yml` file are provided for easily using the
+package in jupyter server in a docker container. First, you need to build the docker
+image::
+
+    docker-compose build
+
+Then you can run the following command to start the container::
+
+    docker-compose up
+
+After the container is started, you can access the jupyter server via the link provided
+in the terminal. When the container is started, the current directory will be mounted to the container in
+the path `/home/work`. You can put your notebooks in the current directory and run them
+in the jupyter server in the container. The package is already installed in the container.
+
+To stop the container, you can run the following command::
+
+    docker-compose down
+
 Maintainers
 -----------
 * **Zhiwei Zhang** - *Maintainer* - `zhiwei2017@gmail.com <mailto:zhiwei2017@gmail.com?subject=[GitHub]Instagram%20Crawler>`_

@@ -188,9 +188,9 @@
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
             <span class="n">not_pers_btn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span>
                 <span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span>
-                <span class="s1">&#39;//div[@aria-label=&quot;Not personalised&quot; or @aria-label=&quot;Nicht personalisiert&quot;]&#39;</span>
+                <span class="s1">&#39;//div[@aria-label=&quot;Not personalised&quot; or @aria-label=&quot;Not personalized&quot; or @aria-label=&quot;Nicht personalisiert&quot;]&#39;</span>
                 <span class="s1">&#39;[@role=&quot;button&quot;][@tabindex=&quot;0&quot;]&#39;</span>
-                <span class="s1">&#39;//span[text()=&quot;Not personalised&quot; or text()=&quot;Nicht personalisiert&quot;]&#39;</span><span class="p">)</span>
+                <span class="s1">&#39;//span[text()=&quot;Not personalised&quot; or text()=&quot;Not personalized&quot; or text()=&quot;Nicht personalisiert&quot;]&#39;</span><span class="p">)</span>
             <span class="n">not_pers_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">SystemRandom</span><span class="p">()</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 

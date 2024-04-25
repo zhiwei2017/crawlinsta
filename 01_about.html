@@ -56,6 +56,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#create-browser-driver">Create Browser Driver</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#login">Login</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#crawling">Crawling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#work-wit-docker-compose">Work wit Docker Compose</a></li>
 </ul>
 </li>
 </ul>
@@ -816,6 +817,27 @@ from module <strong>crawlinsta.login</strong> to login with the cookie file, suc
 </pre></div>
 </div>
 </section>
+</section>
+<section id="work-wit-docker-compose">
+<h4>Work wit Docker Compose<a class="headerlink" href="#work-wit-docker-compose" title="Permalink to this heading"></a></h4>
+<p>A <cite>Dockerfile</cite> and a <cite>docker-compose.yml</cite> file are provided for easily using the
+package in jupyter server in a docker container. First, you need to build the docker
+image:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">build</span>
+</pre></div>
+</div>
+<p>Then you can run the following command to start the container:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">up</span>
+</pre></div>
+</div>
+<p>After the container is started, you can access the jupyter server via the link provided
+in the terminal. When the container is started, the current directory will be mounted to the container in
+the path <cite>/home/work</cite>. You can put your notebooks in the current directory and run them
+in the jupyter server in the container. The package is already installed in the container.</p>
+<p>To stop the container, you can run the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">down</span>
+</pre></div>
+</div>
 </section>
 </section>
 </section>

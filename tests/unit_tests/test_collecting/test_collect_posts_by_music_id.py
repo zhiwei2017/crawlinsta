@@ -27,7 +27,7 @@ class MockedDriver(BaseMockedDriver):
         request = mock.Mock(url=url, body=body, response=response)
         self.requests = [request]
 
-    def find_element(self, by, value):
+    def execute_script(self, value):
         url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/clips/music/"
 
         body = urlencode(dict(audio_cluster_id=self.music_id, max_id=self.max_id),

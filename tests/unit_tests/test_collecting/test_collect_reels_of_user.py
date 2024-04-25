@@ -37,7 +37,7 @@ class MockedDriver(BaseMockedDriver):
                                       body=json.dumps(data2).encode())
         self.requests = [request1, request2]
 
-    def find_element(self, by, value):
+    def execute_script(self, value):
         url = f"{INSTAGRAM_DOMAIN}/api/graphql"
         after = "QVFCU1EwZjBPaDVQQ0U1ZHNvYnByell3YkJMYkJRLUdUR3FlazVXbGlXRnlVOHhFcTRsWGtuZU1nTjZYRXZzM2FCM042MFNmT2hRcDQ2a0lIU25KT1J0cA=="
         with open("tests/resources/reels/graphql2.json", "r") as file:

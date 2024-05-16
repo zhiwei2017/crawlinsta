@@ -111,7 +111,7 @@ class MockedDriverLoaded(BaseMockedDriver):
                                  quote_via=quote).encode()
         self.requests = [request1, request2, request3, request]
         self.call_find_element_number += 1
-        return [mock.Mock()]
+        return [mock.MagicMock()]
 
     def find_element(self, by, value):
         mocked_element = mock.Mock()
@@ -148,4 +148,4 @@ def test_collect_comments_of_post_on_no_post_id_found(mocked_logger, mocked_slee
 def test_collect_comments_of_post_load_no_request_found(mocked_logger, mocked_search_request, mocked_sleep):
     result = collect_comments_of_post(MockedDriverLoaded(), "C10MvewSSYl", 100)
     assert result == {'comments': [], 'count': 0}
-    mocked_logger.warning.assert_called_once_with("No comments found for post 'C10MvewSSYl'.")
+    mocked_logger.warning.assert_has_calls([mock.call("No comments found for post 'C10MvewSSYl'.")])

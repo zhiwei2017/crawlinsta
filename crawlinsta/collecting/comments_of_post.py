@@ -36,7 +36,9 @@ class CollectCommentOfPost(CollectPostInfoBase):
     def __init__(self,
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  post_code: str,
-                 n: int) -> None:
+                 n: int,
+                 target_url: str,
+                 json_response_content_type: str) -> None:
         """Initialize CollectCommentOfPost.
 
         Args:
@@ -49,7 +51,9 @@ class CollectCommentOfPost(CollectPostInfoBase):
                          n,
                          "comments",
                          f"{INSTAGRAM_DOMAIN}/p/{post_code}/")
-        self.target_url = f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}"
+        self.cannot_load = False
+        self.target_url = target_url
+        self.json_response_content_type = json_response_content_type
 
     def check_request_data(self, request: Request) -> bool:
         """Check the request data.
@@ -99,7 +103,7 @@ class CollectCommentOfPost(CollectPostInfoBase):
     def fetch_data(self) -> None:
         """Fetching data."""
         self.json_requests = filter_requests(self.driver.requests,
-                                             JsonResponseContentType.application_json)
+                                             self.json_response_content_type)
         del self.driver.requests
 
     def extract_data(self) -> bool:
@@ -110,7 +114,7 @@ class CollectCommentOfPost(CollectPostInfoBase):
         """
         idx = search_request(self.json_requests,
                              self.target_url,
-                             JsonResponseContentType.application_json,
+                             self.json_response_content_type,
                              self.check_request_data)
         if idx is None:
             return False
@@ -139,7 +143,7 @@ class CollectCommentOfPost(CollectPostInfoBase):
 
         time.sleep(random.SystemRandom().randint(4, 6))
         self.json_requests += filter_requests(self.driver.requests,
-                                              JsonResponseContentType.application_json)
+                                              self.json_response_content_type)
         del self.driver.requests
 
     def generate_result(self, empty_result=False) -> Json:
@@ -199,6 +203,7 @@ class CollectCommentOfPost(CollectPostInfoBase):
             status = self.extract_data()
             if not status:
                 logger.warning(f"No comments found for post '{self.post_code}'.")
+                self.cannot_load = True
                 return self.generate_result(True)
 
         while self.continue_fetching():
@@ -206,6 +211,7 @@ class CollectCommentOfPost(CollectPostInfoBase):
 
             status = self.extract_data()
             if not status:
+                self.cannot_load = True
                 break
 
         return self.generate_result(False)
@@ -262,4 +268,17 @@ def collect_comments_of_post(driver: Union[Chrome, Edge, Firefox, Safari, Remote
           "count": 100
         }
     """
-    return CollectCommentOfPost(driver, post_code, n).collect()
+    target_responses = [
+        dict(url=f"{INSTAGRAM_DOMAIN}/{GRAPHQL_QUERY_PATH}",
+             content_type=JsonResponseContentType.application_json),
+        dict(url=f"{INSTAGRAM_DOMAIN}/api/graphql",
+             content_type=JsonResponseContentType.text_javascript), ]
+    results = []
+    for response in target_responses:
+        cc = CollectCommentOfPost(driver, post_code, n,
+                                  response["url"], response["content_type"])
+        result = cc.collect()
+        if not cc.cannot_load:
+            return result
+        results.append(result)
+    return sorted(results, key=lambda x: x["count"], reverse=True)[0]

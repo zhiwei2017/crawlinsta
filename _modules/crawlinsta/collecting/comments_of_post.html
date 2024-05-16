@@ -113,7 +113,9 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">driver</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span><span class="p">],</span>
                  <span class="n">post_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">target_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">json_response_content_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize CollectCommentOfPost.</span>
 
 <span class="sd">        Args:</span>
@@ -126,7 +128,9 @@
                          <span class="n">n</span><span class="p">,</span>
                          <span class="s2">&quot;comments&quot;</span><span class="p">,</span>
                          <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/p/</span><span class="si">{</span><span class="n">post_code</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">target_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">GRAPHQL_QUERY_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cannot_load</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_url</span> <span class="o">=</span> <span class="n">target_url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_response_content_type</span> <span class="o">=</span> <span class="n">json_response_content_type</span>
 
     <span class="k">def</span> <span class="nf">check_request_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check the request data.</span>
@@ -176,7 +180,7 @@
     <span class="k">def</span> <span class="nf">fetch_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetching data.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">json_requests</span> <span class="o">=</span> <span class="n">filter_requests</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span><span class="p">,</span>
-                                             <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">application_json</span><span class="p">)</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">json_response_content_type</span><span class="p">)</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
 
     <span class="k">def</span> <span class="nf">extract_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -187,7 +191,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">idx</span> <span class="o">=</span> <span class="n">search_request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json_requests</span><span class="p">,</span>
                              <span class="bp">self</span><span class="o">.</span><span class="n">target_url</span><span class="p">,</span>
-                             <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">application_json</span><span class="p">,</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">json_response_content_type</span><span class="p">,</span>
                              <span class="bp">self</span><span class="o">.</span><span class="n">check_request_data</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -216,7 +220,7 @@
 
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">SystemRandom</span><span class="p">()</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">json_requests</span> <span class="o">+=</span> <span class="n">filter_requests</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span><span class="p">,</span>
-                                              <span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">application_json</span><span class="p">)</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">json_response_content_type</span><span class="p">)</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
 
     <span class="k">def</span> <span class="nf">generate_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">empty_result</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
@@ -276,6 +280,7 @@
             <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_data</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">status</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No comments found for post &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">post_code</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cannot_load</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_result</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">continue_fetching</span><span class="p">():</span>
@@ -283,6 +288,7 @@
 
             <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_data</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">status</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cannot_load</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">break</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_result</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -339,7 +345,20 @@
 <span class="sd">          &quot;count&quot;: 100</span>
 <span class="sd">        }</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">CollectCommentOfPost</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">post_code</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span></div>
+    <span class="n">target_responses</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">GRAPHQL_QUERY_PATH</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+             <span class="n">content_type</span><span class="o">=</span><span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">application_json</span><span class="p">),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">INSTAGRAM_DOMAIN</span><span class="si">}</span><span class="s2">/api/graphql&quot;</span><span class="p">,</span>
+             <span class="n">content_type</span><span class="o">=</span><span class="n">JsonResponseContentType</span><span class="o">.</span><span class="n">text_javascript</span><span class="p">),</span> <span class="p">]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">target_responses</span><span class="p">:</span>
+        <span class="n">cc</span> <span class="o">=</span> <span class="n">CollectCommentOfPost</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">post_code</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span>
+                                  <span class="n">response</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">],</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;content_type&quot;</span><span class="p">])</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cc</span><span class="o">.</span><span class="n">cannot_load</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
 </pre></div>
 
            </div>

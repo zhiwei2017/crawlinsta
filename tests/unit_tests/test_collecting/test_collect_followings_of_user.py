@@ -17,12 +17,15 @@ class MockedDriver(BaseMockedDriver):
         self.user_id = "1798450984"
         username = url.split("/")[-2]
 
-        url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username={username}"
+        url = f"{INSTAGRAM_DOMAIN}/api/graphql"
         with open("tests/resources/followings/web_profile_info.json", "r") as file:
             data = json.load(file)
         request = mock.Mock()
         request.url = url
-        request.response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
+        request.body = urlencode(dict(av="17841461911219001",
+                                      variables=json.dumps({"render_surface": "PROFILE"}, separators=(',', ':'))),
+                                 quote_via=quote).encode()
+        request.response = mock.Mock(headers={"Content-Type": JsonResponseContentType.text_javascript,
                                               'Content-Encoding': 'identity'},
                                      body=json.dumps(data).encode())
 
@@ -82,13 +85,16 @@ class MockedDriverPrivate(MockedDriver):
         self.user_id = "1798450984"
         username = url.split("/")[-2]
 
-        url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username={username}"
+        url = f"{INSTAGRAM_DOMAIN}/api/graphql"
         with open("tests/resources/followings/web_profile_info.json", "r") as file:
             data = json.load(file)
         data["data"]["user"]["is_private"] = True
         request = mock.Mock()
         request.url = url
-        request.response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
+        request.body = urlencode(dict(av="17841461911219001",
+                                      variables=json.dumps({"render_surface": "PROFILE"}, separators=(',', ':'))),
+                                 quote_via=quote).encode()
+        request.response = mock.Mock(headers={"Content-Type": JsonResponseContentType.text_javascript,
                                               'Content-Encoding': 'identity'},
                                      body=json.dumps(data).encode())
         self.requests = [request]

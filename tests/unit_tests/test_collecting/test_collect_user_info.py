@@ -1,6 +1,7 @@
 import json
 import pytest
 from unittest import mock
+from urllib.parse import urlencode, quote
 from crawlinsta.collecting.user_info import collect_user_info
 from crawlinsta.constants import (
     INSTAGRAM_DOMAIN, API_VERSION, GRAPHQL_QUERY_PATH, JsonResponseContentType
@@ -11,12 +12,15 @@ from .base_mocked_driver import BaseMockedDriver
 class MockedDriver(BaseMockedDriver):
     def get(self, url):
         username = url.split("/")[-2]
-        url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username={username}"
+        url = f"{INSTAGRAM_DOMAIN}/api/graphql"
         with open("tests/resources/user_info/web_profile_info.json", "r") as file:
             data = json.load(file)
         request = mock.Mock()
         request.url = url
-        request.response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
+        request.body = urlencode(dict(av="17841461911219001",
+                                      variables=json.dumps({"render_surface": "PROFILE"}, separators=(',', ':'))),
+                                 quote_via=quote).encode()
+        request.response = mock.Mock(headers={"Content-Type": JsonResponseContentType.text_javascript,
                                               'Content-Encoding': 'identity'},
                                      body=json.dumps(data).encode())
         self.requests = [request]
@@ -61,13 +65,16 @@ def test_collect_user_info_fail(mocked_sleep):
 class MockedDriverPrivate(BaseMockedDriver):
     def get(self, url):
         username = url.split("/")[-2]
-        url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username={username}"
+        url = f"{INSTAGRAM_DOMAIN}/api/graphql"
         with open("tests/resources/user_info/web_profile_info.json", "r") as file:
             data = json.load(file)
         data["data"]["user"]["is_private"] = True
         request = mock.Mock()
         request.url = url
-        request.response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
+        request.body = urlencode(dict(av="17841461911219001",
+                                      variables=json.dumps({"render_surface": "PROFILE"}, separators=(',', ':'))),
+                                 quote_via=quote).encode()
+        request.response = mock.Mock(headers={"Content-Type": JsonResponseContentType.text_javascript,
                                               'Content-Encoding': 'identity'},
                                      body=json.dumps(data).encode())
         self.requests = [request]
@@ -106,7 +113,7 @@ def test_collect_user_info_private(mocked_sleep):
 @mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
 @mock.patch("crawlinsta.collecting.user_info.logger")
 @mock.patch("crawlinsta.collecting.user_info.search_request", return_value=None)
-def test_collect_user_info_private(mocked_search_request, mocked_logger, mocked_sleep):
+def test_collect_user_info_private_1(mocked_search_request, mocked_logger, mocked_sleep):
     result = collect_user_info(MockedDriver(), "nasa")
     assert result == {
         'id': '528817151',

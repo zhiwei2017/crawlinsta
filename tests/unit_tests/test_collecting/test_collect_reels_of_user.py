@@ -16,12 +16,15 @@ class MockedDriver(BaseMockedDriver):
         self.user_id = "50269116275"
         username = url.split("/")[-3]
 
-        url1 = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username={username}"
+        url1 = f"{INSTAGRAM_DOMAIN}/api/graphql"
         with open("tests/resources/reels/web_profile_info.json", "r") as file:
             data1 = json.load(file)
         request1 = mock.Mock()
         request1.url = url1
-        request1.response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
+        request1.body = urlencode(dict(av="17841461911219001",
+                                       variables=json.dumps({"render_surface": "PROFILE"}, separators=(',', ':'))),
+                                  quote_via=quote).encode()
+        request1.response = mock.Mock(headers={"Content-Type": JsonResponseContentType.text_javascript,
                                                'Content-Encoding': 'identity'},
                                       body=json.dumps(data1).encode())
 

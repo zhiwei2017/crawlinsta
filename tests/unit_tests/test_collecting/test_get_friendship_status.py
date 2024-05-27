@@ -15,13 +15,16 @@ class MockedDriver(BaseMockedDriver):
 
     def get(self, url):
         self.username = url.split("/")[-2]
-        url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username={self.username}"
+        url = f"{INSTAGRAM_DOMAIN}/api/graphql"
         with open(self.user_dict[self.username]["profile_file"], "r") as file:
             data = json.load(file)
-        response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
+        response = mock.Mock(headers={"Content-Type": JsonResponseContentType.text_javascript,
                                       'Content-Encoding': 'identity'},
                              body=json.dumps(data).encode())
         request = mock.Mock(url=url, response=response)
+        request.body = urlencode(dict(av="17841461911219001",
+                                      variables=json.dumps({"render_surface": "PROFILE"}, separators=(',', ':'))),
+                                 quote_via=quote).encode()
 
         self.requests = [request]
 
@@ -107,14 +110,17 @@ class MockedDriverPrivate(MockedDriver):
 
     def get(self, url):
         self.username = url.split("/")[-2]
-        url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username={self.username}"
+        url = f"{INSTAGRAM_DOMAIN}/api/graphql"
         with open(self.user_dict[self.username]["profile_file"], "r") as file:
             data = json.load(file)
         data["data"]["user"]["is_private"] = True
-        response = mock.Mock(headers={"Content-Type": JsonResponseContentType.application_json,
+        response = mock.Mock(headers={"Content-Type": JsonResponseContentType.text_javascript,
                                       'Content-Encoding': 'identity'},
                              body=json.dumps(data).encode())
         request = mock.Mock(url=url, response=response)
+        request.body = urlencode(dict(av="17841461911219001",
+                                      variables=json.dumps({"render_surface": "PROFILE"}, separators=(',', ':'))),
+                                 quote_via=quote).encode()
 
         self.requests = [request]
 

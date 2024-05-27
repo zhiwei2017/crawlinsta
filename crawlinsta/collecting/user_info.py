@@ -94,10 +94,10 @@ class CollectUserInfo(UserIDRequiredCollect):
                           profile_pic_url=self.user_data["profile_pic_url"],  # type: ignore
                           is_private=self.user_data["is_private"],  # type: ignore
                           is_verified=self.user_data["is_verified"],  # type: ignore
-                          follower_count=self.user_data["edge_followed_by"]["count"],  # type: ignore
-                          following_count=self.user_data["edge_follow"]["count"],  # type: ignore
+                          follower_count=self.user_data["follower_count"],  # type: ignore
+                          following_count=self.user_data["following_count"],  # type: ignore
                           following_tag_count=following_hashtags_number,
-                          post_count=self.user_data["edge_owner_to_timeline_media"]["count"],  # type: ignore
+                          post_count=self.user_data["media_count"],  # type: ignore
                           biography=self.user_data["biography"])  # type: ignore
         return result.model_dump(mode="json")
 

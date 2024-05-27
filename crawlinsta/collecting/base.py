@@ -1,9 +1,10 @@
+import json
 import logging
 import random
 import re
 import time
 from pydantic import Json
-from urllib.parse import quote, urlencode
+from urllib.parse import quote, urlencode, parse_qs
 from seleniumwire.request import Request
 from selenium.webdriver.common.by import By
 from seleniumwire.webdriver import Chrome, Edge, Firefox, Safari, Remote
@@ -11,7 +12,7 @@ from typing import Union, List, Dict, Any, Sequence
 from ..schemas import Posts, Users, UserProfile
 from ..utils import search_request, get_json_data, filter_requests
 from ..data_extraction import extract_post, extract_id
-from ..constants import JsonResponseContentType, INSTAGRAM_DOMAIN, API_VERSION
+from ..constants import JsonResponseContentType, INSTAGRAM_DOMAIN
 
 logger = logging.getLogger("crawlinsta")
 
@@ -107,6 +108,26 @@ class UserIDRequiredCollect(CollectBase):
         self.user_id: Union[str, None] = None
         self.user_data: Union[Dict[str, Any], None] = None
 
+    def check_request_data_for_user(self, request: Request) -> bool:
+        """Check if the request data is valid.
+
+        Args:
+            request (seleniumwire.request.Request): request object.
+            after (str): cursor for the next page.
+
+        Returns:
+            bool: True if the request data is valid, False otherwise.
+        """
+        request_data = parse_qs(request.body.decode())
+        variables = json.loads(request_data.get("variables", ["{}"])[0])
+        if request_data.get("av", [''])[0] != "17841461911219001":
+            return False
+        elif not variables:
+            return False
+        elif variables.get("render_surface", "") != "PROFILE":
+            return False
+        return True
+
     def get_user_id(self) -> bool:
         """Get user id.
 
@@ -117,12 +138,14 @@ class UserIDRequiredCollect(CollectBase):
             ValueError: If the user is not found.
         """
         json_requests = filter_requests(self.driver.requests,
-                                        JsonResponseContentType.application_json)
+                                        JsonResponseContentType.text_javascript)
 
         if not json_requests:
             raise ValueError(f"User '{self.username}' not found.")
-        target_url = f"{INSTAGRAM_DOMAIN}/{API_VERSION}/users/web_profile_info/?username={self.username}"
-        idx = search_request(json_requests, target_url, JsonResponseContentType.application_json)
+        target_url = f"{INSTAGRAM_DOMAIN}/api/graphql"
+        idx = search_request(json_requests, target_url,
+                             JsonResponseContentType.text_javascript,
+                             self.check_request_data_for_user)
         if idx is None:
             raise ValueError(f"User '{self.username}' not found.")
         request = json_requests.pop(idx)  # type: ignore

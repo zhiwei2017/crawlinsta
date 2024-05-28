@@ -72,7 +72,10 @@ class GetFriendshipStatus(UserIDRequiredCollect):
         del self.driver.requests
 
         search_input_box = self.driver.find_element(
-            By.XPATH, '//input[@aria-label="Search input"][@placeholder="Search"][@type="text"]')
+            By.XPATH, '//input'
+                      '[@aria-label="Search input" or @aria-label="Sucheingabe"]'
+                      '[@placeholder="Search" or @placeholder="Suchen"]'
+                      '[@type="text"]')
         search_input_box.send_keys(self.searching_username)
         time.sleep(random.SystemRandom().randint(6, 8))
 

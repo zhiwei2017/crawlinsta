@@ -180,7 +180,10 @@
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">requests</span>
 
         <span class="n">search_input_box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span>
-            <span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s1">&#39;//input[@aria-label=&quot;Search input&quot;][@placeholder=&quot;Search&quot;][@type=&quot;text&quot;]&#39;</span><span class="p">)</span>
+            <span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s1">&#39;//input&#39;</span>
+                      <span class="s1">&#39;[@aria-label=&quot;Search input&quot;]&#39;</span>
+                      <span class="s1">&#39;[@placeholder=&quot;Search&quot; or @placeholder=&quot;Suchen&quot;]&#39;</span>
+                      <span class="s1">&#39;[@type=&quot;text&quot;]&#39;</span><span class="p">)</span>
         <span class="n">search_input_box</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keyword</span><span class="p">)</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">SystemRandom</span><span class="p">()</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 

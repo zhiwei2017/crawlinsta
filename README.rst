@@ -17,6 +17,10 @@ How to Install
 
 Please install it via::
 
+    pip install crawlinsta
+
+Or you can install it from the source code::
+
     pip install git+https://github.com/zhiwei2017/crawlinsta.git@master
 
 Prerequisites
@@ -306,7 +310,9 @@ Input:
     * username2 (str): username of the person B.
 
 Output:
-    * friendship_status (dict): relationship between the two users, including whether person A is following person B and whether person B is following person A.
+    * friendship_status (dict): relationship between the two users, including whether person A is following
+      person B and whether person B is following person A. "following" indicates if person A is
+      following person B, and "followed_by" indicates if person A is followed by person B.
 
 **Example**:
 

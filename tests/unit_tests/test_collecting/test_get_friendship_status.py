@@ -97,8 +97,8 @@ def test_get_friendship_status_no_request_found(mocked_logger, mocked_search_req
     driver = MockedDriver(user_dict)
     result = get_friendship_status(driver, username1, username2)
     assert result == {"following": False, "followed_by": False}
-    calls = [mock.call(f"Searching request for user '{username2}' in followings of user '{username1}' not found."),
-             mock.call(f"Searching request for user '{username1}' in followings of user '{username2}' not found.")]
+    calls = [mock.call(f"Searching request for user '{username1}' in followings of user '{username2}' not found."),
+             mock.call(f"Searching request for user '{username2}' in followings of user '{username1}' not found.")]
     mocked_logger.warning.assert_has_calls(calls, any_order=False)
 
 
@@ -168,7 +168,7 @@ def test_get_friendship_status_private_account(mocked_sleep, username1, username
 
 
 @mock.patch("crawlinsta.collecting.base.time.sleep", return_value=None)
-def test_collect_posts_of_user_no_request(mocked_sleep):
+def test_get_friendship_status_no_request(mocked_sleep):
     with pytest.raises(ValueError) as exc_info:
         get_friendship_status(BaseMockedDriver(), "nasa", "astro_frankrubio")
-    assert str(exc_info.value) == "User 'nasa' not found."
+    assert str(exc_info.value) == "User 'astro_frankrubio' not found."

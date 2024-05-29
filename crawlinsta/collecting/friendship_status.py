@@ -17,7 +17,7 @@ logger = logging.getLogger("crawlinsta")
 
 
 class GetFriendshipStatus(UserIDRequiredCollect):
-    """Base class for collecting posts.
+    """Class for getting friendship status.
 
     Attributes:
         driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium
@@ -31,7 +31,7 @@ class GetFriendshipStatus(UserIDRequiredCollect):
                  driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                  username: str,
                  searching_username: str) -> None:
-        """Initialize CollectPostsBase.
+        """Initialize GetFriendshipStatus.
 
         Args:
             driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium
@@ -118,8 +118,8 @@ class GetFriendshipStatus(UserIDRequiredCollect):
 def get_friendship_status(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
                           username1: str,
                           username2: str) -> Json:
-    """Get the relationship between the user with `username1` and the user with `username2`, i.e. finding out who is
-    following whom.
+    """Get the relationship between the user with `username1` and the
+    user with `username2`, i.e. finding out who is following whom.
 
     Args:
         driver (selenium.webdriver.remote.webdriver.WebDriver): selenium
@@ -128,7 +128,10 @@ def get_friendship_status(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
         username2 (str): username of the person B.
 
     Returns:
-        Json: friendship indication between person A with `username1` and person B with `username2`.
+        Json: friendship indication between person A with `username1` and
+        person B with `username2`. "following" indicates if person A is
+        following person B, and "followed_by" indicates if person A is followed
+        by person B.
 
     Raises:
         ValueError: if the user with the given username is not found.
@@ -147,7 +150,7 @@ def get_friendship_status(driver: Union[Chrome, Edge, Firefox, Safari, Remote],
           "followed_by": true
         }
     """
-    followed_by = GetFriendshipStatus(driver, username1, username2).collect()
-    following = GetFriendshipStatus(driver, username2, username1).collect()
+    followed_by = GetFriendshipStatus(driver, username2, username1).collect()
+    following = GetFriendshipStatus(driver, username1, username2).collect()
     return FriendshipStatus(following=following,
                             followed_by=followed_by).model_dump(mode="json")

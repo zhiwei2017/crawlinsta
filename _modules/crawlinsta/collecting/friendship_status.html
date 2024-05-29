@@ -94,7 +94,7 @@
 
 
 <span class="k">class</span> <span class="nc">GetFriendshipStatus</span><span class="p">(</span><span class="n">UserIDRequiredCollect</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for collecting posts.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for getting friendship status.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium</span>
@@ -108,7 +108,7 @@
                  <span class="n">driver</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span><span class="p">],</span>
                  <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                  <span class="n">searching_username</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize CollectPostsBase.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize GetFriendshipStatus.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            driver (Union[Chrome, Edge, Firefox, Safari, Remote]): selenium</span>
@@ -195,8 +195,8 @@
 <span class="k">def</span> <span class="nf">get_friendship_status</span><span class="p">(</span><span class="n">driver</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Chrome</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Firefox</span><span class="p">,</span> <span class="n">Safari</span><span class="p">,</span> <span class="n">Remote</span><span class="p">],</span>
                           <span class="n">username1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                           <span class="n">username2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Json</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the relationship between the user with `username1` and the user with `username2`, i.e. finding out who is</span>
-<span class="sd">    following whom.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the relationship between the user with `username1` and the</span>
+<span class="sd">    user with `username2`, i.e. finding out who is following whom.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        driver (selenium.webdriver.remote.webdriver.WebDriver): selenium</span>
@@ -205,7 +205,10 @@
 <span class="sd">        username2 (str): username of the person B.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Json: friendship indication between person A with `username1` and person B with `username2`.</span>
+<span class="sd">        Json: friendship indication between person A with `username1` and</span>
+<span class="sd">        person B with `username2`. &quot;following&quot; indicates if person A is</span>
+<span class="sd">        following person B, and &quot;followed_by&quot; indicates if person A is followed</span>
+<span class="sd">        by person B.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: if the user with the given username is not found.</span>
@@ -224,8 +227,8 @@
 <span class="sd">          &quot;followed_by&quot;: true</span>
 <span class="sd">        }</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">followed_by</span> <span class="o">=</span> <span class="n">GetFriendshipStatus</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">username1</span><span class="p">,</span> <span class="n">username2</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
-    <span class="n">following</span> <span class="o">=</span> <span class="n">GetFriendshipStatus</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">username2</span><span class="p">,</span> <span class="n">username1</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+    <span class="n">followed_by</span> <span class="o">=</span> <span class="n">GetFriendshipStatus</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">username2</span><span class="p">,</span> <span class="n">username1</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+    <span class="n">following</span> <span class="o">=</span> <span class="n">GetFriendshipStatus</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">username1</span><span class="p">,</span> <span class="n">username2</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">FriendshipStatus</span><span class="p">(</span><span class="n">following</span><span class="o">=</span><span class="n">following</span><span class="p">,</span>
                             <span class="n">followed_by</span><span class="o">=</span><span class="n">followed_by</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span></div>
 </pre></div>

@@ -1060,8 +1060,8 @@ driver for controlling the browser to perform certain actions.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">get_friendship_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Chrome</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Edge</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Firefox</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Safari</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Remote</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">username2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Json</span></span></span><a class="reference internal" href="_modules/crawlinsta/collecting/friendship_status.html#get_friendship_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Get the relationship between the user with <cite>username1</cite> and the user with <cite>username2</cite>, i.e. finding out who is
-following whom.</p>
+<dd><p>Get the relationship between the user with <cite>username1</cite> and the
+user with <cite>username2</cite>, i.e. finding out who is following whom.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1072,7 +1072,10 @@ driver for controlling the browser to perform certain actions.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>friendship indication between person A with <cite>username1</cite> and person B with <cite>username2</cite>.</p>
+<dd class="field-even"><p>friendship indication between person A with <cite>username1</cite> and
+person B with <cite>username2</cite>. “following” indicates if person A is
+following person B, and “followed_by” indicates if person A is followed
+by person B.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Json</p>

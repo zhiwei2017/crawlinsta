@@ -15,7 +15,6 @@ help:
 	@echo "test                   : Run tests and generate coverage report.";
 	@echo "unit_test              : Run unit tests and generate coverage report.";
 	@echo "build                  : Build a python wheel package.";
-	@echo "publish                : Publish a python wheel package to package index.";
 
 # Clean the folder from build/test related folders
 clean: clean-build clean-pyc
@@ -55,18 +54,3 @@ unit_test:
 # build wheel package
 build:
 	poetry build -f wheel
-
-# publish the built package
-publish:
-	@if [ -n "${POETRY_PYPI_TOKEN_PYPI}" ]; then\
-		echo "Uploading package to PyPi.";\
-		poetry publish --build --skip-existing;\
-	elif [ -n "${PACKAGE_INDEX_REPOSITORY_URL}" ] && [ -n "${PACKAGE_INDEX_USERNAME}" ] && [ -n "${PACKAGE_INDEX_PASSWORD}" ]; then\
-		echo "Uploading package to private package index ${PACKAGE_INDEX_REPOSITORY_URL}.";\
-		poetry config repositories.packagidx ${PACKAGE_INDEX_REPOSITORY_URL};\
-		poetry config http-basic.packagidx "${PACKAGE_INDEX_USERNAME}" "${PACKAGE_INDEX_PASSWORD}";\
-		poetry publish --build --skip-existing -r packagidx;\
-	else\
-		echo "To upload package to a private package index, you need to set environment variables \033[1mPACKAGE_INDEX_REPOSITORY_URL\033[0m \033[1mPACKAGE_INDEX_USERNAME\033[0m and \033[1mPACKAGE_INDEX_PASSWORD\033[0m.";\
-		exit 1;\
-	fi

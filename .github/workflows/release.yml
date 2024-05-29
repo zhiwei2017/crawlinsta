@@ -8,14 +8,20 @@ on:
   # Trigger the workflow on push for release branches vXX.XX.XX
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - '[0-9]+.[0-9]+.[0-9]+'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   deploy:
     # The type of runner that the job will run on
+    name: upload release to PyPI
     runs-on: ubuntu-latest
+    # Specifying a GitHub environment is optional, but strongly encouraged
+    environment: release
+    permissions:
+      # IMPORTANT: this permission is mandatory for trusted publishing
+      id-token: write
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -36,5 +42,7 @@ jobs:
       with:
         path: .venv
         key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
-    - name: Build and publish package
-      run: make publish
+    - name: Build package
+      run: make build
+    - name: Publish package distributions to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
